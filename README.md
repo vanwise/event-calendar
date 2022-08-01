@@ -44,3 +44,13 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+# Project Structure description:
+
+Assets - resources as fonts, styles, images and etc
+Components - all reusable components
+Hooks - React Hooks folder
+Pages - routes pages
+Services - complex services as LocalStorage, auth service and more
+Store - all entities in Redux store
+Utils - accessory reusable constants, function helpers, hooks and etc
