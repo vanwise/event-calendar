@@ -34,5 +34,18 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
+    // component name by file path in styled-components
+    'no-restricted-imports': [
+      'error',
+      {
+        paths: [
+          {
+            name: 'styled-components',
+            message: 'Please import from styled-components/macro.',
+          },
+        ],
+        patterns: ['!styled-components/macro'],
+      },
+    ],
   },
 };
