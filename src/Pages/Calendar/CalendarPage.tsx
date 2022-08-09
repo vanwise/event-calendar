@@ -1,9 +1,19 @@
 import styled from 'styled-components/macro';
+import { DatePicker } from 'Components/forms';
 
 function CalendarPage() {
-  return <Wrapper></Wrapper>;
+  return (
+    <Root>
+      <DatePicker
+        defaultSelectedDates={{}}
+        onSelectedDatesChange={console.log}
+      />
+    </Root>
+  );
 }
 
-const Wrapper = styled.div``;
+const Root = styled.div`
+  padding: 40px;
+`;
 
 export default CalendarPage;

@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import styled, { CSSProp, keyframes } from 'styled-components/macro';
-import WithOutsideClick from 'Components/WithOutsideClick';
+import { WithOutsideClick } from 'Components';
 
-interface MainDropdownProps {
+interface MainDropdownProps extends WithClassName {
   renderDropdown(closeDropdown: () => void): JSX.Element;
   renderTrigger(
     toggleDropdown: () => void,
     isDropdownVisible: boolean,
   ): JSX.Element;
-  className?: string;
   dropdownWrapperCSS?: CSSProp;
 }
 
@@ -63,7 +62,7 @@ const DropdownWrapper = styled.div<{ $CSS?: CSSProp }>`
   background: white;
   border-radius: 10px;
   border: 1px solid var(--gray);
-  box-shadow: 0px 5px 20px 5px var(--gray);
+  box-shadow: 0 5px 20px 5px var(--gray);
   animation: ${fadeInAnimation} 0.3s forwards;
   ${({ $CSS }) => $CSS}
 `;

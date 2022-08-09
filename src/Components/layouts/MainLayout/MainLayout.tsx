@@ -15,7 +15,7 @@ function MainLayout({ children }: MainLayoutProps) {
     <Root>
       <NavigationSidebar />
 
-      <div>
+      <Wrapper>
         <Header>
           <HeaderWrapper>
             <Notifications />
@@ -24,7 +24,7 @@ function MainLayout({ children }: MainLayoutProps) {
         </Header>
 
         <Content>{children}</Content>
-      </div>
+      </Wrapper>
     </Root>
   );
 }
@@ -33,6 +33,11 @@ const Root = styled.div`
   display: grid;
   grid-template: 1fr / 100px 1fr;
   height: 100%;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const Header = styled.header`
@@ -51,7 +56,7 @@ const HeaderWrapper = styled.div`
 `;
 
 const Content = styled.main`
-  display: flex;
+  flex-grow: 1;
 `;
 
 export default MainLayout;

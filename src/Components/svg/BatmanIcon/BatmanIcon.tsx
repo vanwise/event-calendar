@@ -1,11 +1,11 @@
-function BatmanIcon({ ...rest }) {
+function BatmanIcon(props: SvgProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       id="Layer_1"
       data-name="Layer 1"
       viewBox="0 0 128 128"
-      {...rest}>
+      {...props}>
       <circle cx="64" cy="64" r="60" fill="#f2bc0f" />
       <circle cx="64" cy="64" r="48" fill="#fff" opacity=".3" />
       <path

@@ -1,16 +1,14 @@
-import { SVGProps } from 'react';
-
-interface CalendarIconProps extends SVGProps<SVGSVGElement> {
+interface CalendarIconProps extends SvgProps {
   isActive?: boolean;
 }
 
-function CalendarIcon({ isActive, ...rest }: CalendarIconProps) {
+function CalendarIcon({ isActive, ...props }: CalendarIconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
-      {...rest}>
+      {...props}>
       <path
         fill={`var(${isActive ? '--red' : '--gray2'})`}
         d="M3 8a1 1 0 0 0-1 1v8a5 5 0 0 0 5 5h10a5 5 0 0 0 5-5V9a1 1 0 0 0-1-1H3Z"

@@ -1,0 +1,5 @@
+export const DATE_FORMAT = {
+  FULL_MONTH_YEAR: 'MMMM, YYYY',
+  DAY_MONTH_YEAR: 'DD.MM.YY',
+  SHORT_DAY: 'D',
+};

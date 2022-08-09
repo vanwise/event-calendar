@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro';
-import MainDropdown from 'Components/MainDropdown';
+import { MainDropdown } from 'Components';
 import { NotificationIcon } from 'Components/svg';
 
 const NOTIFICATIONS = [{ text: 'Hello' }, { text: 'Hi' }];
