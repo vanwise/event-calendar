@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro';
 import { useNavigate } from 'react-router-dom';
-import MainDropdown from 'Components/MainDropdown';
+import { MainDropdown } from 'Components';
 import { BatmanIcon } from 'Components/svg';
 import { ROUTES } from 'Utils/constants/routes';
 

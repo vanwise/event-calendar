@@ -1,10 +1,10 @@
-function MainLogoIcon({ ...rest }) {
+function MainLogoIcon(props: SvgProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       xmlSpace="preserve"
       viewBox="0 0 256 256"
-      {...rest}>
+      {...props}>
       <g
         transform="matrix(2.81 0 0 2.81 1.407 1.407)"
         strokeWidth="0"
