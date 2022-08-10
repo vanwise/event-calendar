@@ -7,7 +7,7 @@ import {
   SelectedDate,
   SelectedDateType,
   DefaultSelectedDates,
-} from './DatePicker';
+} from './DateRangePicker';
 
 export function getInitialSelectedDates({ from, to }: DefaultSelectedDates) {
   const dateFrom = from ? TimeService.getDate(from) : null;
