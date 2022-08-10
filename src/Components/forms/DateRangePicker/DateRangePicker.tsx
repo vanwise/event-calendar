@@ -12,23 +12,23 @@ import {
 } from './utils';
 
 export type SelectedDate = Nullable<Dayjs>;
-export type SelectedDates = Partial<{
+export interface SelectedDates {
   from: SelectedDate;
   to: SelectedDate;
-}>;
+}
 export type SelectedDateType = keyof SelectedDates;
-export type DefaultSelectedDates = Partial<{
+export type DefaultSelectedDates = {
   [key in SelectedDateType]: Nullable<string>;
-}>;
-interface DatePickerProps {
+};
+interface DateRangePickerProps {
   defaultSelectedDates: DefaultSelectedDates;
   onSelectedDatesChange(dates: DefaultSelectedDates): void;
 }
 
-function DatePicker({
+function DateRangePicker({
   defaultSelectedDates,
   onSelectedDatesChange,
-}: DatePickerProps) {
+}: DateRangePickerProps) {
   const [currentDate, setCurrentDate] = useState(TimeService.getDate);
   const [selectedDates, setSelectedDates] = useState<SelectedDates>(() =>
     getInitialSelectedDates(defaultSelectedDates),
@@ -50,8 +50,8 @@ function DatePicker({
   function updateSelectedDates(newDates: SelectedDates) {
     setSelectedDates(newDates);
     onSelectedDatesChange({
-      from: newDates.from?.toISOString(),
-      to: newDates.to?.toISOString(),
+      from: newDates.from?.toISOString() || null,
+      to: newDates.to?.toISOString() || null,
     });
   }
 
@@ -100,7 +100,7 @@ function DatePicker({
         </MonthControl>
       </Header>
 
-      <Wrapper>
+      <div>
         {(selectedDates.from || selectedDates.to) && (
           <RangeDatesWrapper>
             <RangeDate
@@ -118,7 +118,7 @@ function DatePicker({
         )}
 
         <Calendar daysInMonth={daysInMonth} onDateClick={handleDateClick} />
-      </Wrapper>
+      </div>
     </Root>
   );
 }
@@ -145,8 +145,6 @@ const MonthControl = styled.div`
   align-items: center;
 `;
 
-const Wrapper = styled.div``;
-
 const RangeDatesWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -154,4 +152,4 @@ const RangeDatesWrapper = styled.div`
   margin: 0 0 10px;
 `;
 
-export default DatePicker;
+export default DateRangePicker;

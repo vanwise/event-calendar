@@ -1,12 +1,20 @@
 import styled from 'styled-components/macro';
-import { DatePicker } from 'Components/forms';
+import { DateRangePicker } from 'Components/forms';
+import {
+  selectFilterDateRange,
+  setDateRange,
+} from 'Store/features/eventsFilter/eventsFilterSlice';
+import { useAppDispatch, useAppSelector } from 'Hooks/store';
 
 function CalendarPage() {
+  const dispatch = useAppDispatch();
+  const dateRange = useAppSelector(selectFilterDateRange);
+
   return (
     <Root>
-      <DatePicker
-        defaultSelectedDates={{}}
-        onSelectedDatesChange={console.log}
+      <DateRangePicker
+        defaultSelectedDates={dateRange}
+        onSelectedDatesChange={dates => dispatch(setDateRange(dates))}
       />
     </Root>
   );
