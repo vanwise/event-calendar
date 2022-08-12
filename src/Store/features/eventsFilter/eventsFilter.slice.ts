@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { DefaultSelectedDates } from 'Components/forms/DateRangePicker/DateRangePicker';
-import { RootState } from 'Store/config';
 
 interface EventsFilterStore {
   dateRange: DefaultSelectedDates;
@@ -22,9 +21,6 @@ export const eventsFilterSlice = createSlice({
     },
   },
 });
-
-export const selectFilterDateRange = (state: RootState) =>
-  state.eventsFilter.dateRange;
 
 export const { setDateRange } = eventsFilterSlice.actions;
 

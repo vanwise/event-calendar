@@ -1,17 +1,12 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import { eventsFilterReducer } from './features';
+import { api } from './api';
+import { configureStore } from '@reduxjs/toolkit';
+import eventsFilterReducer from './features/eventsFilter/eventsFilter.slice';
 
 export const store = configureStore({
   reducer: {
     eventsFilter: eventsFilterReducer,
+    [api.reducerPath]: api.reducer,
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware().concat(api.middleware),
 });
-
-export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof store.getState>;
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
->;
