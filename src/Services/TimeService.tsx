@@ -2,10 +2,12 @@ import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
 import weekday from 'dayjs/plugin/weekday';
 import updateLocale from 'dayjs/plugin/updateLocale';
+import isBetween from 'dayjs/plugin/isBetween';
 
 dayjs.extend(weekday);
 dayjs.extend(localeData);
 dayjs.extend(updateLocale);
+dayjs.extend(isBetween);
 
 dayjs.updateLocale(dayjs.locale(), {
   weekStart: 1,

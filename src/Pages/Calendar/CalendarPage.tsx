@@ -1,10 +1,8 @@
 import styled from 'styled-components/macro';
 import { DateRangePicker } from 'Components/forms';
-import {
-  selectFilterDateRange,
-  setDateRange,
-} from 'Store/features/eventsFilter/eventsFilterSlice';
-import { useAppDispatch, useAppSelector } from 'Hooks/store';
+import { setDateRange } from 'Store/features/eventsFilter/eventsFilter.slice';
+import { selectFilterDateRange } from 'Store/features/eventsFilter/eventsFilter.selectors';
+import { useAppDispatch, useAppSelector } from 'Hooks';
 
 function CalendarPage() {
   const dispatch = useAppDispatch();

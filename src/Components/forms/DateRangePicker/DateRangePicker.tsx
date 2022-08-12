@@ -9,7 +9,7 @@ import {
   getDaysInMonth,
   getInitialSelectedDates,
   handleCalendarDateClick,
-} from './utils';
+} from './DateRangePicker.utils';
 
 export type SelectedDate = Nullable<Dayjs>;
 export interface SelectedDates {
