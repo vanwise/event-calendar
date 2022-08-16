@@ -1,17 +1,17 @@
-import { useAppDispatch, useAppSelector } from 'Hooks';
 import styled from 'styled-components/macro';
-import { DATE_FORMAT } from 'Utils/constants/date';
-import { SimpleCalendarIcon } from 'Components/svg';
 import { ArrowButton } from 'Components/buttons';
-import {
-  showNextActiveDate,
-  showPrevActiveDate,
-} from 'Store/features/eventsFilter/eventsFilter.slice';
+import { SimpleCalendarIcon } from 'Components/svg';
+import { useAppDispatch, useAppSelector } from 'Hooks';
+import TimeService, { TimeServiceDate } from 'Services/TimeService';
 import {
   selectFilterDateRange,
   selectHasBothDateRange,
 } from 'Store/features/eventsFilter/eventsFilter.selectors';
-import TimeService, { TimeServiceDate } from 'Services/TimeService';
+import {
+  showNextActiveDate,
+  showPrevActiveDate,
+} from 'Store/features/eventsFilter/eventsFilter.slice';
+import { DATE_FORMAT } from 'Utils/constants/date';
 
 interface HeaderWithDateProps {
   activeDate: TimeServiceDate;

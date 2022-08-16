@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityState } from '@reduxjs/toolkit';
-import { Event } from 'Types/api';
 import { api } from 'Store/api';
+import { Event } from 'Types/api';
 import { API_TAG_TYPES } from 'Utils/constants/store';
 
 type NewEvent = Omit<Event, 'id'>;

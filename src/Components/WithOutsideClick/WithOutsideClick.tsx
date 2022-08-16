@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useRef, cloneElement } from 'react';
+import { cloneElement, ReactElement, useEffect, useRef } from 'react';
 
 interface WithOutsideClickProps {
   children: ReactElement;

@@ -1,10 +1,10 @@
 import styled from 'styled-components/macro';
 import { EntityId } from '@reduxjs/toolkit';
 import { useAppSelector } from 'Hooks';
+import { TimeServiceDate } from 'Services/TimeService';
 import { selectEventById } from 'Store/features/events/events.selectors';
 import { HOUR_TEXT_WIDTH_IN_PX } from '../../EventsTimeBar.utils';
 import { getEventTimeProps } from './EventDetails.utils';
-import { TimeServiceDate } from 'Services/TimeService';
 
 interface EventDetailsProps {
   eventId: EntityId;

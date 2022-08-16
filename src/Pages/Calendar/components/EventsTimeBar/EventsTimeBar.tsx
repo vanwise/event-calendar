@@ -1,8 +1,8 @@
+import styled from 'styled-components/macro';
 import { useAppSelector } from 'Hooks';
 import { TimeService } from 'Services';
 import { selectEventsIdsByActiveDate } from 'Store/features/events/events.selectors';
 import { selectFilterActiveDate } from 'Store/features/eventsFilter/eventsFilter.selectors';
-import styled from 'styled-components/macro';
 import { EmptyBlock, EventDetails, HeaderWithDate } from './components';
 import {
   getDayHours,

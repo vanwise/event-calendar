@@ -2,10 +2,10 @@ import { Dispatch, SetStateAction } from 'react';
 import TimeService, { TimeServiceDate } from 'Services/TimeService';
 import { DayCell } from './components/Calendar/Calendar';
 import {
-  SelectedDates,
-  SelectedDate,
-  SelectedDateType,
   DefaultSelectedDates,
+  SelectedDate,
+  SelectedDates,
+  SelectedDateType,
 } from './DateRangePicker.types';
 
 export function getInitialSelectedDates({ from, to }: DefaultSelectedDates) {

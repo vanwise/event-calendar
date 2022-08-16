@@ -1,5 +1,5 @@
-import { RightArrowIcon } from 'Components/svg';
 import styled, { keyframes } from 'styled-components/macro';
+import { RightArrowIcon } from 'Components/svg';
 
 function EmptyBlock() {
   return (

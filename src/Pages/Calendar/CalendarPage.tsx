@@ -1,11 +1,11 @@
 import styled from 'styled-components/macro';
-import { DateRangePicker } from 'Components/forms';
-import { changeDateRange } from 'Store/features/eventsFilter/eventsFilter.slice';
-import { selectFilterDateRange } from 'Store/features/eventsFilter/eventsFilter.selectors';
-import { useAppDispatch, useAppSelector } from 'Hooks';
-import { EventsTimeBar, NearesEvents } from './components';
-import { useGetEventsQuery } from 'Store/features/events/events.slice';
 import { Loader } from 'Components';
+import { DateRangePicker } from 'Components/forms';
+import { useAppDispatch, useAppSelector } from 'Hooks';
+import { useGetEventsQuery } from 'Store/features/events/events.slice';
+import { selectFilterDateRange } from 'Store/features/eventsFilter/eventsFilter.selectors';
+import { changeDateRange } from 'Store/features/eventsFilter/eventsFilter.slice';
+import { EventsTimeBar, NearesEvents } from './components';
 
 function CalendarPage() {
   const { isLoading: isEventsLoading } = useGetEventsQuery();

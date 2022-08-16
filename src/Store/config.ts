@@ -1,5 +1,5 @@
-import { api } from './api';
 import { configureStore } from '@reduxjs/toolkit';
+import { api } from './api';
 import eventsFilterReducer from './features/eventsFilter/eventsFilter.slice';
 
 export const store = configureStore({

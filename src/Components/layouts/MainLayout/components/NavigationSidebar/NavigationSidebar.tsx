@@ -1,7 +1,7 @@
 import styled from 'styled-components/macro';
 import { NavLink } from 'react-router-dom';
+import { CalendarIcon, MainLogoIcon, ProfileIcon } from 'Components/svg';
 import { ROUTES } from 'Utils/constants/routes';
-import { MainLogoIcon, CalendarIcon, ProfileIcon } from 'Components/svg';
 
 const { CALENDAR_PATH, PROFILE_PATH } = ROUTES;
 const LINKS = [

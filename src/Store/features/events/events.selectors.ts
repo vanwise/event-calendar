@@ -1,12 +1,12 @@
-import { TimeService } from 'Services';
-import { eventsAdapter, eventsApi, eventsInitialState } from './events.slice';
 import { createSelector } from '@reduxjs/toolkit';
+import { TimeService } from 'Services';
 import { RootState } from 'Types/store';
 import {
-  selectFilterDateRange,
   selectFilterActiveDate,
+  selectFilterDateRange,
   selectHasBothDateRange,
 } from '../eventsFilter/eventsFilter.selectors';
+import { eventsAdapter, eventsApi, eventsInitialState } from './events.slice';
 
 const selectEventsResult = eventsApi.endpoints.getEvents.select();
 

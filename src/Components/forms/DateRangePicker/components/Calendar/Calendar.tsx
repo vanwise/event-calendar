@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro';
-import { DATE_FORMAT } from 'Utils/constants/date';
 import TimeService, { TimeServiceDate } from 'Services/TimeService';
+import { DATE_FORMAT } from 'Utils/constants/date';
 
 export interface DayCell {
   date: TimeServiceDate;

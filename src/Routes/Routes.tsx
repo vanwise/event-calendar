@@ -1,12 +1,12 @@
 import {
   BrowserRouter as Router,
-  Routes as Switch,
-  Route,
   Navigate,
+  Route,
+  Routes as Switch,
 } from 'react-router-dom';
-import { ROUTES } from 'Utils/constants/routes';
-import { CalendarPage, ProfilePage } from 'Pages';
 import { MainLayout } from 'Components/layouts';
+import { CalendarPage, ProfilePage } from 'Pages';
+import { ROUTES } from 'Utils/constants/routes';
 
 const { CALENDAR_PATH, PROFILE_PATH } = ROUTES;
 
