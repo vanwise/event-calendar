@@ -1,8 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Dayjs } from 'dayjs';
 import styled from 'styled-components/macro';
 import { ArrowButton } from 'Components/buttons';
-import { TimeService } from 'Services';
 import { DATE_FORMAT } from 'Utils/constants/date';
 import { Calendar, RangeDate } from './components';
 import {
@@ -10,26 +8,20 @@ import {
   getInitialSelectedDates,
   handleCalendarDateClick,
 } from './DateRangePicker.utils';
-
-export type SelectedDate = Nullable<Dayjs>;
-export interface SelectedDates {
-  from: SelectedDate;
-  to: SelectedDate;
-}
-export type SelectedDateType = keyof SelectedDates;
-export type DefaultSelectedDates = {
-  [key in SelectedDateType]: Nullable<string>;
-};
-interface DateRangePickerProps {
-  defaultSelectedDates: DefaultSelectedDates;
-  onSelectedDatesChange(dates: DefaultSelectedDates): void;
-}
+import TimeService, { TimeServiceDate } from 'Services/TimeService';
+import {
+  DateRangePickerProps,
+  SelectedDate,
+  SelectedDates,
+  SelectedDateType,
+} from './DateRangePicker.types';
 
 function DateRangePicker({
+  className,
   defaultSelectedDates,
   onSelectedDatesChange,
 }: DateRangePickerProps) {
-  const [currentDate, setCurrentDate] = useState(TimeService.getDate);
+  const [currentDate, setCurrentDate] = useState(TimeService.getStartOfNow);
   const [selectedDates, setSelectedDates] = useState<SelectedDates>(() =>
     getInitialSelectedDates(defaultSelectedDates),
   );
@@ -47,7 +39,12 @@ function DateRangePicker({
     setCurrentDate(currentDate.subtract(1, 'month'));
   }
 
-  function updateSelectedDates(newDates: SelectedDates) {
+  function updateSelectedDates(incomingDates: SelectedDates) {
+    const newDates = {
+      from: incomingDates.from,
+      to: incomingDates.to?.endOf('date') || null,
+    };
+
     setSelectedDates(newDates);
     onSelectedDatesChange({
       from: newDates.from?.toISOString() || null,
@@ -76,7 +73,7 @@ function DateRangePicker({
     }
   }
 
-  function handleDateClick(newDate: Dayjs) {
+  function handleDateClick(newDate: TimeServiceDate) {
     handleCalendarDateClick({
       newDate,
       currentDate,
@@ -89,7 +86,7 @@ function DateRangePicker({
   }
 
   return (
-    <Root>
+    <Root className={className}>
       <Header>
         <FullDate className="text-line-clamp-1">
           {currentDate.format(DATE_FORMAT.FULL_MONTH_YEAR)}
@@ -143,6 +140,7 @@ const FullDate = styled.p`
 const MonthControl = styled.div`
   display: flex;
   align-items: center;
+  gap: 10px;
 `;
 
 const RangeDatesWrapper = styled.div`

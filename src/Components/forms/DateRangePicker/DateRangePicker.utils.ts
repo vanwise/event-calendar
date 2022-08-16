@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction } from 'react';
-import { Dayjs } from 'dayjs';
 import TimeService, { TimeServiceDate } from 'Services/TimeService';
 import { DayCell } from './components/Calendar/Calendar';
 import {
@@ -7,7 +6,7 @@ import {
   SelectedDate,
   SelectedDateType,
   DefaultSelectedDates,
-} from './DateRangePicker';
+} from './DateRangePicker.types';
 
 export function getInitialSelectedDates({ from, to }: DefaultSelectedDates) {
   const dateFrom = from ? TimeService.getDate(from) : null;
@@ -19,7 +18,10 @@ export function getInitialSelectedDates({ from, to }: DefaultSelectedDates) {
   };
 }
 
-export function getDaysInMonth(date: Dayjs, selectedDates: SelectedDates) {
+export function getDaysInMonth(
+  date: TimeServiceDate,
+  selectedDates: SelectedDates,
+) {
   const daysInCurrentMonth = date.daysInMonth();
   let days: DayCell[] = [...Array(daysInCurrentMonth)].map((_, index) => ({
     date: date.date(index + 1),
@@ -109,7 +111,10 @@ export function handleCalendarDateClick({
       updateSelectedDate('from', newDate);
     }
 
-    function setCorrectUpdatedDate(dateFrom: Dayjs, dateTo: Dayjs) {
+    function setCorrectUpdatedDate(
+      dateFrom: TimeServiceDate,
+      dateTo: TimeServiceDate,
+    ) {
       const middleDateBetweenSelectedDates = dateFrom.add(
         dateTo.diff(dateFrom, 'millisecond') / 2,
         'millisecond',
