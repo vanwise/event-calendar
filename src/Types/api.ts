@@ -3,6 +3,6 @@ export interface Event {
   title: string;
   description: string;
   tag: string;
-  startDate: string;
-  endDate: string;
+  startDateISO: string;
+  endDateISO: string;
 }

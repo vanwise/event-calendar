@@ -1,16 +1,15 @@
-import { Dayjs } from 'dayjs';
 import styled from 'styled-components/macro';
-import { TimeService } from 'Services';
 import { DATE_FORMAT } from 'Utils/constants/date';
+import TimeService, { TimeServiceDate } from 'Services/TimeService';
 
 export interface DayCell {
-  date: Dayjs;
+  date: TimeServiceDate;
   isActive?: boolean;
   isFrom?: boolean;
   isTo?: boolean;
 }
 interface CalendarProps {
-  onDateClick(date: Dayjs): void;
+  onDateClick(date: TimeServiceDate): void;
   daysInMonth: DayCell[];
 }
 interface DayButtonProps {

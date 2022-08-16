@@ -31,7 +31,7 @@ function MainLayout({ children }: MainLayoutProps) {
 
 const Root = styled.div`
   display: grid;
-  grid-template: 1fr / 100px 1fr;
+  grid-template: 100% / 100px 1fr;
   height: 100%;
 `;
 
@@ -57,6 +57,7 @@ const HeaderWrapper = styled.div`
 
 const Content = styled.main`
   flex-grow: 1;
+  overflow: hidden;
 `;
 
 export default MainLayout;
