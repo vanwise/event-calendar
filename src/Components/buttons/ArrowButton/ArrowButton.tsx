@@ -1,9 +1,7 @@
 import styled from 'styled-components/macro';
 import { RightArrowIcon } from 'Components/svg';
 
-interface ArrowButtonProps extends WithClassName {
-  onClick(): void;
-  isDisabled?: boolean;
+interface ArrowButtonProps extends ButtonPropsWithoutRef {
   direction?: ArrowDirection;
 }
 
@@ -15,18 +13,9 @@ const directionRotateValue = {
 
 type ArrowDirection = keyof typeof directionRotateValue;
 
-function ArrowButton({
-  onClick,
-  className,
-  direction,
-  isDisabled,
-}: ArrowButtonProps) {
+function ArrowButton({ direction, ...props }: ArrowButtonProps) {
   return (
-    <Root
-      onClick={onClick}
-      disabled={isDisabled}
-      className={className}
-      $direction={direction}>
+    <Root $direction={direction} {...props}>
       <Icon />
     </Root>
   );

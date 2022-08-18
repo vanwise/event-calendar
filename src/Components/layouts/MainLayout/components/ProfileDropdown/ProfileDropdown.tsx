@@ -2,33 +2,50 @@ import styled from 'styled-components/macro';
 import { useNavigate } from 'react-router-dom';
 import { MainDropdown } from 'Components';
 import { BatmanIcon } from 'Components/svg';
+import { HiddenTitle, TextWithLineClamp } from 'Components/text';
 import { ROUTES } from 'Utils/constants/routes';
 
 function ProfileDropdown() {
   const navigate = useNavigate();
 
-  function onProfileClick(closeDropdown: () => void) {
-    navigate(ROUTES.PROFILE_PATH);
+  function closeDropdownAndCallCallback(
+    closeDropdown: () => void,
+    callCallback?: () => void,
+  ) {
     closeDropdown();
+    callCallback?.();
   }
+
+  const buttons = [
+    { text: 'Profile', onClick: () => navigate(ROUTES.PROFILE_PATH) },
+    { text: 'Logout' },
+  ];
 
   return (
     <Root>
+      <HiddenTitle level={2}>Profile control dropdown</HiddenTitle>
+
       <AvatarWrapper>
         <BatmanIcon />
       </AvatarWrapper>
+
       <MainDropdown
         renderTrigger={toggleDropdown => (
-          <TriggerButton className="text-line-clamp-1" onClick={toggleDropdown}>
-            Bruce Wayne
+          <TriggerButton onClick={toggleDropdown}>
+            <TextWithLineClamp>Bruce Wayne</TextWithLineClamp>
           </TriggerButton>
         )}
         renderDropdown={closeDropdown => (
           <Dropdown>
-            <TextButton onClick={() => onProfileClick(closeDropdown)}>
-              Profile
-            </TextButton>
-            <TextButton>Logout</TextButton>
+            {buttons.map(({ text, onClick }) => (
+              <TextButton
+                key={text}
+                onClick={() =>
+                  closeDropdownAndCallCallback(closeDropdown, onClick)
+                }>
+                {text}
+              </TextButton>
+            ))}
           </Dropdown>
         )}
       />
@@ -36,7 +53,7 @@ function ProfileDropdown() {
   );
 }
 
-const Root = styled.div`
+const Root = styled.article`
   flex-grow: 1;
   display: flex;
   align-items: center;
@@ -45,6 +62,7 @@ const Root = styled.div`
 `;
 
 const AvatarWrapper = styled.div`
+  flex-shrink: 0;
   margin: 0 10px 0 0;
   width: 60px;
   height: 60px;
@@ -71,7 +89,7 @@ const TriggerButton = styled.button`
   }
 `;
 
-const Dropdown = styled.div`
+const Dropdown = styled.menu`
   display: grid;
   grid-gap: 10px 0;
   padding: 10px;

@@ -19,26 +19,42 @@ function CalendarPage() {
 
   return (
     <Root>
-      <DatePicker
-        defaultSelectedDates={dateRange}
-        onSelectedDatesChange={dates => dispatch(changeDateRange(dates))}
-      />
-      <EventsTimeBar />
-      <NearesEvents />
+      <PageTitle>Availability</PageTitle>
+      <Wrapper>
+        <DatePicker
+          defaultSelectedDates={dateRange}
+          onSelectedDatesChange={dates => dispatch(changeDateRange(dates))}
+        />
+        <EventsTimeBar />
+        <NearesEvents />
+      </Wrapper>
     </Root>
   );
 }
 
-const DatePicker = styled(DateRangePicker)`
-  padding: 15px 0 0;
+const Root = styled.article`
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  height: 100%;
 `;
 
-const Root = styled.div`
+const PageTitle = styled.h1`
+  margin: 0 0 10px;
+  font-size: 50px;
+  font-weight: 700;
+  line-height: 60px;
+`;
+
+const Wrapper = styled.div`
   display: grid;
   grid-template-columns: minmax(auto, 300px) 1fr minmax(auto, 300px);
   grid-gap: 0 25px;
-  padding: 40px;
-  height: 100%;
+  overflow: hidden;
+`;
+
+const DatePicker = styled(DateRangePicker)`
+  padding: 15px 0 0;
 `;
 
 export default CalendarPage;

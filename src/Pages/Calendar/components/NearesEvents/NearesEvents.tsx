@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro';
+import { HiddenTitle } from 'Components/text';
 
 function NearesEvents() {
   const events = null;
@@ -7,10 +8,14 @@ function NearesEvents() {
     return <EmptyText>No nearest events yet</EmptyText>;
   }
 
-  return <Root></Root>;
+  return (
+    <Root>
+      <HiddenTitle level={2}>Nearest events</HiddenTitle>
+    </Root>
+  );
 }
 
-const Root = styled.div``;
+const Root = styled.article``;
 
 const EmptyText = styled.p`
   max-width: 100px;

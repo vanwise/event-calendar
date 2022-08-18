@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import styled from 'styled-components/macro';
 import { ArrowButton } from 'Components/buttons';
+import { HiddenTitle, TextWithLineClamp } from 'Components/text';
 import TimeService, { TimeServiceDate } from 'Services/TimeService';
 import { DATE_FORMAT } from 'Utils/constants/date';
 import { Calendar, RangeDate } from './components';
@@ -15,6 +16,8 @@ import {
   getInitialSelectedDates,
   handleCalendarDateClick,
 } from './DateRangePicker.utils';
+
+const { YEAR_MONTH_DAY, FULL_MONTH_YEAR } = DATE_FORMAT;
 
 function DateRangePicker({
   className,
@@ -88,18 +91,27 @@ function DateRangePicker({
   return (
     <Root className={className}>
       <Header>
-        <FullDate className="text-line-clamp-1">
-          {currentDate.format(DATE_FORMAT.FULL_MONTH_YEAR)}
+        <HiddenTitle level={2}>Date Range Picker</HiddenTitle>
+        <FullDate dateTime={currentDate.format(YEAR_MONTH_DAY)}>
+          <TextWithLineClamp>
+            {currentDate.format(FULL_MONTH_YEAR)}
+          </TextWithLineClamp>
         </FullDate>
+
         <MonthControl>
-          <ArrowButton onClick={decreaseCurrentMonth} direction="left" />
-          <ArrowButton onClick={increaseCurrentMonth} />
+          <ArrowButton
+            title="Show previous date"
+            onClick={decreaseCurrentMonth}
+            direction="left"
+          />
+          <ArrowButton onClick={increaseCurrentMonth} title="Show next date" />
         </MonthControl>
       </Header>
 
       <div>
         {(selectedDates.from || selectedDates.to) && (
           <RangeDatesWrapper>
+            <HiddenTitle level={3}>Calendar Range Dates</HiddenTitle>
             <RangeDate
               isFrom
               date={selectedDates.from}
@@ -120,7 +132,7 @@ function DateRangePicker({
   );
 }
 
-const Root = styled.section`
+const Root = styled.article`
   max-width: 300px;
 `;
 
@@ -132,7 +144,7 @@ const Header = styled.header`
   margin: 0 0 30px;
 `;
 
-const FullDate = styled.p`
+const FullDate = styled.time`
   font-size: 20px;
   font-weight: 500;
 `;
@@ -143,7 +155,7 @@ const MonthControl = styled.div`
   gap: 10px;
 `;
 
-const RangeDatesWrapper = styled.div`
+const RangeDatesWrapper = styled.section`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;

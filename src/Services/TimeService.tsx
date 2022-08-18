@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import duration from 'dayjs/plugin/duration';
 import isBetween from 'dayjs/plugin/isBetween';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
@@ -16,6 +17,7 @@ dayjs.extend(localizedFormat);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(duration);
+dayjs.extend(customParseFormat);
 
 dayjs.updateLocale(dayjs.locale(), {
   weekStart: 1,

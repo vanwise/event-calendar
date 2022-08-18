@@ -3,7 +3,7 @@ import { EntityId } from '@reduxjs/toolkit';
 import { useAppSelector } from 'Hooks';
 import { TimeServiceDate } from 'Services/TimeService';
 import { selectEventById } from 'Store/features/events/events.selectors';
-import { HOUR_TEXT_WIDTH_IN_PX } from '../../EventsTimeBar.utils';
+import { HOUR_TEXT_WIDTH_IN_PX } from '../HoursList/HoursList.utils';
 import { getEventTimeProps } from './EventDetails.utils';
 
 interface EventDetailsProps {

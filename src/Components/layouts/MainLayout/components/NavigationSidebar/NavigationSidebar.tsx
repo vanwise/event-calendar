@@ -40,7 +40,7 @@ const Root = styled.aside`
 const LogoWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin: 0 15px 20px;
+  margin: 0 15px 40px;
   padding: 15px 0;
   height: 90px;
   border-bottom: 2px solid var(--gray);
@@ -56,7 +56,7 @@ const LogoWrapper = styled.div`
   }
 `;
 
-const LinksList = styled.ul`
+const LinksList = styled.menu`
   display: flex;
   flex-direction: column;
   gap: 10px 0;

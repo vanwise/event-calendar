@@ -10,6 +10,8 @@ interface RangeDateProps {
   onDeleteClick(): void;
 }
 
+const { DAY_MONTH_YEAR, YEAR_MONTH_DAY } = DATE_FORMAT;
+
 function RangeDate({
   date,
   isFrom,
@@ -24,7 +26,9 @@ function RangeDate({
     <Root>
       <TextButton onClick={onTextClick}>
         <TypeText>{isFrom ? 'From' : 'To'}</TypeText>
-        {date.format(DATE_FORMAT.DAY_MONTH_YEAR)}
+        <time dateTime={date.format(YEAR_MONTH_DAY)}>
+          {date.format(DAY_MONTH_YEAR)}
+        </time>
       </TextButton>
 
       <DeleteButton onClick={onDeleteClick}>
@@ -43,7 +47,7 @@ const releasingAnimation = keyframes`
   }
 `;
 
-const Root = styled.div`
+const Root = styled.section`
   position: relative;
   display: flex;
   align-items: center;

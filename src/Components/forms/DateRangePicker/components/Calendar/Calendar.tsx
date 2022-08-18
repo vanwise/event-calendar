@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro';
+import { HiddenTitle } from 'Components/text';
 import TimeService, { TimeServiceDate } from 'Services/TimeService';
 import { DATE_FORMAT } from 'Utils/constants/date';
 
@@ -18,18 +19,21 @@ interface DayButtonProps {
   $isTo?: boolean;
 }
 
+const { SHORT_DAY, YEAR_MONTH_DAY } = DATE_FORMAT;
 const weekdayNames = TimeService.shortWeekdayNames;
 
 function Calendar({ onDateClick, daysInMonth }: CalendarProps) {
   return (
     <Root>
+      <HiddenTitle level={3}>Calendar</HiddenTitle>
+
       <HeaderTable>
         {weekdayNames.map(weekDay => (
           <HeaderCell key={weekDay}>{weekDay}</HeaderCell>
         ))}
       </HeaderTable>
 
-      <Table>
+      <Table as="menu">
         {daysInMonth.map(({ date, isActive, isFrom, isTo }, index) => (
           <Cell key={index}>
             <DayButton
@@ -37,7 +41,9 @@ function Calendar({ onDateClick, daysInMonth }: CalendarProps) {
               $isFrom={isFrom}
               onClick={() => onDateClick(date)}
               $isActive={isActive}>
-              {date.format(DATE_FORMAT.SHORT_DAY)}
+              <time dateTime={date.format(YEAR_MONTH_DAY)}>
+                {date.format(SHORT_DAY)}
+              </time>
             </DayButton>
           </Cell>
         ))}
@@ -101,6 +107,8 @@ const DayButton = styled.button<DayButtonProps>`
       } else if ($isTo) {
         return '--violet';
       }
+
+      return '--transparent';
     }}
   );
   transition: 0.2s ease;
