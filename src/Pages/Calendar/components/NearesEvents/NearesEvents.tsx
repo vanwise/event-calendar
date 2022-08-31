@@ -5,7 +5,11 @@ function NearesEvents() {
   const events = null;
 
   if (!events) {
-    return <EmptyText>No nearest events yet</EmptyText>;
+    return (
+      <div>
+        <EmptyText>No nearest events yet</EmptyText>
+      </div>
+    );
   }
 
   return (

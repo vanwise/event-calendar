@@ -7,3 +7,6 @@ export const DATE_FORMAT = {
   SHORT_MONTH_DAY_HOURS_MINUTES: 'MMM D, LT',
   YEAR_MONTH_DAY: 'YYYY-MM-DD',
 };
+
+export const MINUTES_IN_HOUR = 60;
+export const HOURS_IN_DAY = 24;

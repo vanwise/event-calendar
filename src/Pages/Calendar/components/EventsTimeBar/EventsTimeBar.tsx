@@ -3,6 +3,7 @@ import { useAppSelector } from 'Hooks';
 import { TimeService } from 'Services';
 import { selectEventsIdsByActiveDate } from 'Store/features/events/events.selectors';
 import { selectFilterActiveDate } from 'Store/features/eventsFilter/eventsFilter.selectors';
+import { Event } from 'Types/api';
 import {
   EmptyBlock,
   EventDetails,
@@ -10,7 +11,11 @@ import {
   HoursList,
 } from './components';
 
-function EventsTimeBar() {
+interface EventsTimeBarProps {
+  onEventClick(event: Event): void;
+}
+
+function EventsTimeBar({ onEventClick }: EventsTimeBarProps) {
   const filterActiveDate = useAppSelector(selectFilterActiveDate);
   const filteredEventsIds = useAppSelector(selectEventsIdsByActiveDate);
 
@@ -34,6 +39,7 @@ function EventsTimeBar() {
                 <EventDetails
                   key={eventId}
                   eventId={eventId}
+                  onClick={onEventClick}
                   activeDate={activeDate}
                 />
               ))}

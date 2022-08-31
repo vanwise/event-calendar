@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import styled from 'styled-components/macro';
 import {
   NavigationSidebar,
@@ -6,9 +5,7 @@ import {
   ProfileDropdown,
 } from './components';
 
-interface MainLayoutProps {
-  children: ReactNode;
-}
+type MainLayoutProps = WithChildren;
 
 function MainLayout({ children }: MainLayoutProps) {
   return (

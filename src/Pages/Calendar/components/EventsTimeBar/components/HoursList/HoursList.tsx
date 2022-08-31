@@ -2,11 +2,10 @@ import { memo } from 'react';
 import styled from 'styled-components/macro';
 import { TimeService } from 'Services';
 import { DATE_FORMAT } from 'Utils/constants/date';
-import {
-  getDayHours,
-  HOUR_HEIGHT_IN_PX,
-  HOUR_TEXT_WIDTH_IN_PX,
-} from './HoursList.utils';
+import { getDayHours } from 'Utils/helpers/date';
+
+export const HOUR_HEIGHT_IN_PX = 80;
+export const HOUR_TEXT_WIDTH_IN_PX = 80;
 
 const dayHours = getDayHours();
 

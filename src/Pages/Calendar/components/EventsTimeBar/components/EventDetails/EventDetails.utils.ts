@@ -1,9 +1,9 @@
 import TimeService, { TimeServiceDate } from 'Services/TimeService';
 import { Event } from 'Types/api';
-import { DATE_FORMAT } from 'Utils/constants/date';
-import { HOUR_HEIGHT_IN_PX } from '../HoursList/HoursList.utils';
+import { DATE_FORMAT, MINUTES_IN_HOUR } from 'Utils/constants/date';
+import { HOUR_HEIGHT_IN_PX } from '../HoursList/HoursList';
 
-const ONE_MINUTE_IN_PX = HOUR_HEIGHT_IN_PX / 60;
+const ONE_MINUTE_IN_PX = HOUR_HEIGHT_IN_PX / MINUTES_IN_HOUR;
 const { HOUR_MINUTES, SHORT_MONTH_DAY_HOURS_MINUTES } = DATE_FORMAT;
 
 export function getEventTimeProps(

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { DefaultSelectedDates } from 'Components/forms/DateRangePicker/DateRangePicker.types';
+import { DefaultSelectedDates } from 'Components/inputs/DatePicker/DatePicker.types';
 import { TimeService } from 'Services';
 
 interface EventsFilterStore {

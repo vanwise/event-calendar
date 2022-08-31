@@ -74,14 +74,14 @@ const TriggerButton = styled.button`
   position: relative;
   padding: 0 20px 0 0;
   font-weight: 500;
-  color: var(--black3);
+  color: var(--gray7);
 
   &::before {
     content: '';
     position: absolute;
     top: calc(50% - 6px);
     right: 3px;
-    border: solid var(--black3);
+    border: solid var(--gray7);
     border-width: 0 3px 3px 0;
     display: inline-block;
     padding: 3px;

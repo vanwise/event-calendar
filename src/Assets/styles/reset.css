@@ -44,9 +44,6 @@ button:not([disabled]) {
 button[disabled] {
   cursor: not-allowed;
 }
-button:focus {
-  outline: 0;
-}
 picture {
   display: block;
 }

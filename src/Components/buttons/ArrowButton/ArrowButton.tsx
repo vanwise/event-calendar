@@ -15,7 +15,7 @@ type ArrowDirection = keyof typeof directionRotateValue;
 
 function ArrowButton({ direction, ...props }: ArrowButtonProps) {
   return (
-    <Root $direction={direction} {...props}>
+    <Root $direction={direction} type="button" {...props}>
       <Icon />
     </Root>
   );
@@ -33,7 +33,11 @@ const Root = styled.button<{ $direction?: ArrowDirection }>`
     $direction && `transform: rotate(${directionRotateValue[$direction]}deg);`}
 
   &:hover:not([disabled]) {
-    opacity: 0.7;
+    border-radius: 50%;
+  }
+
+  &:disabled {
+    opacity: 0.5;
   }
 `;
 

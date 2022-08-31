@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro';
-import { StyledComponentsAsProp } from 'Types/styled-components';
+import { StyledComponentsAsProp } from 'Types/libs';
 import { concatStringsBySpace } from 'Utils/helpers/string';
 
 type TitleLevel = 1 | 2 | 3 | 4 | 5 | 6;

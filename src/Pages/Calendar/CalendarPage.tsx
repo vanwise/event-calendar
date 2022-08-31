@@ -1,33 +1,108 @@
+import { useCallback, useState } from 'react';
 import styled from 'styled-components/macro';
 import { Loader } from 'Components';
-import { DateRangePicker } from 'Components/forms';
+import { Button } from 'Components/buttons';
+import { DatePicker } from 'Components/inputs';
+import { EventModal } from 'Components/modals';
+import {
+  EventFormValues,
+  SubmittedEventFormValues,
+} from 'Components/modals/EventModal/components/EventForm/EventForm';
 import { useAppDispatch, useAppSelector } from 'Hooks';
-import { useGetEventsQuery } from 'Store/features/events/events.slice';
+import {
+  useAddEventMutation,
+  useGetEventsQuery,
+  useUpdateEventMutation,
+} from 'Store/features/events/events.slice';
 import { selectFilterDateRange } from 'Store/features/eventsFilter/eventsFilter.selectors';
 import { changeDateRange } from 'Store/features/eventsFilter/eventsFilter.slice';
+import { Event } from 'Types/api';
+import { getJointDateAndTime } from 'Utils/helpers/date';
 import { EventsTimeBar, NearesEvents } from './components';
 
 function CalendarPage() {
-  const { isLoading: isEventsLoading } = useGetEventsQuery();
-
   const dispatch = useAppDispatch();
+
+  const [isEventModalVisible, setIsEventModalVisible] = useState(false);
+  const [eventForChanging, setEventForChanging] = useState<Event>();
+
+  const { isLoading: isEventsLoading } = useGetEventsQuery();
+  const [addEvent, { isLoading: isLoadingAddingEvent }] = useAddEventMutation();
+  const [updateEvent, { isLoading: isLoadingUpdatingevent }] =
+    useUpdateEventMutation();
+
   const dateRange = useAppSelector(selectFilterDateRange);
+
+  const handleCloseEventModal = useCallback(() => {
+    setEventForChanging(undefined);
+    setIsEventModalVisible(false);
+  }, []);
 
   if (isEventsLoading) {
     return <Loader hasFillWholeBlock />;
   }
 
+  function openEventModal() {
+    setIsEventModalVisible(true);
+  }
+
+  function handleEventClick(event: Event) {
+    setEventForChanging(event);
+    openEventModal();
+  }
+
+  function handleEventFormSubmit(values: EventFormValues) {
+    const { startDate, startTime, endDate, endTime, ...newFields } =
+      values as SubmittedEventFormValues;
+
+    const startDateISO = getJointDateAndTime(
+      startDate,
+      startTime,
+    )?.toISOString();
+    const endDateISO = getJointDateAndTime(endDate, endTime)?.toISOString();
+
+    if (!startDateISO || !endDateISO) return;
+
+    const newEvent = {
+      ...newFields,
+      startDateISO,
+      endDateISO,
+    };
+
+    const fetchPromise = eventForChanging
+      ? updateEvent({
+          id: String(eventForChanging.id),
+          updatedFields: newEvent,
+        })
+      : addEvent(newEvent);
+
+    fetchPromise.then(handleCloseEventModal);
+  }
+
   return (
     <Root>
-      <PageTitle>Availability</PageTitle>
+      <PageHeader>
+        <PageTitle>Availability</PageTitle>
+        <Button onClick={openEventModal}>Add event</Button>
+      </PageHeader>
+
       <Wrapper>
-        <DatePicker
-          defaultSelectedDates={dateRange}
-          onSelectedDatesChange={dates => dispatch(changeDateRange(dates))}
+        <DatePickerStylized
+          isRange
+          defaultDates={dateRange}
+          onDateChange={dates => dispatch(changeDateRange(dates))}
         />
-        <EventsTimeBar />
+        <EventsTimeBar onEventClick={handleEventClick} />
         <NearesEvents />
       </Wrapper>
+
+      <EventModal
+        onClose={handleCloseEventModal}
+        onSubmit={handleEventFormSubmit}
+        isVisible={isEventModalVisible}
+        isLoading={isLoadingAddingEvent || isLoadingUpdatingevent}
+        eventForChanging={eventForChanging}
+      />
     </Root>
   );
 }
@@ -39,8 +114,14 @@ const Root = styled.article`
   height: 100%;
 `;
 
-const PageTitle = styled.h1`
+const PageHeader = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin: 0 0 10px;
+`;
+
+const PageTitle = styled.h1`
   font-size: 50px;
   font-weight: 700;
   line-height: 60px;
@@ -53,7 +134,7 @@ const Wrapper = styled.div`
   overflow: hidden;
 `;
 
-const DatePicker = styled(DateRangePicker)`
+const DatePickerStylized = styled(DatePicker)`
   padding: 15px 0 0;
 `;
 
