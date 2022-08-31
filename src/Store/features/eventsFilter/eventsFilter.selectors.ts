@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from 'Types/store';
+import { RootState } from 'Types/libs';
 
 export const selectFilterDateRange = (state: RootState) =>
   state.eventsFilter.dateRange;

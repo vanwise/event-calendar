@@ -4,7 +4,6 @@
 
   --black:              #000;
   --black2:             #4a4969;
-  --black3:             #636368;
 
   --gray:               #f0f1f4;
   --gray2:              #e8eaee;
@@ -12,6 +11,10 @@
   --gray4:              #cbb9be;
   --gray5:              #f5f9fb;
   --gray6:              #e2e5ef;
+  --gray7:              #636368;
+  --gray8:              #b5b5b5;
+
+  --gray-opacity:       #59596f50;
 
   --red:                #fed3db;
   --red2:               #f58a9e;

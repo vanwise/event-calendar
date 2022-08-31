@@ -1,12 +1,16 @@
 import dayjs from 'dayjs';
-import localeData from 'dayjs/plugin/localeData';
-import weekday from 'dayjs/plugin/weekday';
-import updateLocale from 'dayjs/plugin/updateLocale';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import duration, {
+  DurationUnitsObjectType,
+  DurationUnitType,
+} from 'dayjs/plugin/duration';
 import isBetween from 'dayjs/plugin/isBetween';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import duration from 'dayjs/plugin/duration';
+import localeData from 'dayjs/plugin/localeData';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import updateLocale from 'dayjs/plugin/updateLocale';
+import weekday from 'dayjs/plugin/weekday';
 
 dayjs.extend(weekday);
 dayjs.extend(localeData);
@@ -16,6 +20,7 @@ dayjs.extend(localizedFormat);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(duration);
+dayjs.extend(customParseFormat);
 
 dayjs.updateLocale(dayjs.locale(), {
   weekStart: 1,
@@ -27,15 +32,15 @@ const UNITS_FOR_DATE_COMPARE = ['year', 'month', 'date'] as const;
 const TimeService = {
   getDate: dayjs,
   shortWeekdayNames: dayjs.weekdaysMin(),
-  getStartOfNow() {
-    return dayjs().startOf('date');
+  getStartOfDate(date?: TimeServiceRawDate) {
+    return TimeService.getDate(date).startOf('date');
   },
   isDateSame(
     firstRawDate: TimeServiceRawDate,
     secondRawDate: TimeServiceRawDate,
   ) {
-    const firstDate = dayjs(firstRawDate);
-    const secondDate = dayjs(secondRawDate);
+    const firstDate = TimeService.getDate(firstRawDate);
+    const secondDate = TimeService.getDate(secondRawDate);
 
     return UNITS_FOR_DATE_COMPARE.every(unit =>
       firstDate.isSame(secondDate, unit),
@@ -45,10 +50,10 @@ const TimeService = {
     firstDates: TimeServceOverlapDates,
     secondDates: TimeServceOverlapDates,
   ) {
-    const firstDateFrom = dayjs(firstDates.from);
-    const firstDateTo = dayjs(firstDates.to);
-    const secondDateFrom = dayjs(secondDates.from);
-    const secondDateTo = dayjs(secondDates.to);
+    const firstDateFrom = TimeService.getDate(firstDates.from);
+    const firstDateTo = TimeService.getDate(firstDates.to);
+    const secondDateFrom = TimeService.getDate(secondDates.from);
+    const secondDateTo = TimeService.getDate(secondDates.to);
 
     return (
       secondDateFrom.isBetween(firstDateFrom, firstDateTo) ||
@@ -62,7 +67,7 @@ const TimeService = {
     { from, to }: TimeServceOverlapDates,
     date: TimeServiceRawDate,
   ) {
-    const currentDate = dayjs(date);
+    const currentDate = TimeService.getDate(date);
 
     return (
       currentDate.isValid() &&
@@ -71,11 +76,22 @@ const TimeService = {
       )
     );
   },
+  getDurationFromStartOfDay(date: TimeServiceRawDate, unit: DurationUnitType) {
+    const currentDate = TimeService.getDate(date);
+    const startOfDay = currentDate.startOf('date');
+    const duration = dayjs.duration(startOfDay.diff(currentDate)).as(unit);
+
+    return Math.abs(duration);
+  },
+  addMultiple(date: TimeServiceRawDate, timeUnits: DurationUnitsObjectType) {
+    const currentDate = TimeService.getDate(date);
+    return currentDate.add(TimeService.getDate.duration(timeUnits));
+  },
 };
 
 type DayjsType = typeof dayjs;
 export type TimeServiceDate = ReturnType<DayjsType>;
-type TimeServiceRawDate = Parameters<DayjsType>[0];
+export type TimeServiceRawDate = Exclude<Parameters<DayjsType>[0], undefined>;
 
 interface TimeServceOverlapDates {
   from: TimeServiceRawDate;

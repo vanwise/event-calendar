@@ -1,6 +1,7 @@
 import styled from 'styled-components/macro';
 import { MainDropdown } from 'Components';
 import { NotificationIcon } from 'Components/svg';
+import { HiddenTitle } from 'Components/text';
 
 const NOTIFICATIONS = [{ text: 'Hello' }, { text: 'Hi' }];
 const DROPDOWN_CSS = {
@@ -11,25 +12,31 @@ const DROPDOWN_CSS = {
 
 function Notifications() {
   return (
-    <MainDropdownStylized
-      dropdownWrapperCSS={DROPDOWN_CSS}
-      renderTrigger={toggleDropdown => (
-        <TriggerButton onClick={toggleDropdown}>
-          <NotificationIcon />
-        </TriggerButton>
-      )}
-      renderDropdown={() => (
-        <NotificationList>
-          {NOTIFICATIONS.map(({ text }) => (
-            <li key={text}>{text}</li>
-          ))}
-        </NotificationList>
-      )}
-    />
+    <Root>
+      <HiddenTitle level={2}>Notifications</HiddenTitle>
+
+      <MainDropdown
+        dropdownWrapperCSS={DROPDOWN_CSS}
+        renderTrigger={toggleDropdown => (
+          <TriggerButton onClick={toggleDropdown}>
+            <NotificationIcon />
+          </TriggerButton>
+        )}
+        renderDropdown={() => (
+          <NotificationList>
+            {NOTIFICATIONS.map(({ text }) => (
+              <li key={text}>
+                <h3>{text}</h3>
+              </li>
+            ))}
+          </NotificationList>
+        )}
+      />
+    </Root>
   );
 }
 
-const MainDropdownStylized = styled(MainDropdown)`
+const Root = styled.article`
   margin: 0 20px 0 0;
 `;
 

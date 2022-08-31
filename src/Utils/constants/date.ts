@@ -5,4 +5,8 @@ export const DATE_FORMAT = {
   HOUR_MINUTES: 'LT',
   SHORT_MONTH_DAY_YEAR: 'll',
   SHORT_MONTH_DAY_HOURS_MINUTES: 'MMM D, LT',
+  YEAR_MONTH_DAY: 'YYYY-MM-DD',
 };
+
+export const MINUTES_IN_HOUR = 60;
+export const HOURS_IN_DAY = 24;

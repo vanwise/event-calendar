@@ -1,9 +1,9 @@
 import styled from 'styled-components/macro';
 
 function ProfilePage() {
-  return <Wrapper></Wrapper>;
+  return <Root></Root>;
 }
 
-const Wrapper = styled.div``;
+const Root = styled.article``;
 
 export default ProfilePage;

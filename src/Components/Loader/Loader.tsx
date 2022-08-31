@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
-import ScaleLoader from 'react-spinners/ScaleLoader';
 import { LoaderHeightWidthRadiusProps } from 'react-spinners/helpers/props';
+import ScaleLoader from 'react-spinners/ScaleLoader';
 
-interface LoaderProps extends Omit<LoaderHeightWidthRadiusProps, 'ref'> {
+export interface LoaderProps extends Omit<LoaderHeightWidthRadiusProps, 'ref'> {
   hasFillWholeBlock?: boolean;
 }
 

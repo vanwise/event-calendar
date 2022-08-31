@@ -19,7 +19,12 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'unused-imports'],
+  plugins: [
+    'react',
+    '@typescript-eslint',
+    'unused-imports',
+    'simple-import-sort',
+  ],
   rules: {
     'react/react-in-jsx-scope': 0,
     // disabling "no-unused-vars" for correct use it in "unused-imports"
@@ -45,6 +50,22 @@ module.exports = {
           },
         ],
         patterns: ['!styled-components/macro'],
+      },
+    ],
+    'simple-import-sort/exports': 'error',
+    'simple-import-sort/imports': [
+      'error',
+      {
+        groups: [
+          [
+            'react$',
+            '^styled-components',
+            '^([a-z]|@)?\\w',
+            '^[A-Z]?\\w',
+            '^\\.',
+            '^\\u0000',
+          ],
+        ],
       },
     ],
   },

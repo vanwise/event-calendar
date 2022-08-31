@@ -1,18 +1,21 @@
+import styled from 'styled-components/macro';
 import { useAppSelector } from 'Hooks';
 import { TimeService } from 'Services';
 import { selectEventsIdsByActiveDate } from 'Store/features/events/events.selectors';
 import { selectFilterActiveDate } from 'Store/features/eventsFilter/eventsFilter.selectors';
-import styled from 'styled-components/macro';
-import { EmptyBlock, EventDetails, HeaderWithDate } from './components';
+import { Event } from 'Types/api';
 import {
-  getDayHours,
-  HOUR_HEIGHT_IN_PX,
-  HOUR_TEXT_WIDTH_IN_PX,
-} from './EventsTimeBar.utils';
+  EmptyBlock,
+  EventDetails,
+  HeaderWithDate,
+  HoursList,
+} from './components';
 
-const dayHours = getDayHours();
+interface EventsTimeBarProps {
+  onEventClick(event: Event): void;
+}
 
-function EventsTimeBar() {
+function EventsTimeBar({ onEventClick }: EventsTimeBarProps) {
   const filterActiveDate = useAppSelector(selectFilterActiveDate);
   const filteredEventsIds = useAppSelector(selectEventsIdsByActiveDate);
 
@@ -29,19 +32,14 @@ function EventsTimeBar() {
       <Wrapper>
         <Inner>
           <SlideWrapper>
-            <ul>
-              {dayHours.map(hour => (
-                <HourItem key={hour}>
-                  <HourText>{hour}</HourText>
-                </HourItem>
-              ))}
-            </ul>
+            <HoursList />
 
             <ul>
               {filteredEventsIds.map(eventId => (
                 <EventDetails
                   key={eventId}
                   eventId={eventId}
+                  onClick={onEventClick}
                   activeDate={activeDate}
                 />
               ))}
@@ -53,14 +51,14 @@ function EventsTimeBar() {
   );
 }
 
-const Root = styled.section`
+const Root = styled.article`
   display: flex;
   flex-direction: column;
   border-radius: 10px;
   overflow: hidden;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.section`
   flex-grow: 1;
   padding: 15px;
   background: linear-gradient(135deg, var(--gray5), var(--gray6));
@@ -78,36 +76,6 @@ const SlideWrapper = styled.div`
   position: relative;
   overflow: auto;
   height: 100%;
-`;
-
-const HourItem = styled.li`
-  position: relative;
-  display: flex;
-  height: ${HOUR_HEIGHT_IN_PX}px;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: 0;
-    width: calc(100% - 80px);
-    height: 1px;
-    background: var(--gray2);
-  }
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--gray2);
-  }
-`;
-
-const HourText = styled.p`
-  display: flex;
-  justify-content: center;
-  padding: 15px 0;
-  width: ${HOUR_TEXT_WIDTH_IN_PX}px;
-  font-weight: 400;
-  color: var(--gray4);
-  border-right: 1px solid var(--gray2);
 `;
 
 export default EventsTimeBar;

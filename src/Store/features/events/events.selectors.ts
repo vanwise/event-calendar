@@ -1,12 +1,12 @@
-import { TimeService } from 'Services';
-import { eventsAdapter, eventsApi, eventsInitialState } from './events.slice';
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from 'Types/store';
+import { TimeService } from 'Services';
+import { RootState } from 'Types/libs';
 import {
-  selectFilterDateRange,
   selectFilterActiveDate,
+  selectFilterDateRange,
   selectHasBothDateRange,
 } from '../eventsFilter/eventsFilter.selectors';
+import { eventsAdapter, eventsApi, eventsInitialState } from './events.slice';
 
 const selectEventsResult = eventsApi.endpoints.getEvents.select();
 
@@ -26,15 +26,18 @@ export const selectEventsIdsByDateRange = createSelector(
     const filteredEventsIds = eventsData?.ids.filter(id => {
       const event = eventsData.entities[id];
 
+      if (!event) return;
+      const { startDateISO, endDateISO } = event;
+
       if (hasBothDateRange) {
         return TimeService.isOverlapped(
-          { from: event?.startDateISO, to: event?.endDateISO },
+          { from: startDateISO, to: endDateISO },
           { from: dateRange.from, to: dateRange.to },
         );
       }
 
       return TimeService.isDateBetween(
-        { from: event?.startDateISO, to: event?.endDateISO },
+        { from: startDateISO, to: endDateISO },
         dateRange.from || dateRange.to,
       );
     });
@@ -50,8 +53,11 @@ export const selectEventsIdsByActiveDate = createSelector(
       const event = eventsData?.entities[id];
 
       if (event) {
+        const { startDateISO, endDateISO } = event;
+        if (activeDate === endDateISO) return;
+
         return TimeService.isDateBetween(
-          { from: event.startDateISO, to: event.endDateISO },
+          { from: startDateISO, to: endDateISO },
           activeDate,
         );
       }

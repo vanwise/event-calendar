@@ -1,18 +1,24 @@
 import styled from 'styled-components/macro';
 import { EntityId } from '@reduxjs/toolkit';
 import { useAppSelector } from 'Hooks';
-import { selectEventById } from 'Store/features/events/events.selectors';
-import { HOUR_TEXT_WIDTH_IN_PX } from '../../EventsTimeBar.utils';
-import { getEventTimeProps } from './EventDetails.utils';
 import { TimeServiceDate } from 'Services/TimeService';
+import { selectEventById } from 'Store/features/events/events.selectors';
+import { selectTagById } from 'Store/features/tags/tags.selectors';
+import { Event } from 'Types/api';
+import { HOUR_TEXT_WIDTH_IN_PX } from '../HoursList/HoursList';
+import { getEventTimeProps } from './EventDetails.utils';
 
 interface EventDetailsProps {
   eventId: EntityId;
+  onClick(event: Event): void;
   activeDate: TimeServiceDate;
 }
 
-function EventDetails({ eventId, activeDate }: EventDetailsProps) {
-  const event = useAppSelector(state => selectEventById(state, eventId));
+function EventDetails({ eventId, onClick, activeDate }: EventDetailsProps) {
+  const event = useAppSelector(store => selectEventById(store, eventId));
+  const eventTag = useAppSelector(store =>
+    selectTagById(store, event?.tagId || ''),
+  );
 
   if (!event) {
     return null;
@@ -26,14 +32,14 @@ function EventDetails({ eventId, activeDate }: EventDetailsProps) {
 
   return (
     <Root $topPosition={topPosition} $eventHeight={eventHeight}>
-      <Wrapper>
+      <Wrapper onClick={() => onClick(event)}>
         <TimeWrapper>
           <Time>{startTime}</Time>
           <Duration>{duration}</Duration>
         </TimeWrapper>
 
         <Title>{event.title}</Title>
-        <Tag>{event.tag}</Tag>
+        <Tag>{eventTag?.title}</Tag>
       </Wrapper>
     </Root>
   );
@@ -60,6 +66,7 @@ const Wrapper = styled.div`
   overflow: hidden;
   background: white;
   font-weight: 400;
+  cursor: pointer;
 
   &::before {
     content: '';
@@ -83,7 +90,7 @@ const Time = styled.p`
 `;
 
 const Duration = styled.p`
-  color: var(--black3);
+  color: var(--gray7);
 `;
 
 const Title = styled.p`
@@ -91,7 +98,7 @@ const Title = styled.p`
 `;
 
 const Tag = styled.p`
-  color: var(--black3);
+  color: var(--gray7);
   font-weight: 500;
 `;
 

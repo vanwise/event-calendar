@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styled, { CSSProp, keyframes } from 'styled-components/macro';
-import { WithOutsideClick } from 'Components';
+import { WithOutsideClick } from 'Components/HOCs';
 
 interface MainDropdownProps extends WithClassName {
   renderDropdown(closeDropdown: () => void): JSX.Element;

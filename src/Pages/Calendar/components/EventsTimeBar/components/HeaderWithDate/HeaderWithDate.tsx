@@ -1,21 +1,24 @@
-import { useAppDispatch, useAppSelector } from 'Hooks';
 import styled from 'styled-components/macro';
-import { DATE_FORMAT } from 'Utils/constants/date';
-import { SimpleCalendarIcon } from 'Components/svg';
 import { ArrowButton } from 'Components/buttons';
-import {
-  showNextActiveDate,
-  showPrevActiveDate,
-} from 'Store/features/eventsFilter/eventsFilter.slice';
+import { SimpleCalendarIcon } from 'Components/svg';
+import { HiddenTitle } from 'Components/text';
+import { useAppDispatch, useAppSelector } from 'Hooks';
+import TimeService, { TimeServiceDate } from 'Services/TimeService';
 import {
   selectFilterDateRange,
   selectHasBothDateRange,
 } from 'Store/features/eventsFilter/eventsFilter.selectors';
-import TimeService, { TimeServiceDate } from 'Services/TimeService';
+import {
+  showNextActiveDate,
+  showPrevActiveDate,
+} from 'Store/features/eventsFilter/eventsFilter.slice';
+import { DATE_FORMAT } from 'Utils/constants/date';
 
 interface HeaderWithDateProps {
   activeDate: TimeServiceDate;
 }
+
+const { SHORT_MONTH_DAY_YEAR, YEAR_MONTH_DAY } = DATE_FORMAT;
 
 function HeaderWithDate({ activeDate }: HeaderWithDateProps) {
   const dispatch = useAppDispatch();
@@ -23,25 +26,38 @@ function HeaderWithDate({ activeDate }: HeaderWithDateProps) {
   const dateRange = useAppSelector(selectFilterDateRange);
   const hasBothDateRange = useAppSelector(selectHasBothDateRange);
 
-  const formattedDate = activeDate.format(DATE_FORMAT.SHORT_MONTH_DAY_YEAR);
+  const isLeftButtonDisabled = TimeService.isDateSame(
+    activeDate,
+    dateRange.from,
+  );
+  const isRightButtonDisabled = TimeService.isDateSame(
+    activeDate,
+    dateRange.to,
+  );
 
   return (
     <Root $hasBothDateRange={hasBothDateRange}>
+      <HiddenTitle level={2}>Events Time Bar</HiddenTitle>
+
       <DateWrapper>
         <CalendarIcon />
-        <DateText>{formattedDate}</DateText>
+        <DateText dateTime={activeDate.format(YEAR_MONTH_DAY)}>
+          {activeDate.format(SHORT_MONTH_DAY_YEAR)}
+        </DateText>
       </DateWrapper>
 
       {hasBothDateRange && (
         <ContolButtonsWrapper>
           <ArrowButtonStylized
+            title="Show previous date"
             onClick={() => dispatch(showPrevActiveDate())}
+            disabled={isLeftButtonDisabled}
             direction="left"
-            isDisabled={TimeService.isDateSame(activeDate, dateRange.from)}
           />
           <ArrowButtonStylized
+            title="Show next date"
             onClick={() => dispatch(showNextActiveDate())}
-            isDisabled={TimeService.isDateSame(activeDate, dateRange.to)}
+            disabled={isRightButtonDisabled}
           />
         </ContolButtonsWrapper>
       )}
@@ -85,7 +101,7 @@ const CalendarIcon = styled(SimpleCalendarIcon)`
   fill: white;
 `;
 
-const DateText = styled.p`
+const DateText = styled.time`
   font-weight: 400;
   font-size: 16px;
   color: white;
