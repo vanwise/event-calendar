@@ -1,5 +1,6 @@
 import styled from 'styled-components/macro';
 import { EntityId } from '@reduxjs/toolkit';
+import { TextWithLineClamp } from 'Components/text';
 import { useAppSelector } from 'Hooks';
 import { TimeServiceDate } from 'Services/TimeService';
 import { selectEventById } from 'Store/features/events/events.selectors';
@@ -39,6 +40,9 @@ function EventDetails({ eventId, onClick, activeDate }: EventDetailsProps) {
         </TimeWrapper>
 
         <Title>{event.title}</Title>
+        <Description lineCount={2} title={event.description}>
+          {event.description}
+        </Description>
         <Tag>{eventTag?.title}</Tag>
       </Wrapper>
     </Root>
@@ -83,18 +87,27 @@ const TimeWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: 0 0 2px;
 `;
 
 const Time = styled.p`
+  font-size: 13px;
+  font-style: italic;
   color: var(--black2);
 `;
 
 const Duration = styled.p`
+  font-size: 13px;
   color: var(--gray7);
 `;
 
 const Title = styled.p`
+  font-size: 18px;
   color: var(--gray3);
+`;
+
+const Description = styled(TextWithLineClamp)`
+  color: var(--gray4);
 `;
 
 const Tag = styled.p`

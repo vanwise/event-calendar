@@ -9,15 +9,18 @@ import {
   SubmittedEventFormValues,
 } from 'Components/modals/EventModal/components/EventForm/EventForm';
 import { useAppDispatch, useAppSelector } from 'Hooks';
+import { ToastService } from 'Services';
 import {
   useAddEventMutation,
+  useDeleteEventMutation,
   useGetEventsQuery,
   useUpdateEventMutation,
 } from 'Store/features/events/events.slice';
 import { selectFilterDateRange } from 'Store/features/eventsFilter/eventsFilter.selectors';
 import { changeDateRange } from 'Store/features/eventsFilter/eventsFilter.slice';
+import { useGetTagsQuery } from 'Store/features/tags/tags.slice';
 import { Event } from 'Types/api';
-import { getJointDateAndTime } from 'Utils/helpers/date';
+import { onEventFormSubmit } from './CalendarPage.utils';
 import { EventsTimeBar, NearesEvents } from './components';
 
 function CalendarPage() {
@@ -27,9 +30,13 @@ function CalendarPage() {
   const [eventForChanging, setEventForChanging] = useState<Event>();
 
   const { isLoading: isEventsLoading } = useGetEventsQuery();
+  const { isLoading: isTagsLoading } = useGetTagsQuery();
+
   const [addEvent, { isLoading: isLoadingAddingEvent }] = useAddEventMutation();
-  const [updateEvent, { isLoading: isLoadingUpdatingevent }] =
+  const [updateEvent, { isLoading: isLoadingUpdatingEvent }] =
     useUpdateEventMutation();
+  const [deleteEvent, { isLoading: isLoadingDeletingEvent }] =
+    useDeleteEventMutation();
 
   const dateRange = useAppSelector(selectFilterDateRange);
 
@@ -38,7 +45,7 @@ function CalendarPage() {
     setIsEventModalVisible(false);
   }, []);
 
-  if (isEventsLoading) {
+  if (isEventsLoading || isTagsLoading) {
     return <Loader hasFillWholeBlock />;
   }
 
@@ -52,32 +59,28 @@ function CalendarPage() {
   }
 
   function handleEventFormSubmit(values: EventFormValues) {
-    const { startDate, startTime, endDate, endTime, ...newFields } =
-      values as SubmittedEventFormValues;
-
-    const startDateISO = getJointDateAndTime(
-      startDate,
-      startTime,
-    )?.toISOString();
-    const endDateISO = getJointDateAndTime(endDate, endTime)?.toISOString();
-
-    if (!startDateISO || !endDateISO) return;
-
-    const newEvent = {
-      ...newFields,
-      startDateISO,
-      endDateISO,
-    };
-
-    const fetchPromise = eventForChanging
-      ? updateEvent({
-          id: String(eventForChanging.id),
-          updatedFields: newEvent,
-        })
-      : addEvent(newEvent);
-
-    fetchPromise.then(handleCloseEventModal);
+    onEventFormSubmit({
+      values: values as SubmittedEventFormValues,
+      addEvent,
+      updateEvent,
+      eventForChanging,
+      onCloseEventModal: handleCloseEventModal,
+    });
   }
+
+  function handleEventDeleteClick() {
+    if (eventForChanging) {
+      deleteEvent(String(eventForChanging.id))
+        .then(() => {
+          handleCloseEventModal();
+          ToastService.success('Success deleting event');
+        })
+        .catch(() => ToastService.error('Error deleting event'));
+    }
+  }
+
+  const isFetching =
+    isLoadingAddingEvent || isLoadingUpdatingEvent || isLoadingDeletingEvent;
 
   return (
     <Root>
@@ -100,8 +103,9 @@ function CalendarPage() {
         onClose={handleCloseEventModal}
         onSubmit={handleEventFormSubmit}
         isVisible={isEventModalVisible}
-        isLoading={isLoadingAddingEvent || isLoadingUpdatingevent}
+        isLoading={isFetching}
         eventForChanging={eventForChanging}
+        onDeleteEventClick={handleEventDeleteClick}
       />
     </Root>
   );

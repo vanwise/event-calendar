@@ -1,27 +1,60 @@
-import { useEffect } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import styled, { CSSProp } from 'styled-components/macro';
-import { CloseButton } from 'Components/buttons';
+import { IconButton } from 'Components/buttons';
+import { modalAnimations } from './Modal.utils';
 
 export interface ModalProps extends WithChildren {
   title: string;
   /** @param onClose callback must be wrapped in useCallback */
   onClose(): void;
+  titleCSS?: CSSProp;
   isVisible?: boolean;
   isLoading?: boolean;
   contentCSS?: CSSProp;
+  wrapperCSS?: CSSProp;
+  headerButtonsCSS?: CSSProp;
+  withoutClosingOnEsc?: boolean;
+  isCloseButtonHidden?: boolean;
+  headerButtonsContent?: ReactNode;
+}
+interface WrapperProps {
+  $CSS: ModalProps['wrapperCSS'];
+  $hasClosingAnimation: boolean;
 }
 
+const reactRootElement = document.querySelector('#root');
+const animationDurationInMs = 300;
+
 function Modal({
-  isVisible,
   title,
   onClose,
   children,
+  titleCSS,
+  isVisible,
   isLoading,
   contentCSS,
+  wrapperCSS,
+  headerButtonsCSS,
+  isCloseButtonHidden,
+  withoutClosingOnEsc,
+  headerButtonsContent,
 }: ModalProps) {
-  const handleClose = isLoading ? undefined : onClose;
+  const [hasClosingAnimation, setHasClosingAnimation] = useState(false);
+
+  const showAnimationAndClose = useCallback(() => {
+    setHasClosingAnimation(true);
+    setTimeout(() => {
+      onClose();
+      setHasClosingAnimation(false);
+    }, animationDurationInMs);
+  }, [onClose]);
+
+  const handleClose = isLoading ? undefined : showAnimationAndClose;
 
   useEffect(() => {
+    if (withoutClosingOnEsc) return;
+
     function handleKeyDown({ key }: KeyboardEvent) {
       if (key === 'Escape') {
         handleClose?.();
@@ -30,27 +63,55 @@ function Modal({
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleClose]);
+  }, [handleClose, withoutClosingOnEsc]);
 
-  if (!isVisible) {
+  useEffect(() => {
+    if (isVisible) {
+      setHasClosingAnimation(false);
+    }
+  }, [isVisible]);
+
+  if (!isVisible || !reactRootElement) {
     return null;
   }
 
-  return (
-    <Root role="dialog" onClick={handleClose}>
-      <Wrapper onClick={e => e.stopPropagation()}>
+  const modal = (
+    <Root
+      role="dialog"
+      onClick={handleClose}
+      $hasClosingAnimation={hasClosingAnimation}>
+      <Backdrop $hasClosingAnimation={hasClosingAnimation} />
+      <Wrapper
+        $CSS={wrapperCSS}
+        onClick={e => e.stopPropagation()}
+        $hasClosingAnimation={hasClosingAnimation}>
         <Header>
-          <Title>{title}</Title>
-          <CloseButton onClick={handleClose} title="Close modal" />
+          <Title $CSS={titleCSS}>{title}</Title>
+          <HeaderButtons $CSS={headerButtonsCSS}>
+            {headerButtonsContent}
+
+            {!isCloseButtonHidden && (
+              <IconButton
+                icon="cross"
+                title="Close modal"
+                onClick={handleClose}
+              />
+            )}
+          </HeaderButtons>
         </Header>
 
         <ContentWrapper $CSS={contentCSS}>{children}</ContentWrapper>
       </Wrapper>
     </Root>
   );
+
+  return createPortal(modal, reactRootElement);
 }
 
-const Root = styled.article`
+const { backdropFadeIn, backdropFadeOut, wrapperFadeIn, wrapperFadeOut } =
+  modalAnimations;
+
+const Root = styled.article<{ $hasClosingAnimation: boolean }>`
   position: fixed;
   z-index: 101;
   top: 0;
@@ -60,10 +121,24 @@ const Root = styled.article`
   width: 100%;
   height: 100%;
   overflow: auto;
-  background: var(--gray-opacity);
+  ${({ $hasClosingAnimation }) =>
+    $hasClosingAnimation && 'pointer-events: none;'}
 `;
 
-const Wrapper = styled.div`
+const Backdrop = styled.div<{ $hasClosingAnimation: boolean }>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px);
+  background: var(--gray-opacity);
+  animation: ${({ $hasClosingAnimation }) =>
+      $hasClosingAnimation ? backdropFadeOut : backdropFadeIn}
+    ${animationDurationInMs}ms;
+`;
+
+const Wrapper = styled.div<WrapperProps>`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -75,6 +150,11 @@ const Wrapper = styled.div`
   border: 1px solid var(--violet);
   background: white;
   box-shadow: 0 0 2px 0 var(--violet);
+  animation: ${({ $hasClosingAnimation }) =>
+      $hasClosingAnimation ? wrapperFadeOut : wrapperFadeIn}
+    ${animationDurationInMs}ms;
+
+  ${({ $CSS }) => $CSS}
 `;
 
 const Header = styled.header`
@@ -85,8 +165,16 @@ const Header = styled.header`
   border-bottom: 1px solid var(--gray6);
 `;
 
-const Title = styled.h2`
+const Title = styled.h2<{ $CSS: ModalProps['titleCSS'] }>`
   font-size: 30px;
+
+  ${({ $CSS }) => $CSS}
+`;
+
+const HeaderButtons = styled.div<{ $CSS: ModalProps['headerButtonsCSS'] }>`
+  display: flex;
+
+  ${({ $CSS }) => $CSS}
 `;
 
 const ContentWrapper = styled.div<{ $CSS: ModalProps['contentCSS'] }>`

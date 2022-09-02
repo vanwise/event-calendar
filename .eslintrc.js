@@ -59,6 +59,7 @@ module.exports = {
         groups: [
           [
             'react$',
+            'react-dom$',
             '^styled-components',
             '^([a-z]|@)?\\w',
             '^[A-Z]?\\w',
