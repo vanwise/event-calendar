@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
 import App from 'App';
 import { store } from 'Store/config';
 import reportWebVitals from './reportWebVitals';
@@ -13,6 +14,7 @@ root.render(
     <Provider store={store}>
       <App />
     </Provider>
+    <ToastContainer />
   </React.StrictMode>,
 );
 

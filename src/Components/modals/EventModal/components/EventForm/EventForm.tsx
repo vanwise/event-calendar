@@ -5,7 +5,6 @@ import { Button } from 'Components/buttons';
 import { Input, Select, TextArea } from 'Components/inputs';
 import { useAppSelector } from 'Hooks';
 import { selectAllTags } from 'Store/features/tags/tags.selectors';
-import { useGetTagsQuery } from 'Store/features/tags/tags.slice';
 import { Event } from 'Types/api';
 import { getValidations } from 'Utils/helpers/validation';
 import { DateFields, TimeFields } from './components';
@@ -33,7 +32,6 @@ interface EventFormProps {
 const requiredValidation = getValidations(['required']);
 
 function EventForm({ onSubmit, isLoading, defaultEvent }: EventFormProps) {
-  const { isLoading: isTagsLoading } = useGetTagsQuery();
   const eventTags = useAppSelector(selectAllTags);
 
   const {
@@ -75,7 +73,6 @@ function EventForm({ onSubmit, isLoading, defaultEvent }: EventFormProps) {
           label="Tag"
           control={control}
           options={tagsOptions}
-          isLoading={isTagsLoading}
           placeholder="Select tag"
           controlOptions={requiredValidation}
         />

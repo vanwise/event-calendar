@@ -6,3 +6,4 @@ export { default as NotificationIcon } from './NotificationIcon';
 export { default as ProfileIcon } from './ProfileIcon';
 export { default as RightArrowIcon } from './RightArrowIcon';
 export { default as SimpleCalendarIcon } from './SimpleCalendarIcon';
+export { default as TrashIcon } from './TrashIcon';
