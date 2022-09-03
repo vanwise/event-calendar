@@ -1,6 +1,11 @@
 import { DefaultTheme, StyledComponentBase } from 'styled-components/macro';
 import { Action, ThunkAction } from '@reduxjs/toolkit';
 import {
+  FetchBaseQueryError,
+  FetchBaseQueryMeta,
+} from '@reduxjs/toolkit/dist/query';
+import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
+import {
   Control,
   FieldErrors,
   FieldPath,
@@ -18,6 +23,12 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   RootState,
   unknown,
   Action<string>
+>;
+
+export type QueryResponse = QueryReturnValue<
+  unknown,
+  FetchBaseQueryError,
+  FetchBaseQueryMeta
 >;
 
 export type StyledComponentsAsProp = Parameters<

@@ -41,10 +41,8 @@ export function onEventFormSubmit({
       })
     : addEvent(newEvent);
 
-  fetchPromise
-    .then(() => {
-      onCloseEventModal();
-      ToastService.success(`Success ${operationType} event`);
-    })
-    .catch(() => ToastService.error(`Error ${operationType} event`));
+  fetchPromise.unwrap().then(() => {
+    onCloseEventModal();
+    ToastService.success(`Success ${operationType} event`);
+  });
 }

@@ -69,14 +69,14 @@ function CalendarPage() {
   }
 
   function handleEventDeleteClick() {
-    if (eventForChanging) {
-      deleteEvent(String(eventForChanging.id))
-        .then(() => {
-          handleCloseEventModal();
-          ToastService.success('Success deleting event');
-        })
-        .catch(() => ToastService.error('Error deleting event'));
-    }
+    if (!eventForChanging) return;
+
+    deleteEvent(String(eventForChanging.id))
+      .unwrap()
+      .then(() => {
+        handleCloseEventModal();
+        ToastService.success('Success deleting event');
+      });
   }
 
   const isFetching =
