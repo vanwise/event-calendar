@@ -14,10 +14,9 @@ const Root = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 200px 0 0;
 `;
 
-const arrowTransformAnimation = keyframes`
+const arrowAnimation = keyframes`
   from {
     transform: rotate(180deg);
   }
@@ -28,15 +27,18 @@ const arrowTransformAnimation = keyframes`
 
 const ArrowIcon = styled(RightArrowIcon)`
   margin: 0 5px 0 0;
-  width: 30px;
+  width: 25px;
   fill: var(--violet);
-  animation: ${arrowTransformAnimation} 1s infinite alternate ease-out;
+  animation: ${arrowAnimation} 1s infinite alternate ease-out;
+  filter: drop-shadow(0 0 1px white);
 `;
 
 const Text = styled.p`
   padding: 2px 0 0;
-  font-size: 20px;
+  font-size: 16px;
   font-style: italic;
+  color: var(--violet);
+  filter: drop-shadow(0 0 1px white);
 `;
 
 export default EmptyBlock;

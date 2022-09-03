@@ -4,12 +4,7 @@ import { TimeService } from 'Services';
 import { selectEventsIdsByActiveDate } from 'Store/features/events/events.selectors';
 import { selectFilterActiveDate } from 'Store/features/eventsFilter/eventsFilter.selectors';
 import { Event } from 'Types/api';
-import {
-  EmptyBlock,
-  EventDetails,
-  HeaderWithDate,
-  HoursList,
-} from './components';
+import { EventDetails, HeaderWithDate, HoursList } from './components';
 
 interface EventsTimeBarProps {
   onEventClick(event: Event): void;
@@ -19,11 +14,9 @@ function EventsTimeBar({ onEventClick }: EventsTimeBarProps) {
   const filterActiveDate = useAppSelector(selectFilterActiveDate);
   const filteredEventsIds = useAppSelector(selectEventsIdsByActiveDate);
 
-  if (!filterActiveDate) {
-    return <EmptyBlock />;
-  }
-
-  const activeDate = TimeService.getDate(filterActiveDate);
+  const activeDate = filterActiveDate
+    ? TimeService.getDate(filterActiveDate)
+    : undefined;
 
   return (
     <Root>
@@ -34,16 +27,18 @@ function EventsTimeBar({ onEventClick }: EventsTimeBarProps) {
           <SlideWrapper>
             <HoursList />
 
-            <ul>
-              {filteredEventsIds.map(eventId => (
-                <EventDetails
-                  key={eventId}
-                  eventId={eventId}
-                  onClick={onEventClick}
-                  activeDate={activeDate}
-                />
-              ))}
-            </ul>
+            {activeDate && (
+              <ul>
+                {filteredEventsIds.map(eventId => (
+                  <EventDetails
+                    key={eventId}
+                    eventId={eventId}
+                    onClick={onEventClick}
+                    activeDate={activeDate}
+                  />
+                ))}
+              </ul>
+            )}
           </SlideWrapper>
         </Inner>
       </Wrapper>

@@ -13,9 +13,10 @@ import {
   showPrevActiveDate,
 } from 'Store/features/eventsFilter/eventsFilter.slice';
 import { DATE_FORMAT } from 'Utils/constants/date';
+import { EmptyBlock } from './components';
 
 interface HeaderWithDateProps {
-  activeDate: TimeServiceDate;
+  activeDate?: TimeServiceDate;
 }
 
 const { SHORT_MONTH_DAY_YEAR, YEAR_MONTH_DAY } = DATE_FORMAT;
@@ -26,25 +27,29 @@ function HeaderWithDate({ activeDate }: HeaderWithDateProps) {
   const dateRange = useAppSelector(selectFilterDateRange);
   const hasBothDateRange = useAppSelector(selectHasBothDateRange);
 
-  const isLeftButtonDisabled = TimeService.isDateSame(
-    activeDate,
-    dateRange.from,
+  const isLeftButtonDisabled = Boolean(
+    activeDate && TimeService.isDateSame(activeDate, dateRange.from),
   );
-  const isRightButtonDisabled = TimeService.isDateSame(
-    activeDate,
-    dateRange.to,
+  const isRightButtonDisabled = Boolean(
+    activeDate && TimeService.isDateSame(activeDate, dateRange.to),
   );
 
   return (
     <Root $hasBothDateRange={hasBothDateRange}>
       <HiddenTitle level={2}>Events Time Bar</HiddenTitle>
 
-      <DateWrapper>
-        <CalendarIcon />
-        <DateText dateTime={activeDate.format(YEAR_MONTH_DAY)}>
-          {activeDate.format(SHORT_MONTH_DAY_YEAR)}
-        </DateText>
-      </DateWrapper>
+      {activeDate ? (
+        <DateWrapper>
+          <CalendarIcon />
+          <DateText dateTime={activeDate.format(YEAR_MONTH_DAY)}>
+            {activeDate.format(SHORT_MONTH_DAY_YEAR)}
+          </DateText>
+        </DateWrapper>
+      ) : (
+        <EmptyWrapper>
+          <EmptyBlock />
+        </EmptyWrapper>
+      )}
 
       {hasBothDateRange && (
         <ContolButtonsWrapper>
@@ -105,6 +110,11 @@ const DateText = styled.time`
   font-weight: 400;
   font-size: 16px;
   color: white;
+`;
+
+const EmptyWrapper = styled(TransparentWrapper)`
+  margin: 0 auto;
+  padding: 3px 10px 3px 0;
 `;
 
 const ContolButtonsWrapper = styled(TransparentWrapper)`
