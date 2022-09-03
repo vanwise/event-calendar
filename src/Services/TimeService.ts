@@ -33,14 +33,14 @@ const TimeService = {
   getDate: dayjs,
   shortWeekdayNames: dayjs.weekdaysMin(),
   getStartOfDate(date?: TimeServiceRawDate) {
-    return TimeService.getDate(date).startOf('date');
+    return this.getDate(date).startOf('date');
   },
   isDateSame(
     firstRawDate: TimeServiceRawDate,
     secondRawDate: TimeServiceRawDate,
   ) {
-    const firstDate = TimeService.getDate(firstRawDate);
-    const secondDate = TimeService.getDate(secondRawDate);
+    const firstDate = this.getDate(firstRawDate);
+    const secondDate = this.getDate(secondRawDate);
 
     return UNITS_FOR_DATE_COMPARE.every(unit =>
       firstDate.isSame(secondDate, unit),
@@ -50,10 +50,10 @@ const TimeService = {
     firstDates: TimeServceOverlapDates,
     secondDates: TimeServceOverlapDates,
   ) {
-    const firstDateFrom = TimeService.getDate(firstDates.from);
-    const firstDateTo = TimeService.getDate(firstDates.to);
-    const secondDateFrom = TimeService.getDate(secondDates.from);
-    const secondDateTo = TimeService.getDate(secondDates.to);
+    const firstDateFrom = this.getDate(firstDates.from);
+    const firstDateTo = this.getDate(firstDates.to);
+    const secondDateFrom = this.getDate(secondDates.from);
+    const secondDateTo = this.getDate(secondDates.to);
 
     return (
       secondDateFrom.isBetween(firstDateFrom, firstDateTo) ||
@@ -67,7 +67,7 @@ const TimeService = {
     { from, to }: TimeServceOverlapDates,
     date: TimeServiceRawDate,
   ) {
-    const currentDate = TimeService.getDate(date);
+    const currentDate = this.getDate(date);
 
     return (
       currentDate.isValid() &&
@@ -77,15 +77,15 @@ const TimeService = {
     );
   },
   getDurationFromStartOfDay(date: TimeServiceRawDate, unit: DurationUnitType) {
-    const currentDate = TimeService.getDate(date);
+    const currentDate = this.getDate(date);
     const startOfDay = currentDate.startOf('date');
     const duration = dayjs.duration(startOfDay.diff(currentDate)).as(unit);
 
     return Math.abs(duration);
   },
   addMultiple(date: TimeServiceRawDate, timeUnits: DurationUnitsObjectType) {
-    const currentDate = TimeService.getDate(date);
-    return currentDate.add(TimeService.getDate.duration(timeUnits));
+    const currentDate = this.getDate(date);
+    return currentDate.add(this.getDate.duration(timeUnits));
   },
 };
 
