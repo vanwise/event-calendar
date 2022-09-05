@@ -1,38 +1,100 @@
+import { isPlainObject } from '@reduxjs/toolkit';
 import { RegisterOptions } from 'react-hook-form';
+import { EMAIL_REGEX } from '../constants/regex';
 
-type PlainValidationsType = 'required';
+type PlainValidationsType = 'required' | 'email';
+interface ComplexOption {
+  text: string;
+  value: any;
+}
 interface ComplexValidationsType {
-  maxLength?: number;
-  minLength?: number;
+  maxLength?: ComplexOption;
+  minLength?: ComplexOption;
+  match?: ComplexOption;
 }
 type ValidationsType = PlainValidationsType | ComplexValidationsType;
 
+const requiredValidation = {
+  validate: {
+    required(value: unknown) {
+      if (!value || (typeof value === 'string' && !value.trim())) {
+        return 'Field is required';
+      }
+    },
+  },
+};
+
 const allOptions = {
-  required: 'Field is required',
-  maxLength(value = 0) {
+  required: requiredValidation,
+  email: {
+    pattern: {
+      value: EMAIL_REGEX,
+      message: 'Invalid email format',
+    },
+    ...requiredValidation,
+  },
+  maxLength({ value, text }: ComplexOption) {
     return {
-      value,
-      message: `Max length is ${value}`,
+      maxLength: {
+        value,
+        message: `Max length is ${value}` || text,
+      },
     };
   },
-  minLength(value = 0) {
+  minLength({ value, text }: ComplexOption) {
     return {
-      value,
-      message: `Min length is ${value}`,
+      minLength: {
+        value,
+        message: `Min length is ${value}` || text,
+      },
+    };
+  },
+  match({ value, text }: ComplexOption) {
+    return {
+      validate: {
+        match: (fieldValue: unknown) => fieldValue === value || text,
+      },
     };
   },
 };
 
+export function combineValidations(
+  source: Partial<RegisterOptions>,
+  target: Partial<RegisterOptions>,
+) {
+  const newSource: Partial<RegisterOptions> = {};
+
+  Object.keys(target).forEach(key => {
+    const optionsField = key as keyof RegisterOptions;
+    const rule = target[optionsField];
+
+    if (isPlainObject(rule)) {
+      newSource[optionsField] = {
+        ...(source[optionsField] || null),
+        ...rule,
+      };
+    } else {
+      newSource[optionsField] = rule;
+    }
+  });
+
+  return newSource;
+}
+
 export function getValidations(types: ValidationsType[]): RegisterOptions {
   const selectedOptions = types.reduce((acc: RegisterOptions, type) => {
     if (typeof type === 'string') {
-      acc[type] = allOptions[type];
+      const rules = allOptions[type] as Partial<RegisterOptions>;
+      acc = combineValidations(acc, rules);
     } else {
       Object.keys(type).forEach(complexType => {
         const currentComplextType = complexType as keyof ComplexValidationsType;
         const getComplexOption = allOptions[currentComplextType];
+        const args = type[currentComplextType];
 
-        acc[currentComplextType] = getComplexOption(type[currentComplextType]);
+        if (args) {
+          acc = combineValidations(acc, getComplexOption(args));
+        }
       });
     }
 

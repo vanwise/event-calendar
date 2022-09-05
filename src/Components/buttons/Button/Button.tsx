@@ -16,7 +16,11 @@ function Button({
   ...props
 }: ButtonProps) {
   return (
-    <Root $theme={theme} disabled={isLoading || disabled} {...props}>
+    <Root
+      type="button"
+      $theme={theme}
+      disabled={isLoading || disabled}
+      {...props}>
       {isLoading ? <Loader width={4} height={20} /> : children}
     </Root>
   );

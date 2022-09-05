@@ -88,7 +88,7 @@ function EventForm({ onSubmit, isLoading, defaultEvent }: EventFormProps) {
         />
       </Wrapper>
 
-      <SubmitButton isLoading={isLoading} theme="light">
+      <SubmitButton isLoading={isLoading} theme="light" type="submit">
         Submit
       </SubmitButton>
     </Root>

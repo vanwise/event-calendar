@@ -39,7 +39,8 @@ function InputLayout<FormValues extends FieldValues>({
           name={name as any}
           errors={errors}
           render={({ message }) =>
-            !isDisabled && (
+            !isDisabled &&
+            message && (
               <OneLineText className={className} title={message}>
                 {message}
               </OneLineText>

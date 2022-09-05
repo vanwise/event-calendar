@@ -16,6 +16,7 @@ const Root = styled.input<{ $hasError?: boolean; $CSS?: CSSProp }>`
   color: var(--gray7);
   border: 1px solid;
   border-color: var(${({ $hasError }) => ($hasError ? '--red2' : '--gray6')});
+  background: white;
   transition: 0.3s;
 
   &::placeholder {
