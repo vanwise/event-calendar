@@ -1,26 +1,46 @@
+import { createBrowserHistory } from 'history';
 import {
-  BrowserRouter as Router,
   Navigate,
   Route,
   Routes as Switch,
+  unstable_HistoryRouter as HistoryRouter,
 } from 'react-router-dom';
-import { MainLayout } from 'Components/layouts';
-import { CalendarPage, ProfilePage } from 'Pages';
-import { ROUTES } from 'Utils/constants/routes';
+import WithAuthCheck from 'Components/HOCs/WithAuthCheck';
+import { AuthLayout, MainLayout } from 'Components/layouts';
+import { AUTH_ROUTES, ROOT_ROUTES } from 'Utils/constants/routes';
+import { AUTH_COMPONENTS, MAIN_COMPONENTS } from './Routes.utils';
 
-const { CALENDAR_PATH, PROFILE_PATH } = ROUTES;
+const { HOME, CALENDAR, AUTH } = ROOT_ROUTES;
+export const appHistory = createBrowserHistory({ window });
 
 function Routes() {
+  const mainRoutes = (
+    <Route element={<MainLayout />}>
+      {MAIN_COMPONENTS.map(({ path, Component }) => (
+        <Route key={path} path={path} element={<Component />} />
+      ))}
+    </Route>
+  );
+
+  const authRoutes = (
+    <Route element={<AuthLayout />}>
+      {AUTH_COMPONENTS.map(({ path, Component }) => (
+        <Route key={path} path={path} element={<Component />} />
+      ))}
+    </Route>
+  );
+
   return (
-    <Router>
-      <MainLayout>
-        <Switch>
-          <Route path="/" element={<Navigate to={CALENDAR_PATH} />} />
-          <Route path={CALENDAR_PATH} element={<CalendarPage />} />
-          <Route path={PROFILE_PATH} element={<ProfilePage />} />
-        </Switch>
-      </MainLayout>
-    </Router>
+    <HistoryRouter history={appHistory}>
+      <Switch>
+        <Route element={<WithAuthCheck />}>
+          <Route path={HOME} element={<Navigate to={CALENDAR} />} />
+          <Route path={AUTH} element={<Navigate to={AUTH_ROUTES.SIGN_IN} />} />
+          {mainRoutes}
+          {authRoutes}
+        </Route>
+      </Switch>
+    </HistoryRouter>
   );
 }
 

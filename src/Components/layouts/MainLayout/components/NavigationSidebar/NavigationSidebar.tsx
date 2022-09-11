@@ -1,12 +1,12 @@
 import styled from 'styled-components/macro';
 import { NavLink } from 'react-router-dom';
 import { CalendarIcon, MainLogoIcon, ProfileIcon } from 'Components/svg';
-import { ROUTES } from 'Utils/constants/routes';
+import { ROOT_ROUTES } from 'Utils/constants/routes';
 
-const { CALENDAR_PATH, PROFILE_PATH } = ROUTES;
+const { CALENDAR, PROFILE } = ROOT_ROUTES;
 const LINKS = [
-  { path: CALENDAR_PATH, Icon: CalendarIcon },
-  { path: PROFILE_PATH, Icon: ProfileIcon },
+  { path: CALENDAR, Icon: CalendarIcon },
+  { path: PROFILE, Icon: ProfileIcon },
 ];
 
 function NavigationSidebar() {

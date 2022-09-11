@@ -1,13 +1,12 @@
 import styled from 'styled-components/macro';
+import { Outlet } from 'react-router-dom';
 import {
   NavigationSidebar,
   Notifications,
   ProfileDropdown,
 } from './components';
 
-type MainLayoutProps = WithChildren;
-
-function MainLayout({ children }: MainLayoutProps) {
+function MainLayout() {
   return (
     <Root>
       <NavigationSidebar />
@@ -20,7 +19,9 @@ function MainLayout({ children }: MainLayoutProps) {
           </HeaderWrapper>
         </Header>
 
-        <Content>{children}</Content>
+        <Content>
+          <Outlet />
+        </Content>
       </Wrapper>
     </Root>
   );

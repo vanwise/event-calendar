@@ -4,53 +4,85 @@ import {
   fetchBaseQuery,
   FetchBaseQueryError,
 } from '@reduxjs/toolkit/query/react';
-import { ToastService } from 'Services';
-import { QueryResponse } from 'Types/libs';
+import { StorageService, ToastService } from 'Services';
 import { config } from 'Utils/constants/config';
+import { UNAUTHORIZED_CODE } from 'Utils/constants/http';
 import { API_TAG_TYPES } from 'Utils/constants/store';
+import { logOut } from 'Utils/helpers/auth';
+import { AccessToken } from './features/auth/auth.slice';
 
 enum QUERY_ERROR {
   FETCH_ERROR = 'FETCH_ERROR',
 }
+export interface ApiErrors {
+  message?: string;
+  messages?: Record<string, string | string[]>;
+}
 
-function getErrorMessage(error: FetchBaseQueryError, details: string) {
-  if (error.status === QUERY_ERROR.FETCH_ERROR) {
-    return `Failed to fetch ${details}. Check connection`;
-  } else if ('error' in error) {
-    return `${error.error} - ${details}`;
-  } else if (error.status === 404) {
-    return `Resource ${details} not found`;
+function handleRequestError(
+  error: FetchBaseQueryError,
+  repeatApiRequest: () => void,
+) {
+  async function handleUnauthorizedError() {
+    const tokenResponse = await fetch(`${config.BASE_API_URL}/auth/refresh`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+    const { accessToken }: AccessToken = await tokenResponse.json();
+
+    if (accessToken) {
+      StorageService.set('access-token', accessToken);
+      repeatApiRequest();
+    } else {
+      logOut();
+    }
+  }
+
+  function getErrorMessage() {
+    if (error.status === QUERY_ERROR.FETCH_ERROR) {
+      return 'Failed to fetch. Check connection';
+    }
+
+    function getMessage({ message, messages }: ApiErrors = {}) {
+      if (messages) {
+        return Object.keys(messages).reduce((acc, fieldKey) => {
+          const field = messages[fieldKey];
+          return acc + '\n' + `${fieldKey}: ${field}`;
+        }, '');
+      }
+      return message || `Errors status: ${error.status}`;
+    }
+
+    return getMessage(error.data as ApiErrors);
+  }
+
+  if (error.status === UNAUTHORIZED_CODE) {
+    handleUnauthorizedError();
   } else {
-    return `Error code ${error.status} for ${details} requext`;
+    ToastService.error(getErrorMessage());
   }
 }
 
-const { BASE_URL = '' } = config;
+const getApiBaseQuery: BaseQueryFn = async (...args) => {
+  const baseQuery = await fetchBaseQuery({
+    baseUrl: config.BASE_API_URL,
+    credentials: 'include',
+    prepareHeaders(headers) {
+      const accesToken = StorageService.get('access-token');
+      if (accesToken) {
+        headers.set('Authorization', `Bearer ${accesToken}`);
+      }
+      return headers;
+    },
+  });
+  let result = await baseQuery(...args);
 
-const getApiBaseQuery: BaseQueryFn = (...args) => {
-  const queryPromise = Promise.resolve(
-    fetchBaseQuery({
-      baseUrl: BASE_URL,
-    })(...args),
-  );
-
-  function handleError(response: QueryResponse) {
-    const { error, meta } = response;
-
-    if (error && meta) {
-      const details = meta.request.url.replace(BASE_URL, '').slice(1);
-      const errorMessage = getErrorMessage(
-        error,
-        `"${meta.request.method}: ${details}"`,
-      );
-
-      ToastService.error(errorMessage);
-    }
-
-    return response;
+  if (result.error) {
+    const repeatApiRequest = async () => (result = await baseQuery(...args));
+    handleRequestError(result.error, repeatApiRequest);
   }
 
-  return queryPromise.then(handleError);
+  return result;
 };
 
 export const api = createApi({

@@ -4,7 +4,7 @@ import RawInput from '../RawInput';
 import { RawInputTag } from '../RawInput/RawInput.types';
 import { InputProps } from './Input.types';
 
-function Input<Values extends FieldValues, As extends RawInputTag>({
+function Input<Values extends FieldValues, As extends RawInputTag = 'input'>({
   name,
   label,
   errors,
