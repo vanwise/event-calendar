@@ -21,3 +21,8 @@ export const BUTTON_THEMES = {
     }
   `,
 };
+
+export const BUTTON_LOADER_COLOR = {
+  violet: 'white',
+  light: 'var(--violet)',
+};

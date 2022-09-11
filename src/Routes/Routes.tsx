@@ -1,8 +1,9 @@
+import { createBrowserHistory } from 'history';
 import {
-  BrowserRouter as Router,
   Navigate,
   Route,
   Routes as Switch,
+  unstable_HistoryRouter as HistoryRouter,
 } from 'react-router-dom';
 import WithAuthCheck from 'Components/HOCs/WithAuthCheck';
 import { AuthLayout, MainLayout } from 'Components/layouts';
@@ -10,14 +11,13 @@ import { AUTH_ROUTES, ROOT_ROUTES } from 'Utils/constants/routes';
 import { AUTH_COMPONENTS, MAIN_COMPONENTS } from './Routes.utils';
 
 const { HOME, CALENDAR, AUTH } = ROOT_ROUTES;
+export const appHistory = createBrowserHistory({ window });
 
 function Routes() {
   const mainRoutes = (
     <Route element={<MainLayout />}>
       {MAIN_COMPONENTS.map(({ path, Component }) => (
-        <Route key={path} element={<WithAuthCheck />}>
-          <Route path={path} element={<Component />} />
-        </Route>
+        <Route key={path} path={path} element={<Component />} />
       ))}
     </Route>
   );
@@ -31,14 +31,16 @@ function Routes() {
   );
 
   return (
-    <Router>
+    <HistoryRouter history={appHistory}>
       <Switch>
-        <Route path={HOME} element={<Navigate to={CALENDAR} />} />
-        <Route path={AUTH} element={<Navigate to={AUTH_ROUTES.SIGN_IN} />} />
-        {mainRoutes}
-        {authRoutes}
+        <Route element={<WithAuthCheck />}>
+          <Route path={HOME} element={<Navigate to={CALENDAR} />} />
+          <Route path={AUTH} element={<Navigate to={AUTH_ROUTES.SIGN_IN} />} />
+          {mainRoutes}
+          {authRoutes}
+        </Route>
       </Switch>
-    </Router>
+    </HistoryRouter>
   );
 }
 

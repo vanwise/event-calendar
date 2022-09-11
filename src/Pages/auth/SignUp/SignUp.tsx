@@ -1,8 +1,11 @@
 import styled from 'styled-components/macro';
+import { useNavigate } from 'react-router-dom';
 import AuthForm, { AuthFormMethods } from 'Components/forms/AuthForm/AuthForm';
 import WithFieldWatcher from 'Components/HOCs/WithFieldWatcher';
 import { Input } from 'Components/inputs';
-import { AUTH_ROUTES } from 'Utils/constants/routes';
+import { useRegisterUserMutation } from 'Store/features/auth/auth.slice';
+import { AUTH_ROUTES, ROOT_ROUTES } from 'Utils/constants/routes';
+import { omit } from 'Utils/helpers/object';
 import { getValidations } from 'Utils/helpers/validation';
 
 interface SignUpFormValuesBase {
@@ -14,7 +17,10 @@ interface SignUpFormValuesBase {
   passwordConfirm: string;
 }
 type SignUpFormValues = Partial<SignUpFormValuesBase>;
-type SubmittedSignUpFormValues = PartialBy<SignUpFormValuesBase, 'lastName'>;
+export type SubmittedSignUpFormValues = PartialBy<
+  SignUpFormValuesBase,
+  'lastName'
+>;
 
 const requiredValidation = getValidations(['required']);
 
@@ -26,9 +32,17 @@ const ROUTE_DATA = {
 };
 
 function SignUpPage() {
-  function handleSubmit(values: SignUpFormValues) {
+  const naviagate = useNavigate();
+  const [registerUser, { isLoading: isRegisterUserLoading }] =
+    useRegisterUserMutation();
+
+  async function handleSubmit(values: SignUpFormValues) {
     const formValues = values as SubmittedSignUpFormValues;
-    console.log('formValues', formValues);
+    const dataForRequest = omit(formValues, ['passwordConfirm']);
+
+    return registerUser(dataForRequest)
+      .unwrap()
+      .then(() => naviagate(ROOT_ROUTES.HOME));
   }
 
   function renderInputs({
@@ -113,6 +127,7 @@ function SignUpPage() {
     <AuthForm
       onSubmit={handleSubmit}
       routeData={ROUTE_DATA}
+      isLoading={isRegisterUserLoading}
       renderInputs={renderInputs}
     />
   );

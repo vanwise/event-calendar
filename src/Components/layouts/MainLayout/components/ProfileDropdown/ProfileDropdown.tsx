@@ -4,6 +4,7 @@ import { MainDropdown } from 'Components';
 import { BatmanIcon } from 'Components/svg';
 import { HiddenTitle, TextWithLineClamp } from 'Components/text';
 import { ROOT_ROUTES } from 'Utils/constants/routes';
+import { logOut } from 'Utils/helpers/auth';
 
 function ProfileDropdown() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ function ProfileDropdown() {
 
   const buttons = [
     { text: 'Profile', onClick: () => navigate(ROOT_ROUTES.PROFILE) },
-    { text: 'Logout' },
+    { text: 'Logout', onClick: logOut },
   ];
 
   return (

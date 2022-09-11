@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro';
 import Loader from 'Components/Loader';
-import { BUTTON_THEMES } from './Button.utils';
+import { BUTTON_LOADER_COLOR, BUTTON_THEMES } from './Button.utils';
 
 type Theme = keyof typeof BUTTON_THEMES;
 interface ButtonProps extends ButtonPropsWithoutRef {
@@ -15,13 +15,19 @@ function Button({
   isLoading,
   ...props
 }: ButtonProps) {
+  const loaderColor = BUTTON_LOADER_COLOR[theme];
+
   return (
     <Root
       type="button"
       $theme={theme}
       disabled={isLoading || disabled}
       {...props}>
-      {isLoading ? <Loader width={4} height={20} /> : children}
+      {isLoading ? (
+        <Loader color={loaderColor} width={4} height={20} />
+      ) : (
+        children
+      )}
     </Root>
   );
 }

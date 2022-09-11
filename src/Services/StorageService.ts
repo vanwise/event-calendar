@@ -7,19 +7,19 @@ const StorageService: StorageServiceType = {
     const data = JSON.stringify(newValue);
     localStorage.setItem(key, data);
   },
-  delete(key) {
+  remove(key) {
     localStorage.removeItem(key);
   },
 };
 
 interface StorageValues {
-  'auth-token': string;
+  'access-token': string;
 }
 type StorageKey = keyof StorageValues;
 interface StorageServiceType {
   get<K extends StorageKey>(key: K): StorageValues[K] | null;
   set<K extends StorageKey>(key: K, newValue: StorageValues[K]): void;
-  delete(key: StorageKey): void;
+  remove(key: StorageKey): void;
 }
 
 export default StorageService;

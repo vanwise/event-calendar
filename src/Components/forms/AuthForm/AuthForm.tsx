@@ -1,12 +1,14 @@
 import { ReactNode } from 'react';
 import styled, { CSSProp } from 'styled-components/macro';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { Path, useForm, UseFormReturn } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { Button } from 'Components/buttons';
+import { ApiErrors } from 'Store/api';
+import { AccessToken } from 'Store/features/auth/auth.slice';
 
 export type AuthFormMethods<FormValues> = Omit<
   UseFormReturn<FormValues>,
-  'handleSubmit'
+  'handleSubmit' | 'setError'
 >;
 
 interface RouteData {
@@ -15,10 +17,14 @@ interface RouteData {
   title: string;
   linkText: string;
 }
+interface SubmitApiErrors {
+  data: ApiErrors;
+}
 interface AuthFormProps<FormValues> {
   formCSS?: CSSProp;
-  onSubmit(values: FormValues): void;
+  onSubmit(values: FormValues): Promise<void | AccessToken | SubmitApiErrors>;
   routeData: RouteData;
+  isLoading: boolean;
   renderInputs(formMethods: AuthFormMethods<FormValues>): ReactNode;
   inputsWrapperCSS?: CSSProp;
 }
@@ -27,20 +33,36 @@ function AuthForm<FormValues>({
   formCSS,
   onSubmit,
   routeData,
+  isLoading,
   renderInputs,
   inputsWrapperCSS,
 }: AuthFormProps<FormValues>) {
-  const { handleSubmit, ...formMethods } = useForm<FormValues>();
+  const { handleSubmit, setError, ...formMethods } = useForm<FormValues>();
+
+  function handleFormSubmit(values: FormValues) {
+    onSubmit(values).catch(({ data }) => {
+      if (data?.messages) {
+        const formErrors = data.messages;
+
+        Object.keys(formErrors).forEach(key => {
+          const fieldKey = key as Path<FormValues>;
+          setError(fieldKey, { message: formErrors[fieldKey] });
+        });
+      }
+    });
+  }
 
   return (
     <Root>
       <Title>{routeData.title}</Title>
 
-      <Form $CSS={formCSS} onSubmit={handleSubmit(onSubmit)}>
+      <Form $CSS={formCSS} onSubmit={handleSubmit(handleFormSubmit)}>
         <InputsWrapper $CSS={inputsWrapperCSS}>
           {renderInputs(formMethods)}
         </InputsWrapper>
-        <SubmitButton type="submit">Submit</SubmitButton>
+        <SubmitButton isLoading={isLoading} type="submit">
+          Submit
+        </SubmitButton>
       </Form>
 
       <LinkWrapper>
