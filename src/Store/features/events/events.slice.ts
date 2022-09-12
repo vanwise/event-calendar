@@ -37,7 +37,7 @@ export const eventsApi = api.injectEndpoints({
     updateEvent: builder.mutation<Event, UpdatedEvent>({
       query: ({ id, updatedFields }) => ({
         url: `/events/${id}`,
-        method: 'PUT',
+        method: 'PATCH',
         body: updatedFields,
       }),
       invalidatesTags: (_, __, arg) => [{ type: EVENT, id: arg.id }],
