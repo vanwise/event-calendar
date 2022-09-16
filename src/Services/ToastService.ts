@@ -6,6 +6,9 @@ const toastOptions: ToastOptions = {
   position: toast.POSITION.BOTTOM_RIGHT,
   closeButton: ToastCloseButton,
   autoClose: 10000,
+  style: {
+    whiteSpace: 'pre',
+  },
 };
 
 const ToastService: ToastServiceType = {

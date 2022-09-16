@@ -1,7 +1,6 @@
 import { createEntityAdapter, EntityState } from '@reduxjs/toolkit';
 import { api } from 'Store/api';
 import { Event } from 'Types/api';
-import { API_TAG_TYPES } from 'Utils/constants/store';
 
 type NewEvent = PartialBy<Omit<Event, 'id'>, 'description'>;
 interface UpdatedEvent {
@@ -12,15 +11,14 @@ interface UpdatedEvent {
 export const eventsAdapter = createEntityAdapter<Event>();
 export const eventsInitialState = eventsAdapter.getInitialState();
 
-const { EVENT } = API_TAG_TYPES;
-
 export const eventsApi = api.injectEndpoints({
   endpoints: builder => ({
     getEvents: builder.query<EntityState<Event>, void>({
       query: () => '/events',
       providesTags: result => {
-        const tags = result?.ids.map(id => ({ type: EVENT, id }));
-        return [EVENT, ...(tags || [])];
+        const tags =
+          result?.ids.map(id => ({ type: 'Event' as const, id })) || [];
+        return [...tags, 'Event'];
       },
       transformResponse(response: Event[]) {
         return eventsAdapter.setAll(eventsInitialState, response);
@@ -32,7 +30,7 @@ export const eventsApi = api.injectEndpoints({
         method: 'POST',
         body: newEvent,
       }),
-      invalidatesTags: [EVENT],
+      invalidatesTags: (_, error) => (error ? [] : ['Event']),
     }),
     updateEvent: builder.mutation<Event, UpdatedEvent>({
       query: ({ id, updatedFields }) => ({
@@ -40,14 +38,15 @@ export const eventsApi = api.injectEndpoints({
         method: 'PATCH',
         body: updatedFields,
       }),
-      invalidatesTags: (_, __, arg) => [{ type: EVENT, id: arg.id }],
+      invalidatesTags: (_, error, arg) =>
+        error ? [] : [{ type: 'Event', id: arg.id }],
     }),
     deleteEvent: builder.mutation<Event, string>({
       query: id => ({
         url: `/events/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: [EVENT],
+      invalidatesTags: (_, error) => (error ? [] : ['Event']),
     }),
   }),
 });

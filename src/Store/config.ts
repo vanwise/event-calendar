@@ -1,6 +1,7 @@
 import { AnyAction, combineReducers, configureStore } from '@reduxjs/toolkit';
 import { api } from './api';
 import eventsFilterReducer from './features/eventsFilter/eventsFilter.slice';
+import apiErrorLogger from './middleware/apiErrorLogger';
 
 const RESET_STORE_ACTION_TYPE = 'resetStore';
 
@@ -19,7 +20,7 @@ function reducer(state: any, action: AnyAction) {
 export const store = configureStore({
   reducer,
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(api.middleware),
+    getDefaultMiddleware().concat(api.middleware, apiErrorLogger),
 });
 
 export function resetReduxStore() {
