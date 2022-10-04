@@ -10,10 +10,7 @@ import { eventsAdapter, eventsApi, eventsInitialState } from './events.slice';
 
 const selectEventsResult = eventsApi.endpoints.getEvents.select();
 
-const selectEventsData = createSelector(
-  selectEventsResult,
-  events => events.data,
-);
+const selectEventsData = createSelector(selectEventsResult, ({ data }) => data);
 
 export const { selectIds: selectEventsIds, selectById: selectEventById } =
   eventsAdapter.getSelectors(

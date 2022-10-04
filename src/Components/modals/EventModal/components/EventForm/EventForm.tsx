@@ -7,7 +7,7 @@ import { useAppSelector } from 'Hooks';
 import { selectAllTags } from 'Store/features/tags/tags.selectors';
 import { Event } from 'Types/api';
 import { getValidations } from 'Utils/helpers/validation';
-import { DateFields, TimeFields } from './components';
+import { DateFields, ReminderCheckbox, TimeFields } from './components';
 import { getEventFormDefaultValues } from './EventForm.utils';
 
 export type ResetFormField = (name: FieldPath<EventFormValues>) => void;
@@ -17,6 +17,7 @@ interface EventFormValuesBase
   endDate: string;
   startTime: string;
   endTime: string;
+  hasReminder: boolean;
 }
 export type EventFormValues = Partial<EventFormValuesBase>;
 export type SubmittedEventFormValues = PartialBy<
@@ -86,6 +87,8 @@ function EventForm({ onSubmit, isLoading, defaultEvent }: EventFormProps) {
           register={register}
           placeholder="Enter description"
         />
+
+        <ReminderCheckbox register={register} control={control} />
       </Wrapper>
 
       <SubmitButton isLoading={isLoading} theme="light" type="submit">
@@ -105,6 +108,7 @@ const Wrapper = styled.div`
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 30px;
   margin: 0 0 30px;
+  align-items: start;
 `;
 
 const SubmitButton = styled(Button)`

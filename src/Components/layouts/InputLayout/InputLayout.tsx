@@ -25,7 +25,7 @@ function InputLayout<FormValues extends FieldValues>({
   renderInput,
   isWrapperAsDiv,
 }: InputLayoutProps<FormValues>) {
-  const hasError = Boolean(errors[name]);
+  const hasError = Boolean(errors?.[name]);
   const as = label && !isWrapperAsDiv ? undefined : 'div';
 
   return (

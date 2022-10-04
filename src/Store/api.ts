@@ -19,9 +19,11 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
+const tagTypes = ['Event', 'User', 'Notification'] as const;
+
 export const api = createApi({
   reducerPath: 'api',
   baseQuery,
-  tagTypes: ['Event'],
+  tagTypes,
   endpoints: () => ({}),
 });

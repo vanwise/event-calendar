@@ -8,28 +8,19 @@ import {
 import WithAuthCheck from 'Components/HOCs/WithAuthCheck';
 import { AuthLayout, MainLayout } from 'Components/layouts';
 import { AUTH_ROUTES, ROOT_ROUTES } from 'Utils/constants/routes';
-import { AUTH_COMPONENTS, MAIN_COMPONENTS } from './Routes.utils';
+import {
+  AUTH_COMPONENTS,
+  createRoutesList,
+  MAIN_COMPONENTS,
+} from './Routes.utils';
 
 const { HOME, CALENDAR, AUTH } = ROOT_ROUTES;
 export const appHistory = createBrowserHistory({ window });
 
+const mainRoutes = createRoutesList(MainLayout, MAIN_COMPONENTS);
+const authRoutes = createRoutesList(AuthLayout, AUTH_COMPONENTS);
+
 function Routes() {
-  const mainRoutes = (
-    <Route element={<MainLayout />}>
-      {MAIN_COMPONENTS.map(({ path, Component }) => (
-        <Route key={path} path={path} element={<Component />} />
-      ))}
-    </Route>
-  );
-
-  const authRoutes = (
-    <Route element={<AuthLayout />}>
-      {AUTH_COMPONENTS.map(({ path, Component }) => (
-        <Route key={path} path={path} element={<Component />} />
-      ))}
-    </Route>
-  );
-
   return (
     <HistoryRouter history={appHistory}>
       <Switch>
