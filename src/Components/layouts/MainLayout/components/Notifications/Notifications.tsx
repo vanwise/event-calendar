@@ -1,37 +1,65 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import { MainDropdown } from 'Components';
+import { Loader } from 'Components';
 import { NotificationIcon } from 'Components/svg';
 import { HiddenTitle } from 'Components/text';
+import { useAppSelector } from 'Hooks';
+import { hasUnreadedNotifications } from 'Store/features/notifications/notifications.selectors';
+import {
+  useGetNotificationsQuery,
+  useReadAllNotificationsMutation,
+} from 'Store/features/notifications/notifications.slice';
+import { NotificationItem } from './components';
 
-const NOTIFICATIONS = [{ text: 'Hello' }, { text: 'Hi' }];
 const DROPDOWN_CSS = {
   right: 3,
-  width: 200,
-  maxHeight: 200,
+  width: 300,
 };
 
 function Notifications() {
+  const { data: notificationsState, isLoading: isNotificationsLoading } =
+    useGetNotificationsQuery();
+  const [readAllNotifications] = useReadAllNotificationsMutation();
+
+  const hasUnreaded = useAppSelector(hasUnreadedNotifications);
+
+  function readNotifications() {
+    if (hasUnreaded) {
+      readAllNotifications();
+    }
+  }
+
+  const notificationIds = notificationsState?.ids || [];
+  const revertedNotificationsIds = notificationIds.slice().reverse();
+  const isDisabledTriggerButton = !notificationIds.length;
+
   return (
     <Root>
       <HiddenTitle level={2}>Notifications</HiddenTitle>
 
-      <MainDropdown
-        dropdownWrapperCSS={DROPDOWN_CSS}
-        renderTrigger={toggleDropdown => (
-          <TriggerButton onClick={toggleDropdown}>
-            <NotificationIcon />
-          </TriggerButton>
-        )}
-        renderDropdown={() => (
-          <NotificationList>
-            {NOTIFICATIONS.map(({ text }) => (
-              <li key={text}>
-                <h3>{text}</h3>
-              </li>
-            ))}
-          </NotificationList>
-        )}
-      />
+      {isNotificationsLoading ? (
+        <Loader />
+      ) : (
+        <MainDropdown
+          dropdownWrapperCSS={DROPDOWN_CSS}
+          onClose={readNotifications}
+          renderTrigger={toggleDropdown => (
+            <TriggerButton
+              onClick={toggleDropdown}
+              disabled={isDisabledTriggerButton}
+              $hasUnreaded={hasUnreaded}>
+              <NotificationIcon />
+            </TriggerButton>
+          )}
+          renderDropdown={() => (
+            <ul>
+              {revertedNotificationsIds.map(id => (
+                <NotificationItem key={id} id={id} />
+              ))}
+            </ul>
+          )}
+        />
+      )}
     </Root>
   );
 }
@@ -40,13 +68,7 @@ const Root = styled.article`
   margin: 0 20px 0 0;
 `;
 
-const TriggerButton = styled.button`
-  position: relative;
-  padding: 5px;
-  width: 50px;
-  height: 50px;
-  transition: 0.3s ease-out;
-
+const unreadedMark = css`
   &::before {
     content: '';
     position: absolute;
@@ -58,16 +80,20 @@ const TriggerButton = styled.button`
     border: 2px solid white;
     background-color: var(--red3);
   }
-
-  &:hover {
-    transform: scale(1.1);
-  }
 `;
 
-const NotificationList = styled.ul`
-  display: grid;
-  grid-gap: 10px 0;
-  padding: 10px;
+const TriggerButton = styled.button<{ $hasUnreaded: boolean }>`
+  position: relative;
+  padding: 5px;
+  width: 50px;
+  height: 50px;
+  transition: 0.3s ease-out;
+
+  &:hover[disabled='false'] {
+    transform: scale(1.1);
+  }
+
+  ${({ $hasUnreaded }) => $hasUnreaded && unreadedMark}
 `;
 
 export default Notifications;

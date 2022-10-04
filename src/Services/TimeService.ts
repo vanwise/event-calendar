@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import calendar from 'dayjs/plugin/calendar';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import duration, {
   DurationUnitsObjectType,
@@ -9,6 +10,7 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import localeData from 'dayjs/plugin/localeData';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
 import weekday from 'dayjs/plugin/weekday';
 
@@ -21,6 +23,8 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(duration);
 dayjs.extend(customParseFormat);
+dayjs.extend(calendar);
+dayjs.extend(relativeTime);
 
 dayjs.updateLocale(dayjs.locale(), {
   weekStart: 1,

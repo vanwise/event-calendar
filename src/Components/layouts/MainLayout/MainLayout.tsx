@@ -1,12 +1,18 @@
 import styled from 'styled-components/macro';
 import { Outlet } from 'react-router-dom';
+import { useNotificationSubscription } from 'Hooks';
+import { handlePushNotification } from 'Utils/helpers/notifications';
 import {
   NavigationSidebar,
   Notifications,
   ProfileDropdown,
 } from './components';
 
+handlePushNotification();
+
 function MainLayout() {
+  useNotificationSubscription();
+
   return (
     <Root>
       <NavigationSidebar />

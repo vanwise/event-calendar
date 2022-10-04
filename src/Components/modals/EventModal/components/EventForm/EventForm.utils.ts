@@ -7,10 +7,8 @@ export function getEventFormDefaultValues(
   defaultEvent?: Event,
 ): EventFormValues | undefined {
   if (defaultEvent) {
-    const { startDateISO, endDateISO, ...newDefaultEvent } = omit(
-      defaultEvent,
-      ['id'],
-    );
+    const { startDateISO, endDateISO, notificationId, ...newDefaultEvent } =
+      omit(defaultEvent, ['id']);
 
     const startDate = TimeService.getDate(startDateISO);
     const newStartDate = startDate.startOf('date').toISOString();
@@ -25,6 +23,7 @@ export function getEventFormDefaultValues(
       endTime,
       startDate: newStartDate,
       endDate: newEndDate,
+      hasReminder: Boolean(notificationId),
       ...newDefaultEvent,
     };
   }
