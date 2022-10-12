@@ -41,7 +41,7 @@ export function onEventFormSubmit({
       })
     : addEvent(newEvent);
 
-  fetchPromise.unwrap().then(() => {
+  return fetchPromise.unwrap().then(() => {
     onCloseEventModal();
     ToastService.success(`Success ${operationType} event`);
   });

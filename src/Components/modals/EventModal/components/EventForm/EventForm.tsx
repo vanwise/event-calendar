@@ -1,11 +1,12 @@
 import { useCallback } from 'react';
 import styled from 'styled-components/macro';
-import { FieldPath, useForm } from 'react-hook-form';
+import { FieldPath } from 'react-hook-form';
 import { Button } from 'Components/buttons';
 import { Input, Select, TextArea } from 'Components/inputs';
-import { useAppSelector } from 'Hooks';
+import { useAppSelector, useHookForm } from 'Hooks';
 import { selectAllTags } from 'Store/features/tags/tags.selectors';
 import { Event } from 'Types/api';
+import { FormSubmit } from 'Types/libs';
 import { getValidations } from 'Utils/helpers/validation';
 import { DateFields, ReminderCheckbox, TimeFields } from './components';
 import { getEventFormDefaultValues } from './EventForm.utils';
@@ -25,7 +26,7 @@ export type SubmittedEventFormValues = PartialBy<
   'description'
 >;
 interface EventFormProps {
-  onSubmit(values: EventFormValues): void;
+  onSubmit: FormSubmit<EventFormValues>;
   isLoading?: boolean;
   defaultEvent?: Event;
 }
@@ -41,7 +42,7 @@ function EventForm({ onSubmit, isLoading, defaultEvent }: EventFormProps) {
     resetField,
     handleSubmit,
     formState: { errors: formErrors },
-  } = useForm<EventFormValues>({
+  } = useHookForm<EventFormValues>({
     defaultValues: getEventFormDefaultValues(defaultEvent),
   });
 

@@ -1,4 +1,4 @@
-import { TimeServiceDate } from 'Services/TimeService';
+import { TimeServiceDate, TimeServiceRawDate } from 'Services/TimeService';
 
 export type SelectedDate = Nullable<TimeServiceDate>;
 export interface SelectedDates {
@@ -32,4 +32,5 @@ export type DatePickerProps = WithClassName &
     borderEndDate?: string;
     borderStartDate?: string;
     isSelectedDaysHidden?: boolean;
+    markedDays?: TimeServiceRawDate[];
   };

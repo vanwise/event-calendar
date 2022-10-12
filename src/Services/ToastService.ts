@@ -7,7 +7,7 @@ const toastOptions: ToastOptions = {
   closeButton: ToastCloseButton,
   autoClose: 10000,
   style: {
-    whiteSpace: 'pre',
+    whiteSpace: 'pre-wrap',
   },
 };
 

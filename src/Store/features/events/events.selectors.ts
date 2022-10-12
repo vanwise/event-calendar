@@ -12,10 +12,13 @@ const selectEventsResult = eventsApi.endpoints.getEvents.select();
 
 const selectEventsData = createSelector(selectEventsResult, ({ data }) => data);
 
-export const { selectIds: selectEventsIds, selectById: selectEventById } =
-  eventsAdapter.getSelectors(
-    (state: RootState) => selectEventsData(state) || eventsInitialState,
-  );
+export const {
+  selectIds: selectEventsIds,
+  selectById: selectEventById,
+  selectAll: selecteAllEvents,
+} = eventsAdapter.getSelectors(
+  (state: RootState) => selectEventsData(state) || eventsInitialState,
+);
 
 export const selectEventsIdsByDateRange = createSelector(
   [selectEventsData, selectFilterDateRange, selectHasBothDateRange],

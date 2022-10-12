@@ -1,10 +1,11 @@
 import { ReactNode } from 'react';
 import styled, { CSSProp } from 'styled-components/macro';
-import { Path, useForm, UseFormReturn } from 'react-hook-form';
+import { UseFormReturn } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { Button } from 'Components/buttons';
-import { ApiErrors } from 'Store/api';
+import { useHookForm } from 'Hooks';
 import { AccessToken } from 'Store/features/auth/auth.slice';
+import { FormSubmit } from 'Types/libs';
 
 export type AuthFormMethods<FormValues> = Omit<
   UseFormReturn<FormValues>,
@@ -17,12 +18,9 @@ interface RouteData {
   title: string;
   linkText: string;
 }
-interface SubmitApiErrors {
-  data: ApiErrors;
-}
 interface AuthFormProps<FormValues> {
   formCSS?: CSSProp;
-  onSubmit(values: FormValues): Promise<void | AccessToken | SubmitApiErrors>;
+  onSubmit: FormSubmit<FormValues, AccessToken | void>;
   routeData: RouteData;
   isLoading: boolean;
   renderInputs(formMethods: AuthFormMethods<FormValues>): ReactNode;
@@ -37,26 +35,13 @@ function AuthForm<FormValues>({
   renderInputs,
   inputsWrapperCSS,
 }: AuthFormProps<FormValues>) {
-  const { handleSubmit, setError, ...formMethods } = useForm<FormValues>();
-
-  function handleFormSubmit(values: FormValues) {
-    onSubmit(values).catch(({ data }) => {
-      if (data?.messages) {
-        const formErrors = data.messages;
-
-        Object.keys(formErrors).forEach(key => {
-          const fieldKey = key as Path<FormValues>;
-          setError(fieldKey, { message: formErrors[fieldKey] });
-        });
-      }
-    });
-  }
+  const { handleSubmit, ...formMethods } = useHookForm<FormValues>();
 
   return (
     <Root>
       <Title>{routeData.title}</Title>
 
-      <Form $CSS={formCSS} onSubmit={handleSubmit(handleFormSubmit)}>
+      <Form $CSS={formCSS} onSubmit={handleSubmit(onSubmit)}>
         <InputsWrapper $CSS={inputsWrapperCSS}>
           {renderInputs(formMethods)}
         </InputsWrapper>

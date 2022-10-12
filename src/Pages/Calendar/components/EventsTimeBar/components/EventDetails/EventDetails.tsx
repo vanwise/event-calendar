@@ -7,6 +7,7 @@ import { selectEventById } from 'Store/features/events/events.selectors';
 import { selectTagById } from 'Store/features/tags/tags.selectors';
 import { Event } from 'Types/api';
 import { HOUR_TEXT_WIDTH_IN_PX } from '../HoursList/HoursList';
+import { useSmallEventTitle } from './EventDetails.hooks';
 import { getEventTimeProps } from './EventDetails.utils';
 
 interface EventDetailsProps {
@@ -21,6 +22,8 @@ function EventDetails({ eventId, onClick, activeDate }: EventDetailsProps) {
     selectTagById(store, event?.tagId || ''),
   );
 
+  const { isTitleVisible, measuredTitleRef } = useSmallEventTitle();
+
   if (!event) {
     return null;
   }
@@ -33,13 +36,18 @@ function EventDetails({ eventId, onClick, activeDate }: EventDetailsProps) {
 
   return (
     <Root $topPosition={topPosition} $eventHeight={eventHeight}>
-      <Wrapper onClick={() => onClick(event)}>
+      <Wrapper onClick={() => onClick(event)} title={event.title}>
         <TimeWrapper>
           <Time>{startTime}</Time>
+          {!isTitleVisible && (
+            <Title $isSmall>
+              <TextWithLineClamp>{event.title}</TextWithLineClamp>
+            </Title>
+          )}
           <Duration>{duration}</Duration>
         </TimeWrapper>
 
-        <Title>{event.title}</Title>
+        <Title ref={measuredTitleRef}>{event?.title}</Title>
         <Description lineCount={2} title={event.description}>
           {event.description}
         </Description>
@@ -91,19 +99,25 @@ const TimeWrapper = styled.div`
 `;
 
 const Time = styled.p`
+  flex-shrink: 0;
+  margin: 0 5px 0 0;
   font-size: 13px;
   font-style: italic;
   color: var(--black2);
 `;
 
 const Duration = styled.p`
+  flex-shrink: 0;
   font-size: 13px;
   color: var(--gray7);
 `;
 
-const Title = styled.p`
-  font-size: 18px;
+const Title = styled.p<{ $isSmall?: boolean }>`
+  font-size: ${({ $isSmall }) => ($isSmall ? 13 : 18)}px;
   color: var(--gray3);
+  overflow: hidden;
+
+  ${({ $isSmall }) => $isSmall && 'margin: 0 auto 0 0;'}
 `;
 
 const Description = styled(TextWithLineClamp)`

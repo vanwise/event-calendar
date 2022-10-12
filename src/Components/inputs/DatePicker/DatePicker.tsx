@@ -23,6 +23,7 @@ const { YEAR_MONTH_DAY, FULL_MONTH_YEAR } = DATE_FORMAT;
 function DatePicker({
   isRange,
   className,
+  markedDays,
   defaultDate,
   defaultDates,
   onDateChange,
@@ -51,11 +52,12 @@ function DatePicker({
     () =>
       getDaysInMonth({
         date: currentDate,
+        markedDays,
         selectedDates,
         borderEndDate,
         borderStartDate,
       }),
-    [currentDate, selectedDates, borderEndDate, borderStartDate],
+    [currentDate, markedDays, selectedDates, borderEndDate, borderStartDate],
   );
 
   function increaseCurrentMonth() {

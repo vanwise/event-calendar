@@ -44,16 +44,6 @@ const LogoWrapper = styled.div`
   padding: 15px 0;
   height: 90px;
   border-bottom: 2px solid var(--gray);
-
-  &:hover {
-    svg {
-      transform: rotate(360deg);
-    }
-  }
-
-  svg {
-    transition: 0.7s ease-out;
-  }
 `;
 
 const LinksList = styled.menu`

@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import { HiddenTitle } from 'Components/text';
 import TimeService, { TimeServiceDate } from 'Services/TimeService';
 import { DATE_FORMAT } from 'Utils/constants/date';
@@ -9,6 +9,7 @@ export interface DayCell {
   isNow?: boolean;
   isFrom?: boolean;
   isActive?: boolean;
+  isMarked?: boolean;
   isDisabled?: boolean;
 }
 interface CalendarProps {
@@ -33,7 +34,10 @@ function Calendar({ onDateClick, daysInMonth }: CalendarProps) {
 
       <Table as="menu">
         {daysInMonth.map(
-          ({ date, isActive, isFrom, isTo, isDisabled, isNow }, index) => (
+          (
+            { date, isActive, isFrom, isTo, isDisabled, isNow, isMarked },
+            index,
+          ) => (
             <Cell key={index}>
               <DayButton
                 type="button"
@@ -43,6 +47,7 @@ function Calendar({ onDateClick, daysInMonth }: CalendarProps) {
                 onClick={() => onDateClick(date)}
                 disabled={isDisabled}
                 $isActive={isActive}
+                $isMarked={isMarked}
                 $isDisabled={isDisabled}>
                 <time dateTime={date.format(YEAR_MONTH_DAY)}>
                   {date.format(SHORT_DAY)}
@@ -93,7 +98,21 @@ const HeaderCell = styled(Cell)`
   text-transform: uppercase;
 `;
 
+const dayMark = css`
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--violet);
+  }
+`;
+
 const DayButton = styled.button<DayButtonProps>`
+  position: relative;
   width: 100%;
   height: 100%;
   color: var(
@@ -142,6 +161,8 @@ const DayButton = styled.button<DayButtonProps>`
       border-color: var(--violet);
       `}
   }
+
+  ${({ $isActive, $isMarked }) => $isActive && $isMarked && dayMark}
 `;
 
 export default Calendar;

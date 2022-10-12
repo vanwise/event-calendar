@@ -58,6 +58,10 @@ const Toggler = styled.span`
 `;
 
 const Input = styled.input`
+  &:focus-visible ~ ${Toggler} {
+    outline: -webkit-focus-ring-color auto 1px;
+  }
+
   &:checked ~ ${Toggler} {
     background: var(--violet);
     border: 2px solid var(--violet);

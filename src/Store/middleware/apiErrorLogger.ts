@@ -60,9 +60,11 @@ function handleUnauthorizedError(
 function generateFieldsErrorMessage(
   messages: Exclude<ApiErrors['messages'], undefined>,
 ) {
-  return Object.keys(messages).reduce((acc, fieldKey) => {
+  return Object.keys(messages).reduce((acc, fieldKey, index) => {
     const field = messages[fieldKey];
-    return acc + '\n' + `${fieldKey}: ${field}`;
+    const space = index === 0 ? '' : '\n';
+
+    return acc + space + `${fieldKey}: ${field}`;
   }, '');
 }
 

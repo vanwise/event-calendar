@@ -11,6 +11,7 @@ import {
   FieldPath,
   FieldValues,
   RegisterOptions,
+  SubmitHandler,
   UseControllerProps,
   UseFormRegister,
 } from 'react-hook-form';
@@ -53,3 +54,8 @@ export interface ControlledFormInputProps<
   control: Control<FormValues>;
   controlOptions?: UseControllerProps<FormValues, FieldName>['rules'];
 }
+
+export type FormSubmit<Values, SubmitResult = any> = ChangeReturnType<
+  SubmitHandler<Values>,
+  Promise<SubmitResult> | void
+>;

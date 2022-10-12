@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { css } from 'styled-components/macro';
 import { IconButton } from 'Components/buttons';
 import { Event } from 'Types/api';
+import { FormSubmit } from 'Types/libs';
 import ConfirmationModal from '../ConfirmationModal';
 import Modal, { ModalProps } from '../Modal/Modal';
 import EventForm, { EventFormValues } from './components/EventForm/EventForm';
 
 interface EventModalProps extends Omit<ModalProps, 'children' | 'title'> {
-  onSubmit(values: EventFormValues): void;
+  onSubmit: FormSubmit<EventFormValues>;
   onDeleteEventClick(): void;
   eventForChanging?: Event;
 }

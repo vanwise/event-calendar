@@ -1,6 +1,9 @@
 import { Dispatch, SetStateAction } from 'react';
 import { compose } from '@reduxjs/toolkit';
-import TimeService, { TimeServiceDate } from 'Services/TimeService';
+import TimeService, {
+  TimeServiceDate,
+  TimeServiceRawDate,
+} from 'Services/TimeService';
 import { DayCell } from './components/Calendar/Calendar';
 import {
   ConditionalDatePickerProps,
@@ -96,6 +99,7 @@ export function getInitialSelectedDates({
 
 interface GetDaysInMonthArgs {
   date: TimeServiceDate;
+  markedDays?: TimeServiceRawDate[];
   selectedDates: SelectedDates;
   borderEndDate?: string;
   borderStartDate?: string;
@@ -103,6 +107,7 @@ interface GetDaysInMonthArgs {
 
 export function getDaysInMonth({
   date,
+  markedDays,
   selectedDates,
   borderEndDate,
   borderStartDate,
@@ -110,6 +115,7 @@ export function getDaysInMonth({
   const initialDays = getInitialDays();
 
   return compose(
+    setMarkedDays,
     setNextMonthDays,
     setPrevMonthDays,
     addMarkOfSpecificDays,
@@ -179,6 +185,17 @@ export function getDaysInMonth({
     );
 
     return days.concat(nextMonthDays);
+  }
+
+  function setMarkedDays(days: DayCell[]): DayCell[] {
+    return days.map(day => {
+      const isMarked =
+        markedDays?.some(markedDay =>
+          TimeService.isDateSame(day.date, markedDay),
+        ) || false;
+
+      return { ...day, isMarked };
+    });
   }
 }
 
