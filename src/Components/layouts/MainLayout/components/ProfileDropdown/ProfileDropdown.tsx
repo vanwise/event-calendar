@@ -1,13 +1,21 @@
 import styled from 'styled-components/macro';
 import { useNavigate } from 'react-router-dom';
-import { MainDropdown } from 'Components';
+import { Loader, MainDropdown } from 'Components';
 import { BatmanIcon } from 'Components/svg';
 import { HiddenTitle, TextWithLineClamp } from 'Components/text';
+import { useGetUserQuery } from 'Store/features/users/users.slice';
 import { ROOT_ROUTES } from 'Utils/constants/routes';
 import { logOut } from 'Utils/helpers/auth';
 
 function ProfileDropdown() {
   const navigate = useNavigate();
+  const { data: user, isLoading: isUserLoading } = useGetUserQuery();
+
+  if (isUserLoading) {
+    return <Loader />;
+  } else if (!user) {
+    return null;
+  }
 
   function closeDropdownAndCallCallback(
     closeDropdown: () => void,
@@ -22,6 +30,8 @@ function ProfileDropdown() {
     { text: 'Logout', onClick: logOut },
   ];
 
+  const { firstName, lastName = '' } = user;
+
   return (
     <Root>
       <HiddenTitle level={2}>Profile control dropdown</HiddenTitle>
@@ -33,7 +43,7 @@ function ProfileDropdown() {
       <MainDropdown
         renderTrigger={toggleDropdown => (
           <TriggerButton onClick={toggleDropdown}>
-            <TextWithLineClamp>Bruce Wayne</TextWithLineClamp>
+            <TextWithLineClamp>{`${firstName} ${lastName}`}</TextWithLineClamp>
           </TriggerButton>
         )}
         renderDropdown={closeDropdown => (
@@ -55,11 +65,10 @@ function ProfileDropdown() {
 }
 
 const Root = styled.article`
-  flex-grow: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 180px;
+  max-width: 250px;
 `;
 
 const AvatarWrapper = styled.div`
@@ -84,7 +93,6 @@ const TriggerButton = styled.button`
     right: 3px;
     border: solid var(--gray7);
     border-width: 0 3px 3px 0;
-    display: inline-block;
     padding: 3px;
     transform: rotate(45deg);
   }

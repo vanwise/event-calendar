@@ -28,8 +28,6 @@ export function getInitialCurrentDate({
   borderEndDate,
   borderStartDate,
 }: GetInitialCurrentDateArgs) {
-  return compose(handleBorderDates, getCurrentDate)();
-
   function getCurrentDate() {
     function getCurrentDateString() {
       if (isRange && defaultDates) {
@@ -61,6 +59,8 @@ export function getInitialCurrentDate({
 
     return currentDate;
   }
+
+  return compose(handleBorderDates, getCurrentDate)();
 }
 
 export function getInitialSelectedDates({
@@ -70,8 +70,6 @@ export function getInitialSelectedDates({
 }: ConditionalDates): SelectedDates {
   const DEFAULT_SELECTED_DAYS = { from: null, to: null };
   const getNewDates = isRange ? getRangeDates : getPlainDate;
-
-  return getNewDates() || DEFAULT_SELECTED_DAYS;
 
   function getRangeDates() {
     if (!defaultDates) return;
@@ -87,7 +85,6 @@ export function getInitialSelectedDates({
 
   function getPlainDate() {
     if (!defaultDate) return;
-
     const dateFrom = TimeService.getDate(defaultDate);
 
     return {
@@ -95,6 +92,8 @@ export function getInitialSelectedDates({
       to: null,
     };
   }
+
+  return getNewDates() || DEFAULT_SELECTED_DAYS;
 }
 
 interface GetDaysInMonthArgs {
@@ -114,13 +113,6 @@ export function getDaysInMonth({
 }: GetDaysInMonthArgs): DayCell[] {
   const initialDays = getInitialDays();
 
-  return compose(
-    setMarkedDays,
-    setNextMonthDays,
-    setPrevMonthDays,
-    addMarkOfSpecificDays,
-  )(initialDays);
-
   function getInitialDays() {
     const daysInCurrentMonth = date.daysInMonth();
     const initialDays = [...Array(daysInCurrentMonth)].map((_, index) => ({
@@ -132,6 +124,20 @@ export function getDaysInMonth({
   }
 
   function addMarkOfSpecificDays(days: DayCell[]): DayCell[] {
+    function getMarkOfFromAndTo(day: DayCell) {
+      const isMonthSameSelectedDatesMonth = Boolean(
+        selectedDates.from?.isSame(date, 'month') ||
+          selectedDates.to?.isSame(date, 'month'),
+      );
+
+      if (!isMonthSameSelectedDatesMonth) return null;
+
+      return {
+        isFrom: selectedDates.from?.isSame(day.date, 'date'),
+        isTo: selectedDates.to?.isSame(day.date, 'date'),
+      };
+    }
+
     return days.map(day => {
       const isNow = TimeService.isDateSame(TimeService.getDate(), day.date);
       const isDisabled = Boolean(
@@ -146,20 +152,6 @@ export function getDaysInMonth({
         ...getMarkOfFromAndTo(day),
       };
     });
-
-    function getMarkOfFromAndTo(day: DayCell) {
-      const isMonthSameSelectedDatesMonth = Boolean(
-        selectedDates.from?.isSame(date, 'month') ||
-          selectedDates.to?.isSame(date, 'month'),
-      );
-
-      if (!isMonthSameSelectedDatesMonth) return null;
-
-      return {
-        isFrom: selectedDates.from?.isSame(day.date, 'date'),
-        isTo: selectedDates.to?.isSame(day.date, 'date'),
-      };
-    }
   }
 
   function setPrevMonthDays(days: DayCell[]): DayCell[] {
@@ -197,6 +189,78 @@ export function getDaysInMonth({
       return { ...day, isMarked };
     });
   }
+
+  return compose(
+    setMarkedDays,
+    setNextMonthDays,
+    setPrevMonthDays,
+    addMarkOfSpecificDays,
+  )(initialDays);
+}
+
+interface ToggleSelectedDateRangeArgs
+  extends Pick<
+    HandleCalendarDateClickArgs,
+    'newDate' | 'selectedDates' | 'updateSelectedDate' | 'updateSelectedDates'
+  > {
+  updateDateFromToNewDate(): void;
+}
+
+function toggleSelectedDateRange({
+  newDate,
+  selectedDates,
+  updateSelectedDate,
+  updateSelectedDates,
+  updateDateFromToNewDate,
+}: ToggleSelectedDateRangeArgs) {
+  function setUpdatedDateRange(
+    dateFrom: TimeServiceDate,
+    dateTo: TimeServiceDate,
+  ) {
+    const middleDateBetweenSelectedDates = dateFrom.add(
+      dateTo.diff(dateFrom, 'millisecond') / 2,
+      'millisecond',
+    );
+    const isDateBeforeMiddleDate = newDate.isBefore(
+      middleDateBetweenSelectedDates,
+      'date',
+    );
+
+    if (isDateBeforeMiddleDate) {
+      updateDateFromToNewDate();
+    } else {
+      updateSelectedDate('to', newDate);
+    }
+  }
+
+  function setDateRangeBorder() {
+    const isDateAfterDateTo = newDate.isAfter(selectedDates.to, 'date');
+    const isDateBeforeDateFrom = newDate.isBefore(selectedDates.from, 'date');
+
+    if (!selectedDates.to && isDateBeforeDateFrom) {
+      updateSelectedDates({
+        to: selectedDates.from,
+        from: newDate,
+      });
+    } else if (!selectedDates.from && isDateAfterDateTo) {
+      updateSelectedDates({
+        to: newDate,
+        from: selectedDates.to,
+      });
+    } else if (selectedDates.to) {
+      updateDateFromToNewDate();
+    } else if (selectedDates.from) {
+      updateSelectedDate('to', newDate);
+    }
+  }
+
+  if (selectedDates.from && selectedDates.to) {
+    setUpdatedDateRange(selectedDates.from, selectedDates.to);
+  } else if (selectedDates.from || selectedDates.to) {
+    setDateRangeBorder();
+  } else {
+    updateDateFromToNewDate();
+  }
 }
 
 interface HandleCalendarDateClickArgs {
@@ -220,10 +284,8 @@ export function handleCalendarDateClick({
   deleteSelectedDate,
   updateSelectedDates,
 }: HandleCalendarDateClickArgs) {
-  if (newDate.isSame(currentDate, 'month')) {
-    toggleSelectedDate();
-  } else {
-    switchToOtherMonth();
+  function updateDateFromToNewDate() {
+    updateSelectedDate('from', newDate);
   }
 
   function toggleSelectedDate() {
@@ -237,67 +299,15 @@ export function handleCalendarDateClick({
     if (typeOfDateSimilarToNewDate) {
       deleteSelectedDate(typeOfDateSimilarToNewDate);
     } else if (isRange) {
-      handleDateRange();
+      toggleSelectedDateRange({
+        newDate,
+        selectedDates,
+        updateSelectedDate,
+        updateSelectedDates,
+        updateDateFromToNewDate,
+      });
     } else {
       updateDateFromToNewDate();
-    }
-
-    function handleDateRange() {
-      if (selectedDates.from && selectedDates.to) {
-        setUpdatedDateRange(selectedDates.from, selectedDates.to);
-      } else if (selectedDates.from || selectedDates.to) {
-        setDateRangeBorder();
-      } else {
-        updateDateFromToNewDate();
-      }
-
-      function setUpdatedDateRange(
-        dateFrom: TimeServiceDate,
-        dateTo: TimeServiceDate,
-      ) {
-        const middleDateBetweenSelectedDates = dateFrom.add(
-          dateTo.diff(dateFrom, 'millisecond') / 2,
-          'millisecond',
-        );
-        const isDateBeforeMiddleDate = newDate.isBefore(
-          middleDateBetweenSelectedDates,
-          'date',
-        );
-
-        if (isDateBeforeMiddleDate) {
-          updateDateFromToNewDate();
-        } else {
-          updateSelectedDate('to', newDate);
-        }
-      }
-
-      function setDateRangeBorder() {
-        const isDateAfterDateTo = newDate.isAfter(selectedDates.to, 'date');
-        const isDateBeforeDateFrom = newDate.isBefore(
-          selectedDates.from,
-          'date',
-        );
-
-        if (!selectedDates.to && isDateBeforeDateFrom) {
-          updateSelectedDates({
-            to: selectedDates.from,
-            from: newDate,
-          });
-        } else if (!selectedDates.from && isDateAfterDateTo) {
-          updateSelectedDates({
-            to: newDate,
-            from: selectedDates.to,
-          });
-        } else if (selectedDates.to) {
-          updateDateFromToNewDate();
-        } else if (selectedDates.from) {
-          updateSelectedDate('to', newDate);
-        }
-      }
-    }
-
-    function updateDateFromToNewDate() {
-      updateSelectedDate('from', newDate);
     }
   }
 
@@ -307,5 +317,11 @@ export function handleCalendarDateClick({
     } else if (newDate.isAfter(currentDate, 'month')) {
       setCurrentDate(currentDate.add(1, 'month'));
     }
+  }
+
+  if (newDate.isSame(currentDate, 'month')) {
+    toggleSelectedDate();
+  } else {
+    switchToOtherMonth();
   }
 }

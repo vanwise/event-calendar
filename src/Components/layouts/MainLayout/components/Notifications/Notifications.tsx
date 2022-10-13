@@ -65,7 +65,7 @@ function Notifications() {
 }
 
 const Root = styled.article`
-  margin: 0 20px 0 0;
+  margin: 0 15px 0 0;
 `;
 
 const unreadedMark = css`
