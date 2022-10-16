@@ -54,7 +54,11 @@ function handleUnauthorizedError(
       .finally(() => (refreshTokenPromise = undefined));
   }
 
-  refreshTokenPromise.then(repeatApiRequest);
+  refreshTokenPromise.then(() => {
+    if (!isMutation) {
+      repeatApiRequest();
+    }
+  });
 }
 
 function generateFieldsErrorMessage(

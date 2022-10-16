@@ -5,7 +5,7 @@ function EmptyBlock() {
   return (
     <Root>
       <ArrowIcon />
-      <Text>Select date</Text>
+      <Text>Choose date</Text>
     </Root>
   );
 }

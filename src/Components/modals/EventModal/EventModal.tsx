@@ -1,13 +1,13 @@
-import { useState } from 'react';
 import { css } from 'styled-components/macro';
 import { IconButton } from 'Components/buttons';
+import { useConfirmationModal } from 'Hooks/modals';
 import { Event } from 'Types/api';
 import { FormSubmit } from 'Types/libs';
-import ConfirmationModal from '../ConfirmationModal';
 import Modal, { ModalProps } from '../Modal/Modal';
 import EventForm, { EventFormValues } from './components/EventForm/EventForm';
 
-interface EventModalProps extends Omit<ModalProps, 'children' | 'title'> {
+export interface EventModalProps
+  extends Omit<ModalProps, 'children' | 'title'> {
   onSubmit: FormSubmit<EventFormValues>;
   onDeleteEventClick(): void;
   eventForChanging?: Event;
@@ -26,25 +26,17 @@ function EventModal({
   eventForChanging,
   ...restProps
 }: EventModalProps) {
-  const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
-
-  function closeConfirmationModal() {
-    setIsConfirmationVisible(false);
-  }
-
-  function handleConfirmationSuccessClick() {
-    onDeleteEventClick();
-    closeConfirmationModal();
-  }
-
-  const title = `${eventForChanging ? 'Change' : 'Create new'} event`;
   const confirmationModalText = `You want to delete "${eventForChanging?.title}" event`;
+  const title = `${eventForChanging ? 'Change' : 'Create new'} event`;
+
+  const { isConfirmationModalVisible, openConfirmationModal } =
+    useConfirmationModal(confirmationModalText, onDeleteEventClick);
 
   const headerButtonsContent = eventForChanging && (
     <IconButton
       icon="trash"
       title="Delete event"
-      onClick={() => setIsConfirmationVisible(true)}
+      onClick={openConfirmationModal}
     />
   );
 
@@ -54,7 +46,7 @@ function EventModal({
         title={title}
         isLoading={isLoading}
         headerButtonsCSS={HEADER_BUTTONS_CSS}
-        withoutClosingOnEsc={isConfirmationVisible}
+        withoutClosingOnEsc={isConfirmationModalVisible}
         headerButtonsContent={headerButtonsContent}
         {...restProps}>
         <EventForm
@@ -63,12 +55,6 @@ function EventModal({
           defaultEvent={eventForChanging}
         />
       </Modal>
-      <ConfirmationModal
-        text={confirmationModalText}
-        onClose={closeConfirmationModal}
-        isVisible={isConfirmationVisible}
-        onSuccessClick={handleConfirmationSuccessClick}
-      />
     </>
   );
 }

@@ -1,30 +1,35 @@
 import styled from 'styled-components/macro';
+import { EntityId } from '@reduxjs/toolkit';
 import { useAppSelector } from 'Hooks';
-import { TimeService } from 'Services';
 import { selectEventsIdsByActiveDate } from 'Store/features/events/events.selectors';
-import { selectFilterActiveDate } from 'Store/features/eventsFilter/eventsFilter.selectors';
-import { Event } from 'Types/api';
 import { EventDetails, HeaderWithDate, HoursList } from './components';
+import { useActiveDate, useInitialTimeBarScroll } from './EventsTimeBar.hooks';
 
 interface EventsTimeBarProps {
-  onEventClick(event: Event): void;
+  activeEventId: Nullable<EntityId>;
+  onEventClick(eventId: EntityId): void;
 }
 
-function EventsTimeBar({ onEventClick }: EventsTimeBarProps) {
-  const filterActiveDate = useAppSelector(selectFilterActiveDate);
+function EventsTimeBar({ onEventClick, activeEventId }: EventsTimeBarProps) {
   const filteredEventsIds = useAppSelector(selectEventsIdsByActiveDate);
 
-  const activeDate = filterActiveDate
-    ? TimeService.getDate(filterActiveDate)
-    : undefined;
+  const activeDate = useActiveDate();
+  const { sliderRef } = useInitialTimeBarScroll();
+
+  function scrollToTopOfSlider() {
+    sliderRef.current?.scroll({ top: 0, behavior: 'smooth' });
+  }
 
   return (
     <Root>
-      <HeaderWithDate activeDate={activeDate} />
+      <HeaderWithDate
+        activeDate={activeDate}
+        onNavigationButtonClick={scrollToTopOfSlider}
+      />
 
       <Wrapper>
         <Inner>
-          <SlideWrapper>
+          <SlideWrapper ref={sliderRef}>
             <HoursList />
 
             {activeDate && (
@@ -33,7 +38,8 @@ function EventsTimeBar({ onEventClick }: EventsTimeBarProps) {
                   <EventDetails
                     key={eventId}
                     eventId={eventId}
-                    onClick={onEventClick}
+                    onClick={() => onEventClick(eventId)}
+                    isActive={eventId === activeEventId}
                     activeDate={activeDate}
                   />
                 ))}

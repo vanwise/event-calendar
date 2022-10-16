@@ -14,19 +14,12 @@ export function getEventTimeProps(
   const endDate = TimeService.getDate(endDateISO);
 
   const isStartDateBeforeActiveDate = startDate.isBefore(activeDate, 'date');
-  const eventDuration = TimeService.getDate.duration(
-    Math.abs(startDate.diff(endDate, 'minutes')),
-    'minutes',
-  );
-  const durationInHours = eventDuration.hours();
-  const durationInMinutes = eventDuration.minutes();
-
   const startTimeFormat = isStartDateBeforeActiveDate
     ? SHORT_MONTH_DAY_HOURS_MINUTES
     : HOUR_MINUTES;
-  const duration = `${durationInHours ? `${durationInHours}h ` : ''}${
-    durationInMinutes ? `${durationInMinutes} min` : ''
-  }`;
+
+  const { duration: eventDuration, durationString: duration } =
+    TimeService.getDurations(startDate, endDate);
 
   function getEventGeometry() {
     const startDateDuration = TimeService.getDate.duration({

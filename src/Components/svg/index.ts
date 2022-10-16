@@ -1,8 +1,13 @@
+export { default as AvatarIcon } from './AvatarIcon';
 export { default as BatmanIcon } from './BatmanIcon';
 export { default as CalendarIcon } from './CalendarIcon';
+export { default as CalendarOutlinedIcon } from './CalendarOutlinedIcon';
+export { default as ClockIcon } from './ClockIcon';
+export { default as ClockOutlinedIcon } from './ClockOutlinedIcon';
 export { default as CrossIcon } from './CrossIcon';
 export { default as MainLogoIcon } from './MainLogoIcon';
 export { default as NotificationIcon } from './NotificationIcon';
+export { default as NotificationOutlinedIcon } from './NotificationOutlinedIcon';
 export { default as ProfileIcon } from './ProfileIcon';
 export { default as RightArrowIcon } from './RightArrowIcon';
 export { default as SimpleCalendarIcon } from './SimpleCalendarIcon';

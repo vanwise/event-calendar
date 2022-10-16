@@ -4,9 +4,11 @@ export const DATE_FORMAT = {
   SHORT_DAY: 'D',
   HOUR_MINUTES: 'LT',
   SHORT_MONTH_DAY_YEAR: 'll',
+  SHORT_WEEK_MONTH_DAY_YEAR: 'ddd, MMM D, YYYY',
   SHORT_MONTH_DAY_HOURS_MINUTES: 'MMM D, LT',
   YEAR_MONTH_DAY: 'YYYY-MM-DD',
 };
 
 export const MINUTES_IN_HOUR = 60;
+export const MINUTES_IN_DAY = MINUTES_IN_HOUR * 24;
 export const HOURS_IN_DAY = 24;

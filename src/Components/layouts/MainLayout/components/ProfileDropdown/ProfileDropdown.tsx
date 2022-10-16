@@ -1,7 +1,7 @@
 import styled from 'styled-components/macro';
 import { useNavigate } from 'react-router-dom';
-import { Loader, MainDropdown } from 'Components';
-import { BatmanIcon } from 'Components/svg';
+import { Loader, MainDropdown } from 'Components/common';
+import { AvatarIcon } from 'Components/svg';
 import { HiddenTitle, TextWithLineClamp } from 'Components/text';
 import { useGetUserQuery } from 'Store/features/users/users.slice';
 import { ROOT_ROUTES } from 'Utils/constants/routes';
@@ -37,7 +37,7 @@ function ProfileDropdown() {
       <HiddenTitle level={2}>Profile control dropdown</HiddenTitle>
 
       <AvatarWrapper>
-        <BatmanIcon />
+        <AvatarIconStylized />
       </AvatarWrapper>
 
       <MainDropdown
@@ -74,10 +74,16 @@ const Root = styled.article`
 const AvatarWrapper = styled.div`
   flex-shrink: 0;
   margin: 0 10px 0 0;
+  padding: 2px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
   border: 3px solid var(--red4);
+  overflow: hidden;
+`;
+
+const AvatarIconStylized = styled(AvatarIcon)`
+  fill: var(--gray7);
 `;
 
 const TriggerButton = styled.button`

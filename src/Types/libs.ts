@@ -59,3 +59,8 @@ export type FormSubmit<Values, SubmitResult = any> = ChangeReturnType<
   SubmitHandler<Values>,
   Promise<SubmitResult> | void
 >;
+
+export interface ModalHookProps {
+  isVisible: boolean;
+  onClose(): void;
+}

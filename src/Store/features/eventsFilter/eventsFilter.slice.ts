@@ -1,13 +1,17 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, EntityId, PayloadAction } from '@reduxjs/toolkit';
 import { DefaultSelectedDates } from 'Components/inputs/DatePicker/DatePicker.types';
 import { TimeService } from 'Services';
 
 interface EventsFilterStore {
   activeDate: Nullable<string>;
   dateRange: DefaultSelectedDates;
+  activeEventId: Nullable<EntityId>;
+  eventsLastScrollValue: Nullable<number>;
 }
 
 const initialState: EventsFilterStore = {
+  eventsLastScrollValue: null,
+  activeEventId: null,
   activeDate: null,
   dateRange: {
     from: null,
@@ -62,10 +66,27 @@ export const eventsFilterSlice = createSlice({
         }
       }
     },
+    changeActiveEventId(
+      state,
+      { payload: eventId }: PayloadAction<Nullable<EntityId>>,
+    ) {
+      state.activeEventId = eventId;
+    },
+    changeEventsLastScrollValue(
+      state,
+      { payload: scrollValue }: PayloadAction<Nullable<number>>,
+    ) {
+      state.eventsLastScrollValue = scrollValue;
+    },
   },
 });
 
-export const { changeDateRange, showPrevActiveDate, showNextActiveDate } =
-  eventsFilterSlice.actions;
+export const {
+  changeDateRange,
+  showPrevActiveDate,
+  showNextActiveDate,
+  changeActiveEventId,
+  changeEventsLastScrollValue,
+} = eventsFilterSlice.actions;
 
 export default eventsFilterSlice.reducer;

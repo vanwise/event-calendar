@@ -1,22 +1,32 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import { EntityId } from '@reduxjs/toolkit';
 import { TextWithLineClamp } from 'Components/text';
 import { useAppSelector } from 'Hooks';
 import { TimeServiceDate } from 'Services/TimeService';
 import { selectEventById } from 'Store/features/events/events.selectors';
 import { selectTagById } from 'Store/features/tags/tags.selectors';
-import { Event } from 'Types/api';
 import { HOUR_TEXT_WIDTH_IN_PX } from '../HoursList/HoursList';
 import { useSmallEventTitle } from './EventDetails.hooks';
 import { getEventTimeProps } from './EventDetails.utils';
 
 interface EventDetailsProps {
   eventId: EntityId;
-  onClick(event: Event): void;
+  onClick(): void;
+  isActive: boolean;
   activeDate: TimeServiceDate;
 }
+interface RootProps {
+  $topPosition: number;
+  $eventHeight: number;
+  $isActive: boolean;
+}
 
-function EventDetails({ eventId, onClick, activeDate }: EventDetailsProps) {
+function EventDetails({
+  eventId,
+  onClick,
+  isActive,
+  activeDate,
+}: EventDetailsProps) {
   const event = useAppSelector(store => selectEventById(store, eventId));
   const eventTag = useAppSelector(store =>
     selectTagById(store, event?.tagId || ''),
@@ -35,11 +45,14 @@ function EventDetails({ eventId, onClick, activeDate }: EventDetailsProps) {
   } = getEventTimeProps(event, activeDate);
 
   return (
-    <Root $topPosition={topPosition} $eventHeight={eventHeight}>
-      <Wrapper onClick={() => onClick(event)} title={event.title}>
+    <Root
+      $isActive={isActive}
+      $topPosition={topPosition}
+      $eventHeight={eventHeight}>
+      <Wrapper onClick={onClick} title={event.title}>
         <TimeWrapper>
           <Time>{startTime}</Time>
-          {!isTitleVisible && (
+          {!isTitleVisible && !isActive && (
             <Title $isSmall>
               <TextWithLineClamp>{event.title}</TextWithLineClamp>
             </Title>
@@ -57,7 +70,15 @@ function EventDetails({ eventId, onClick, activeDate }: EventDetailsProps) {
   );
 }
 
-const Root = styled.li<{ $topPosition: number; $eventHeight: number }>`
+const activeRootCSS = css`
+  z-index: 1;
+  width: calc(100% - 80px);
+  height: auto;
+  transform: translateX(-30px);
+  box-shadow: 0 5px 20px 5px var(--gray-opacity);
+`;
+
+const Root = styled.li<RootProps>`
   position: absolute;
   top: ${({ $topPosition }) => $topPosition}px;
   right: 10px;
@@ -68,6 +89,10 @@ const Root = styled.li<{ $topPosition: number; $eventHeight: number }>`
   background: var(--violet2);
   border-radius: 15px;
   border: 1px solid var(--gray6);
+  transition: 0.3s ease-out;
+  user-select: none;
+
+  ${({ $isActive }) => $isActive && activeRootCSS}
 `;
 
 const Wrapper = styled.div`

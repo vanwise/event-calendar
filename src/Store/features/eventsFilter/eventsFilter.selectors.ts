@@ -7,6 +7,12 @@ export const selectFilterDateRange = (state: RootState) =>
 export const selectFilterActiveDate = (state: RootState) =>
   state.eventsFilter.activeDate;
 
+export const selectActiveEventId = (state: RootState) =>
+  state.eventsFilter.activeEventId;
+
+export const selectEventsLastScrollValue = (state: RootState) =>
+  state.eventsFilter.eventsLastScrollValue;
+
 export const selectHasBothDateRange = createSelector(
   selectFilterDateRange,
   dateRange => Boolean(dateRange.from && dateRange.to),
