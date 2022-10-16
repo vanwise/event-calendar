@@ -80,8 +80,9 @@ const DropdownWrapper = styled.div<{ $CSS?: CSSProp; $topPosition: number }>`
   box-shadow: 0 5px 20px 5px var(--gray-opacity);
   animation: ${fadeInAnimation} 0.3s forwards;
   overflow: auto;
-  ${({ $CSS }) => $CSS}
   max-height: calc(100vh - ${({ $topPosition }) => `${$topPosition - 10}px`});
+
+  ${({ $CSS }) => $CSS}
 `;
 
 export default MainDropdown;

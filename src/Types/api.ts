@@ -1,7 +1,7 @@
 export interface Event {
-  id: number;
+  id: string;
   title: string;
-  description: string;
+  description?: string;
   tagId: string;
   startDateISO: string;
   endDateISO: string;

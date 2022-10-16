@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import * as serviceWorkerRegistration from 'serviceWorkerRegistration';
 import App from 'App';
+import { ModalsContainer } from 'Components/modals';
 import { store } from 'Store/config';
 import reportWebVitals from './reportWebVitals';
 
@@ -14,6 +15,7 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <App />
+      <ModalsContainer />
     </Provider>
     <ToastContainer />
   </React.StrictMode>,

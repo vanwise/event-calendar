@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components/macro';
-import { MainDropdown } from 'Components';
-import { Loader } from 'Components';
+import { Loader, MainDropdown } from 'Components/common';
 import { NotificationIcon } from 'Components/svg';
 import { HiddenTitle } from 'Components/text';
 import { useAppSelector } from 'Hooks';
@@ -46,6 +45,7 @@ function Notifications() {
           renderTrigger={toggleDropdown => (
             <TriggerButton
               onClick={toggleDropdown}
+              title="Show notifications"
               disabled={isDisabledTriggerButton}
               $hasUnreaded={hasUnreaded}>
               <NotificationIcon />

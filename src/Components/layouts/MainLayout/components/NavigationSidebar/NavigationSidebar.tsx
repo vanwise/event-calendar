@@ -1,11 +1,11 @@
 import styled from 'styled-components/macro';
 import { NavLink } from 'react-router-dom';
-import { CalendarIcon, MainLogoIcon, ProfileIcon } from 'Components/svg';
+import { ClockIcon, MainLogoIcon, ProfileIcon } from 'Components/svg';
 import { ROOT_ROUTES } from 'Utils/constants/routes';
 
 const { CALENDAR, PROFILE } = ROOT_ROUTES;
 const LINKS = [
-  { path: CALENDAR, Icon: CalendarIcon },
+  { path: CALENDAR, Icon: ClockIcon },
   { path: PROFILE, Icon: ProfileIcon },
 ];
 
@@ -18,15 +18,19 @@ function NavigationSidebar() {
 
       <nav>
         <LinksList>
-          {LINKS.map(({ path, Icon }) => (
-            <li key={path}>
-              <NavLinkStylized to={path}>
-                {({ isActive }) => (
-                  <Icon className="link-icon" isActive={isActive} />
-                )}
-              </NavLinkStylized>
-            </li>
-          ))}
+          {LINKS.map(({ path, Icon }) => {
+            const pageName = path.split('/').at(-1)?.toUpperCase();
+
+            return (
+              <li key={path}>
+                <NavLinkStylized to={path} title={`${pageName} page link`}>
+                  {({ isActive }) => (
+                    <Icon className="link-icon" isActive={isActive} />
+                  )}
+                </NavLinkStylized>
+              </li>
+            );
+          })}
         </LinksList>
       </nav>
     </Root>
@@ -41,7 +45,7 @@ const LogoWrapper = styled.div`
   display: flex;
   justify-content: center;
   margin: 0 15px 40px;
-  padding: 15px 0;
+  padding: 20px 0;
   height: 90px;
   border-bottom: 2px solid var(--gray);
 `;

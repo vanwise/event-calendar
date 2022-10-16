@@ -91,6 +91,24 @@ const TimeService = {
     const currentDate = this.getDate(date);
     return currentDate.add(this.getDate.duration(timeUnits));
   },
+  getDurations(rawStartDate: TimeServiceRawDate, endDate: TimeServiceRawDate) {
+    const startDate = this.getDate.isDayjs(rawStartDate)
+      ? rawStartDate
+      : this.getDate(rawStartDate);
+    const duration = this.getDate.duration(
+      Math.abs(startDate.diff(endDate, 'minutes')),
+      'minutes',
+    );
+
+    const durationInHours = duration.hours();
+    const durationInMinutes = duration.minutes();
+
+    const durationString = `${durationInHours ? `${durationInHours}h ` : ''}${
+      durationInMinutes ? `${durationInMinutes} min` : ''
+    }`;
+
+    return { duration, durationString };
+  },
 };
 
 type DayjsType = typeof dayjs;

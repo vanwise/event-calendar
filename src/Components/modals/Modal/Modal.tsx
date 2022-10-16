@@ -1,15 +1,12 @@
 import { ReactNode, useCallback, useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
 import styled, { CSSProp } from 'styled-components/macro';
 import { IconButton } from 'Components/buttons';
+import { ModalHookProps } from 'Types/libs';
 import { modalAnimations } from './Modal.utils';
 
-export interface ModalProps extends WithChildren {
+export interface ModalProps extends ModalHookProps, WithChildren {
   title: string;
-  /** @param onClose callback must be wrapped in useCallback */
-  onClose(): void;
   titleCSS?: CSSProp;
-  isVisible?: boolean;
   isLoading?: boolean;
   contentCSS?: CSSProp;
   wrapperCSS?: CSSProp;
@@ -23,7 +20,6 @@ interface WrapperProps {
   $hasClosingAnimation: boolean;
 }
 
-const reactRootElement = document.querySelector('#root');
 const animationDurationInMs = 300;
 
 function Modal({
@@ -71,11 +67,11 @@ function Modal({
     }
   }, [isVisible]);
 
-  if (!isVisible || !reactRootElement) {
+  if (!isVisible) {
     return null;
   }
 
-  const modal = (
+  return (
     <Root
       role="dialog"
       onClick={handleClose}
@@ -104,8 +100,6 @@ function Modal({
       </Wrapper>
     </Root>
   );
-
-  return createPortal(modal, reactRootElement);
 }
 
 const { backdropFadeIn, backdropFadeOut, wrapperFadeIn, wrapperFadeOut } =

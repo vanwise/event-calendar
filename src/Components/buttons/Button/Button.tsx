@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro';
-import Loader from 'Components/Loader';
+import { Loader } from 'Components/common';
 import { BUTTON_LOADER_COLOR, BUTTON_THEMES } from './Button.utils';
 
 type Theme = keyof typeof BUTTON_THEMES;

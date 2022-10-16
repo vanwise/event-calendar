@@ -41,7 +41,7 @@ function EventForm({ onSubmit, isLoading, defaultEvent }: EventFormProps) {
     register,
     resetField,
     handleSubmit,
-    formState: { errors: formErrors },
+    formState: { errors: formErrors, isDirty },
   } = useHookForm<EventFormValues>({
     defaultValues: getEventFormDefaultValues(defaultEvent),
   });
@@ -92,7 +92,11 @@ function EventForm({ onSubmit, isLoading, defaultEvent }: EventFormProps) {
         <ReminderCheckbox register={register} control={control} />
       </Wrapper>
 
-      <SubmitButton isLoading={isLoading} theme="light" type="submit">
+      <SubmitButton
+        type="submit"
+        theme="light"
+        disabled={!isDirty}
+        isLoading={isLoading}>
         Submit
       </SubmitButton>
     </Root>
