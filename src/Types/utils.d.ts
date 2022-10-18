@@ -4,6 +4,10 @@ type FullRequired<T> = {
   [P in keyof T]-?: NonNullable<T[P]>;
 };
 
+type NotPartial<T> = {
+  [P in keyof T]-?: T[P];
+};
+
 type StyledProps<T> = Record<`$${keyof T}`, T[keyof T]>;
 
 type PartialBy<T, F extends keyof T> = Omit<T, F> & Partial<Pick<T, F>>;

@@ -5,7 +5,7 @@ import { StorageService, ToastService } from 'Services';
 import { api, ApiErrors } from 'Store/api';
 import { AccessToken } from 'Store/features/auth/auth.slice';
 import { config } from 'Utils/constants/config';
-import { UNAUTHORIZED_CODE } from 'Utils/constants/http';
+import { FORBIDDEN_CODE, UNAUTHORIZED_CODE } from 'Utils/constants/http';
 import { logOut } from 'Utils/helpers/auth';
 
 interface RTKQueryRejectAction {
@@ -78,6 +78,7 @@ function handleRequestError(
   isMutation: boolean,
 ) {
   const { message, messages } = (data || {}) as ApiErrors;
+  const storedAccessToken = StorageService.get('access-token');
 
   function getErrorMessage() {
     if (errorStatus === QUERY_ERROR.FETCH_ERROR) {
@@ -90,10 +91,12 @@ function handleRequestError(
   }
 
   if (errorStatus === UNAUTHORIZED_CODE) {
-    handleUnauthorizedError(repeatApiRequest, isMutation);
-  } else {
-    ToastService.error(getErrorMessage());
+    return handleUnauthorizedError(repeatApiRequest, isMutation);
+  } else if (errorStatus === FORBIDDEN_CODE && storedAccessToken) {
+    logOut();
   }
+
+  ToastService.error(getErrorMessage());
 }
 
 const apiErrorLogger: Middleware =

@@ -1,8 +1,7 @@
 import styled from 'styled-components/macro';
 import { useNavigate } from 'react-router-dom';
 import AuthForm, { AuthFormMethods } from 'Components/forms/AuthForm/AuthForm';
-import WithFieldWatcher from 'Components/HOCs/WithFieldWatcher';
-import { Input } from 'Components/inputs';
+import { Input, PasswordConfirmInput } from 'Components/inputs';
 import { useRegisterUserMutation } from 'Store/features/auth/auth.slice';
 import { AUTH_ROUTES, ROOT_ROUTES } from 'Utils/constants/routes';
 import { omit } from 'Utils/helpers/object';
@@ -23,6 +22,13 @@ export type SubmittedSignUpFormValues = PartialBy<
 >;
 
 const requiredValidation = getValidations(['required']);
+const passwordValidations = getValidations([
+  'required',
+  {
+    minLength: { value: 4 },
+    maxLength: { value: 16 },
+  },
+]);
 
 const ROUTE_DATA = {
   url: AUTH_ROUTES.SIGN_IN,
@@ -96,28 +102,16 @@ function SignUpPage() {
             errors={errors}
             register={register}
             placeholder="Enter password"
-            registerOptions={requiredValidation}
+            registerOptions={passwordValidations}
           />
-          <WithFieldWatcher name={['password']} control={control}>
-            {([password]) => {
-              const registerOptions = getValidations([
-                'required',
-                { match: { value: password, text: 'Passwords not same' } },
-              ]);
-
-              return (
-                <Input
-                  name="passwordConfirm"
-                  type="password"
-                  label="Password Confirm"
-                  errors={errors}
-                  register={register}
-                  placeholder="Confirm password"
-                  registerOptions={registerOptions}
-                />
-              );
-            }}
-          </WithFieldWatcher>
+          <PasswordConfirmInput
+            name="passwordConfirm"
+            label="Password Confirm"
+            errors={errors}
+            control={control}
+            register={register}
+            passwordFieldName="password"
+          />
         </Wrapper>
       </>
     );

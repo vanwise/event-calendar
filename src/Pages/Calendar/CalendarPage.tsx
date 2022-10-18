@@ -1,5 +1,6 @@
 import styled from 'styled-components/macro';
 import { Loader } from 'Components/common';
+import { PageInnerLayout } from 'Components/layouts';
 import { useGetEventsQuery } from 'Store/features/events/events.slice';
 import { useGetTagsQuery } from 'Store/features/tags/tags.slice';
 import { EventAdding, EventsCalendar, EventsViewer } from './components';
@@ -13,39 +14,14 @@ function CalendarPage() {
   }
 
   return (
-    <Root>
-      <PageHeader>
-        <PageTitle>Availability</PageTitle>
-        <EventAdding />
-      </PageHeader>
-
+    <PageInnerLayout title="Availability" headerRightElement={<EventAdding />}>
       <Wrapper>
         <EventsCalendar />
         <EventsViewer />
       </Wrapper>
-    </Root>
+    </PageInnerLayout>
   );
 }
-
-const Root = styled.article`
-  display: flex;
-  flex-direction: column;
-  padding: 40px;
-  height: 100%;
-`;
-
-const PageHeader = styled.header`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0 0 30px;
-`;
-
-const PageTitle = styled.h1`
-  font-size: 50px;
-  font-weight: 700;
-  line-height: 60px;
-`;
 
 const Wrapper = styled.div`
   display: grid;

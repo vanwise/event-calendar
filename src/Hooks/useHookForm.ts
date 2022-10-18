@@ -13,7 +13,7 @@ function useHookForm<
   Values extends FieldValues = FieldValues,
   SubmitResult = any,
 >(formProps?: UseFormProps<Values>) {
-  const { handleSubmit: onSubmit, ...formMethods } = useForm(formProps);
+  const { handleSubmit: onSubmit, ...formMethods } = useForm<Values>(formProps);
 
   const handleSubmit = useCallback(
     (

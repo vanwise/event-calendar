@@ -4,7 +4,7 @@ import { EMAIL_REGEX } from '../constants/regex';
 
 type PlainValidationsType = 'required' | 'email';
 interface ComplexOption {
-  text: string;
+  text?: string;
   value: any;
 }
 interface ComplexValidationsType {
@@ -37,7 +37,7 @@ const allOptions = {
     return {
       maxLength: {
         value,
-        message: `Max length is ${value}` || text,
+        message: text || `Max length is ${value}`,
       },
     };
   },
@@ -45,7 +45,7 @@ const allOptions = {
     return {
       minLength: {
         value,
-        message: `Min length is ${value}` || text,
+        message: text || `Min length is ${value}`,
       },
     };
   },
@@ -62,23 +62,24 @@ export function combineValidations(
   source: Partial<RegisterOptions>,
   target: Partial<RegisterOptions>,
 ) {
-  const newSource: Partial<RegisterOptions> = {};
+  return Object.keys(target).reduce(
+    (acc: Partial<RegisterOptions>, key) => {
+      const optionsField = key as keyof RegisterOptions;
+      const rule = target[optionsField];
 
-  Object.keys(target).forEach(key => {
-    const optionsField = key as keyof RegisterOptions;
-    const rule = target[optionsField];
+      if (isPlainObject(rule)) {
+        acc[optionsField] = {
+          ...(source[optionsField] || null),
+          ...rule,
+        };
+      } else {
+        acc[optionsField] = rule;
+      }
 
-    if (isPlainObject(rule)) {
-      newSource[optionsField] = {
-        ...(source[optionsField] || null),
-        ...rule,
-      };
-    } else {
-      newSource[optionsField] = rule;
-    }
-  });
-
-  return newSource;
+      return acc;
+    },
+    { ...source },
+  );
 }
 
 export function getValidations(types: ValidationsType[]): RegisterOptions {
