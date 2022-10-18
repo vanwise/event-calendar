@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro';
-import { useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Loader, MainDropdown } from 'Components/common';
 import { AvatarIcon } from 'Components/svg';
 import { HiddenTitle, TextWithLineClamp } from 'Components/text';
@@ -7,8 +7,19 @@ import { useGetUserQuery } from 'Store/features/users/users.slice';
 import { ROOT_ROUTES } from 'Utils/constants/routes';
 import { logOut } from 'Utils/helpers/auth';
 
+interface ProfileButton {
+  onClick(): void;
+  isButton: true;
+}
+interface ProfileLink {
+  path: string;
+  isButton?: never;
+}
+type DropdownButton = (ProfileButton | ProfileLink) & {
+  text: string;
+};
+
 function ProfileDropdown() {
-  const navigate = useNavigate();
   const { data: user, isLoading: isUserLoading } = useGetUserQuery();
 
   if (isUserLoading) {
@@ -17,17 +28,9 @@ function ProfileDropdown() {
     return null;
   }
 
-  function closeDropdownAndCallCallback(
-    closeDropdown: () => void,
-    callCallback?: () => void,
-  ) {
-    closeDropdown();
-    callCallback?.();
-  }
-
-  const buttons = [
-    { text: 'Profile', onClick: () => navigate(ROOT_ROUTES.PROFILE) },
-    { text: 'Logout', onClick: logOut },
+  const buttons: DropdownButton[] = [
+    { text: 'Profile', path: ROOT_ROUTES.PROFILE },
+    { text: 'Logout', isButton: true, onClick: logOut },
   ];
 
   const { firstName, lastName = '' } = user;
@@ -48,14 +51,14 @@ function ProfileDropdown() {
         )}
         renderDropdown={closeDropdown => (
           <Dropdown>
-            {buttons.map(({ text, onClick }) => (
-              <TextButton
-                key={text}
-                onClick={() =>
-                  closeDropdownAndCallCallback(closeDropdown, onClick)
-                }>
-                {text}
-              </TextButton>
+            {buttons.map(({ text, ...button }) => (
+              <span key={text} onClick={closeDropdown}>
+                {button.isButton ? (
+                  <TextButton onClick={button.onClick}>{text}</TextButton>
+                ) : (
+                  <DropdownLink to={button.path}>{text}</DropdownLink>
+                )}
+              </span>
             ))}
           </Dropdown>
         )}
@@ -112,6 +115,20 @@ const Dropdown = styled.menu`
 
 const TextButton = styled.button`
   font-weight: 500;
+  color: var(--gray3);
+`;
+
+const DropdownLink = styled(NavLink)`
+  font-weight: 500;
+  color: var(--gray3);
+
+  &.active {
+    pointer-events: none;
+  }
+
+  &:not([class='active']) {
+    cursor: pointer;
+  }
 `;
 
 export default ProfileDropdown;

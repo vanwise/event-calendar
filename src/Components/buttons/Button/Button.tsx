@@ -22,17 +22,17 @@ function Button({
       type="button"
       $theme={theme}
       disabled={isLoading || disabled}
+      $isLoading={isLoading}
       {...props}>
-      {isLoading ? (
-        <Loader color={loaderColor} width={4} height={20} />
-      ) : (
-        children
+      {children}
+      {isLoading && (
+        <LoaderStylized color={loaderColor} width={4} height={20} />
       )}
     </Root>
   );
 }
 
-const Root = styled.button<{ $theme: Theme }>`
+const Root = styled.button<{ $theme: Theme; $isLoading?: boolean }>`
   position: relative;
   z-index: 0;
   padding: 15px;
@@ -73,7 +73,24 @@ const Root = styled.button<{ $theme: Theme }>`
     }
   }
 
+  &:disabled {
+    color: var(
+      ${({ $isLoading }) => ($isLoading ? '--transparent' : '--gray8')}
+    );
+
+    &::before {
+      background: var(--gray);
+    }
+  }
+
   ${({ $theme }) => BUTTON_THEMES[$theme]}
+`;
+
+const LoaderStylized = styled(Loader)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 export default Button;

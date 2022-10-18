@@ -4,14 +4,6 @@ export const BUTTON_THEMES = {
   violet: css`
     color: white;
 
-    &:disabled {
-      color: var(--gray8);
-
-      &::before {
-        background: var(--gray);
-      }
-    }
-
     &::before {
       background: var(--violet);
     }
@@ -23,14 +15,6 @@ export const BUTTON_THEMES = {
   `,
   light: css`
     color: var(--violet);
-
-    &:disabled {
-      color: var(--gray8);
-
-      &::before {
-        background: var(--gray);
-      }
-    }
 
     &::before {
       background: var(--violet2);
