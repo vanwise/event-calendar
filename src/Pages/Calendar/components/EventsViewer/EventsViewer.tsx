@@ -1,37 +1,20 @@
 import styled from 'styled-components/macro';
-import { EntityId } from '@reduxjs/toolkit';
 import { HiddenTitle } from 'Components/text';
-import { useAppDispatch, useAppSelector } from 'Hooks';
+import { useAppSelector } from 'Hooks';
 import { selectActiveEventId } from 'Store/features/eventsFilter/eventsFilter.selectors';
-import { changeActiveEventId } from 'Store/features/eventsFilter/eventsFilter.slice';
 import EventsTimeBar from '../EventsTimeBar';
 import { EventDetails } from './components';
 
 function EventsViewer() {
-  const dispatch = useAppDispatch();
   const activeEventId = useAppSelector(selectActiveEventId);
-
-  function setActiveEventId(eventId: Nullable<EntityId>) {
-    dispatch(changeActiveEventId(eventId));
-  }
-
-  function handleEventClick(eventId: EntityId) {
-    setActiveEventId(activeEventId === eventId ? null : eventId);
-  }
 
   return (
     <Root $isActive={Boolean(activeEventId)}>
       <HiddenTitle level={2}>Events viewer</HiddenTitle>
-      <EventsTimeBar
-        onEventClick={handleEventClick}
-        activeEventId={activeEventId}
-      />
+      <EventsTimeBar />
 
       {activeEventId ? (
-        <EventDetails
-          eventId={activeEventId}
-          onCloseClick={() => setActiveEventId(null)}
-        />
+        <EventDetails eventId={activeEventId} />
       ) : (
         <EmptyText>Select event</EmptyText>
       )}

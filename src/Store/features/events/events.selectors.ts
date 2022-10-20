@@ -1,5 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { TimeService } from 'Services';
+import { Event } from 'Types/api';
 import { RootState } from 'Types/libs';
 import {
   selectFilterActiveDate,
@@ -7,6 +8,7 @@ import {
   selectHasBothDateRange,
 } from '../eventsFilter/eventsFilter.selectors';
 import { eventsAdapter, eventsApi, eventsInitialState } from './events.slice';
+import { getGroupedEvents } from './events.utils';
 
 const selectEventsResult = eventsApi.endpoints.getEvents.select();
 
@@ -46,21 +48,36 @@ export const selectEventsIdsByDateRange = createSelector(
   },
 );
 
-export const selectEventsIdsByActiveDate = createSelector(
+export const selectGroupedEventsByActiveDate = createSelector(
   [selectEventsData, selectEventsIdsByDateRange, selectFilterActiveDate],
   (eventsData, eventsIdsByDateRange, activeDate) => {
-    return eventsIdsByDateRange.filter(id => {
+    const filteredEvents = eventsIdsByDateRange.reduce((acc: Event[], id) => {
       const event = eventsData?.entities[id];
 
       if (event) {
         const { startDateISO, endDateISO } = event;
-        if (activeDate === endDateISO) return;
+        if (activeDate === endDateISO) return acc;
 
-        return TimeService.isDateBetween(
+        const isActiveDateBetweenEventDates = TimeService.isDateBetween(
           { from: startDateISO, to: endDateISO },
           activeDate,
         );
+
+        if (isActiveDateBetweenEventDates) {
+          acc.push(event);
+        }
       }
+
+      return acc;
+    }, []);
+
+    filteredEvents.sort((firstEvent, secondEvent) => {
+      if (firstEvent.startDateISO === secondEvent.startDateISO) {
+        return 0;
+      }
+      return firstEvent.startDateISO > secondEvent.startDateISO ? 1 : -1;
     });
+
+    return getGroupedEvents(filteredEvents, activeDate);
   },
 );

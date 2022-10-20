@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import styled from 'styled-components/macro';
 import { TimeService } from 'Services';
 import { DATE_FORMAT } from 'Utils/constants/date';
@@ -58,4 +57,4 @@ const Time = styled.time`
   border-right: 1px solid var(--gray2);
 `;
 
-export default memo(HoursList);
+export default HoursList;

@@ -2,27 +2,33 @@ import styled, { css } from 'styled-components/macro';
 import { EntityId } from '@reduxjs/toolkit';
 import { IconButton } from 'Components/buttons';
 import { HiddenTitle } from 'Components/text';
-import { useAppSelector, useDynamicDateNow } from 'Hooks';
+import { useAppDispatch, useAppSelector, useDynamicDateNow } from 'Hooks';
 import { selectEventById } from 'Store/features/events/events.selectors';
+import { changeActiveEventId } from 'Store/features/eventsFilter/eventsFilter.slice';
 import { selectTagById } from 'Store/features/tags/tags.selectors';
 import { EventDateDetails, EventEditing } from './components';
 
 interface EventDetailsProps {
   eventId: EntityId;
-  onCloseClick(): void;
 }
 
 const CLOSE_ICON_CSS = css`
   fill: var(--gray3);
 `;
 
-function EventDetails({ eventId, onCloseClick }: EventDetailsProps) {
+function EventDetails({ eventId }: EventDetailsProps) {
+  const dispatch = useAppDispatch();
   const dateNow = useDynamicDateNow();
+
   const event = useAppSelector(state => selectEventById(state, eventId));
   const tag = useAppSelector(state => selectTagById(state, event?.tagId || ''));
 
   if (!event || !tag) {
     return null;
+  }
+
+  function removeActiveEventId() {
+    dispatch(changeActiveEventId(null));
   }
 
   const { title, description, startDateISO, endDateISO, notificationId } =
@@ -38,7 +44,7 @@ function EventDetails({ eventId, onCloseClick }: EventDetailsProps) {
         icon="cross"
         title={`Close "${title}" event details`}
         iconCSS={CLOSE_ICON_CSS}
-        onClick={onCloseClick}
+        onClick={removeActiveEventId}
       />
 
       <Wrapper>
