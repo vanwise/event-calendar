@@ -1,18 +1,8 @@
 import styled from 'styled-components/macro';
-import { EntityId } from '@reduxjs/toolkit';
-import { useAppSelector } from 'Hooks';
-import { selectEventsIdsByActiveDate } from 'Store/features/events/events.selectors';
-import { EventDetails, HeaderWithDate, HoursList } from './components';
+import { EventGroups, HeaderWithDate, HoursList } from './components';
 import { useActiveDate, useInitialTimeBarScroll } from './EventsTimeBar.hooks';
 
-interface EventsTimeBarProps {
-  activeEventId: Nullable<EntityId>;
-  onEventClick(eventId: EntityId): void;
-}
-
-function EventsTimeBar({ onEventClick, activeEventId }: EventsTimeBarProps) {
-  const filteredEventsIds = useAppSelector(selectEventsIdsByActiveDate);
-
+function EventsTimeBar() {
   const activeDate = useActiveDate();
   const { sliderRef } = useInitialTimeBarScroll();
 
@@ -28,25 +18,10 @@ function EventsTimeBar({ onEventClick, activeEventId }: EventsTimeBarProps) {
       />
 
       <Wrapper>
-        <Inner>
-          <SlideWrapper ref={sliderRef}>
-            <HoursList />
-
-            {activeDate && (
-              <ul>
-                {filteredEventsIds.map(eventId => (
-                  <EventDetails
-                    key={eventId}
-                    eventId={eventId}
-                    onClick={() => onEventClick(eventId)}
-                    isActive={eventId === activeEventId}
-                    activeDate={activeDate}
-                  />
-                ))}
-              </ul>
-            )}
-          </SlideWrapper>
-        </Inner>
+        <SlideWrapper ref={sliderRef}>
+          <HoursList />
+          {activeDate && <EventGroups />}
+        </SlideWrapper>
       </Wrapper>
     </Root>
   );
@@ -66,17 +41,13 @@ const Wrapper = styled.section`
   overflow: hidden;
 `;
 
-const Inner = styled.div`
+const SlideWrapper = styled.div`
+  position: relative;
+
   height: 100%;
   background: white;
   border-radius: 10px;
-  overflow: hidden;
-`;
-
-const SlideWrapper = styled.div`
-  position: relative;
   overflow: auto;
-  height: 100%;
 `;
 
 export default EventsTimeBar;

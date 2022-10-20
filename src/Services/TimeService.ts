@@ -100,12 +100,25 @@ const TimeService = {
       'minutes',
     );
 
-    const durationInHours = duration.hours();
-    const durationInMinutes = duration.minutes();
+    const durationObj = {
+      y: duration.years(),
+      m: duration.months(),
+      d: duration.days(),
+      h: duration.hours(),
+      min: duration.minutes(),
+    };
 
-    const durationString = `${durationInHours ? `${durationInHours}h ` : ''}${
-      durationInMinutes ? `${durationInMinutes} min` : ''
-    }`;
+    const durationString = Object.keys(durationObj).reduce(
+      (acc, key, index) => {
+        const unitKey = key as keyof typeof durationObj;
+        const unitValue = durationObj[unitKey];
+        const spaceSymbol = index === 0 || !unitValue ? '' : ' ';
+        const unitValueString = unitValue ? `${unitValue}${unitKey}` : '';
+
+        return acc + spaceSymbol + unitValueString;
+      },
+      '',
+    );
 
     return { duration, durationString };
   },

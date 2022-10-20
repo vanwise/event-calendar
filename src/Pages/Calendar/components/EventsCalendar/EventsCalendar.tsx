@@ -12,13 +12,22 @@ function EventsCalendar() {
   const dateRange = useAppSelector(selectFilterDateRange);
   const allEvents = useAppSelector(selecteAllEvents);
 
-  const daysWithEvents = allEvents.reduce((acc: string[], { startDateISO }) => {
-    const startDate = TimeService.getStartOfDate(startDateISO).toISOString();
-    if (!acc.includes(startDate)) {
-      acc.push(startDate);
-    }
-    return acc;
-  }, []);
+  const daysWithEvents = allEvents.reduce(
+    (acc: string[], { startDateISO, endDateISO }) => {
+      const startDate = TimeService.getStartOfDate(startDateISO).toISOString();
+      const endDate = TimeService.getStartOfDate(endDateISO).toISOString();
+
+      if (!acc.includes(startDate)) {
+        acc.push(startDate);
+      }
+      if (!acc.includes(endDate)) {
+        acc.push(endDate);
+      }
+
+      return acc;
+    },
+    [],
+  );
 
   return (
     <DatePickerStylized

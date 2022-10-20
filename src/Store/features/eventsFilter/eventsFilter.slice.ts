@@ -27,9 +27,6 @@ export const eventsFilterSlice = createSlice({
       state,
       { payload: dateRange }: PayloadAction<DefaultSelectedDates>,
     ) {
-      state.dateRange = dateRange;
-      setCorrectActiveDate();
-
       function setCorrectActiveDate() {
         const activeDate = TimeService.getDate(state.activeDate);
         const isActiveDateBetweenDateRange = activeDate.isBetween(
@@ -43,6 +40,13 @@ export const eventsFilterSlice = createSlice({
           state.activeDate = dateRange.from || dateRange.to;
         }
       }
+
+      if (!dateRange.from && !dateRange.to) {
+        state.activeEventId = null;
+      }
+
+      state.dateRange = dateRange;
+      setCorrectActiveDate();
     },
     showPrevActiveDate(state) {
       if (state.activeDate && state.dateRange.from) {
