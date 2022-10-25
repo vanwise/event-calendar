@@ -39,6 +39,7 @@ function EventForm({ onSubmit, isLoading, defaultEvent }: EventFormProps) {
   const {
     control,
     register,
+    setValue,
     resetField,
     handleSubmit,
     formState: { errors: formErrors, isDirty },
@@ -89,7 +90,11 @@ function EventForm({ onSubmit, isLoading, defaultEvent }: EventFormProps) {
           placeholder="Enter description"
         />
 
-        <ReminderCheckbox register={register} control={control} />
+        <ReminderCheckbox
+          errors={formErrors}
+          control={control}
+          setFormValue={setValue}
+        />
       </Wrapper>
 
       <SubmitButton

@@ -79,7 +79,7 @@ const Root = styled.button<{ $theme: Theme; $isLoading?: boolean }>`
     );
 
     &::before {
-      background: var(--gray);
+      ${({ $isLoading }) => !$isLoading && 'background: var(--gray);'}
     }
   }
 

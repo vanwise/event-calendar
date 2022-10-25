@@ -1,16 +1,26 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
+import { ErrorMessage } from '@hookform/error-message';
+import { FieldValues } from 'react-hook-form';
+import { Tooltip } from 'Components/common';
 import { FormInputProps } from 'Types/libs';
 
 interface CheckboxProps<Values> extends FormInputProps<Values>, WithClassName {
   label: string;
+  isDisabled?: boolean;
 }
 
-function Checkbox<Values>({
+const ICON_CSS = css`
+  stroke: var(--red2);
+`;
+
+function Checkbox<Values extends FieldValues>({
   name,
   label,
+  errors,
   register,
-  registerOptions,
   className,
+  isDisabled,
+  registerOptions,
 }: CheckboxProps<Values>) {
   return (
     <Root className={className}>
@@ -20,6 +30,14 @@ function Checkbox<Values>({
         className="visually-hidden"
       />
       <Text>{label}</Text>
+      <ErrorMessage
+        name={name as any}
+        errors={errors}
+        render={({ message }) =>
+          !isDisabled &&
+          message && <TooltipStylized text={message} iconCSS={ICON_CSS} />
+        }
+      />
       <Toggler />
     </Root>
   );
@@ -70,6 +88,10 @@ const Input = styled.input`
       transform: translateX(80%);
     }
   }
+`;
+
+const TooltipStylized = styled(Tooltip)`
+  margin: 0 5px 0 auto;
 `;
 
 export default Checkbox;

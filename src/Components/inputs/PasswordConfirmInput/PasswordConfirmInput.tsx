@@ -5,7 +5,10 @@ import Input from '../Input';
 import { InputProps } from '../Input/Input.types';
 
 interface PasswordConfirmInputProps<FormValues>
-  extends Omit<InputProps<FormValues>, 'registerOptions' | 'type'> {
+  extends Omit<
+    InputProps<FormValues>,
+    'registerOptions' | 'type' | 'register' | 'inputAs'
+  > {
   control: Control<FormValues>;
   passwordFieldName: FieldPath<FormValues>;
 }
@@ -27,6 +30,7 @@ function PasswordConfirmInput<FormValues>({
           <Input
             type="password"
             placeholder="Confirm password"
+            register={control.register}
             registerOptions={registerOptions}
             {...restProps}
           />

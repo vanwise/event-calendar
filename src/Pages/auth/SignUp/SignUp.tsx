@@ -109,7 +109,6 @@ function SignUpPage() {
             label="Password Confirm"
             errors={errors}
             control={control}
-            register={register}
             passwordFieldName="password"
           />
         </Wrapper>

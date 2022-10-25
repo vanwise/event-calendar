@@ -1,3 +1,4 @@
+export { default as AlertIcon } from './AlertIcon';
 export { default as AvatarIcon } from './AvatarIcon';
 export { default as BatmanIcon } from './BatmanIcon';
 export { default as CalendarIcon } from './CalendarIcon';

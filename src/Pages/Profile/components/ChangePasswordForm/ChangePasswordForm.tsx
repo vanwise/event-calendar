@@ -80,7 +80,6 @@ function ChangePasswordForm() {
             label="Password Confirm"
             errors={formErrors}
             control={control}
-            register={register}
             passwordFieldName="newPassword"
             placeholder="Confirm new password"
           />
