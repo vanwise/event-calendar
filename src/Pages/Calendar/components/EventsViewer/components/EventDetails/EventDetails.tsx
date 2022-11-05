@@ -1,29 +1,30 @@
 import styled, { css } from 'styled-components/macro';
-import { EntityId } from '@reduxjs/toolkit';
 import { IconButton } from 'Components/buttons';
 import { HiddenTitle } from 'Components/text';
 import { useAppDispatch, useAppSelector, useDynamicDateNow } from 'Hooks';
 import { selectEventById } from 'Store/features/events/events.selectors';
+import { selectActiveEventId } from 'Store/features/eventsFilter/eventsFilter.selectors';
 import { changeActiveEventId } from 'Store/features/eventsFilter/eventsFilter.slice';
 import { selectTagById } from 'Store/features/tags/tags.selectors';
 import { EventDateDetails, EventEditing } from './components';
-
-interface EventDetailsProps {
-  eventId: EntityId;
-}
 
 const CLOSE_ICON_CSS = css`
   fill: var(--gray3);
 `;
 
-function EventDetails({ eventId }: EventDetailsProps) {
+function EventDetails() {
   const dispatch = useAppDispatch();
   const dateNow = useDynamicDateNow();
 
-  const event = useAppSelector(state => selectEventById(state, eventId));
+  const activeEventId = useAppSelector(selectActiveEventId);
+  const event = useAppSelector(state =>
+    selectEventById(state, activeEventId || ''),
+  );
   const tag = useAppSelector(state => selectTagById(state, event?.tagId || ''));
 
-  if (!event || !tag) {
+  if (!activeEventId) {
+    return <EmptyText>Select event</EmptyText>;
+  } else if (!event || !tag) {
     return null;
   }
 
@@ -76,6 +77,14 @@ function EventDetails({ eventId }: EventDetailsProps) {
     </Root>
   );
 }
+
+const EmptyText = styled.p`
+  max-width: 200px;
+  margin: 0 auto;
+  padding: 188px 0 0;
+  font-size: 20px;
+  font-style: italic;
+`;
 
 const Root = styled.article`
   position: relative;
