@@ -1,4 +1,4 @@
-import { SubmittedEventFormValues } from 'Components/modals/EventModal/components/EventForm/EventForm';
+import { EventFormValues } from 'Components/modals/EventModal/components/EventForm/EventForm';
 import { ToastService } from 'Services';
 import {
   useAddEventMutation,
@@ -8,7 +8,7 @@ import { Event } from 'Types/api';
 import { getJointDateAndTime } from 'Utils/helpers/date';
 
 interface OnEventFormSubmitArgs {
-  values: SubmittedEventFormValues;
+  values: EventFormValues;
   addEvent: ReturnType<typeof useAddEventMutation>[0];
   updateEvent: ReturnType<typeof useUpdateEventMutation>[0];
   eventForChanging?: Event;

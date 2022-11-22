@@ -1,6 +1,8 @@
 import { ReactNode } from 'react';
 import styled, { CSSProp } from 'styled-components/macro';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { UseFormProps, UseFormReset, UseFormReturn } from 'react-hook-form';
+import { AnyObjectSchema } from 'yup';
 import { Button } from 'Components/buttons';
 import { useHookForm } from 'Hooks';
 
@@ -11,12 +13,13 @@ interface SectionFormProps<FormValues> extends WithClassName {
     resetForm: UseFormReset<FormValues>,
   ): Promise<any>;
   titleCSS?: CSSProp;
-  formProps?: UseFormProps<FormValues>;
+  formProps?: Omit<UseFormProps<FormValues>, 'resolver'>;
   buttonText: string;
   isLoading?: boolean;
   renderFields(
     formMethods: Omit<UseFormReturn<FormValues>, 'handleSubmit'>,
   ): ReactNode;
+  validationSchema?: AnyObjectSchema;
 }
 
 function SectionForm<FormValues>({
@@ -28,8 +31,14 @@ function SectionForm<FormValues>({
   isLoading,
   buttonText,
   renderFields,
+  validationSchema,
 }: SectionFormProps<FormValues>) {
-  const { handleSubmit, ...formMethods } = useHookForm<FormValues>(formProps);
+  const resolver = validationSchema && yupResolver(validationSchema);
+
+  const { handleSubmit, ...formMethods } = useHookForm<FormValues>({
+    resolver,
+    ...formProps,
+  });
 
   function handleFormSubmit(values: FormValues) {
     return onSubmit(values, formMethods.reset);

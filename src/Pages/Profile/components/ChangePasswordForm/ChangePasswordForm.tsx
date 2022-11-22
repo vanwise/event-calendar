@@ -1,28 +1,20 @@
 import styled from 'styled-components/macro';
 import { UseFormReset } from 'react-hook-form';
 import { SectionForm } from 'Components/forms';
-import { Input, PasswordConfirmInput } from 'Components/inputs';
-import { StorageService, ToastService } from 'Services';
-import {
-  ChangePasswordData,
-  useChangePasswordMutation,
-} from 'Store/features/users/users.slice';
+import { Input } from 'Components/inputs';
+import { StorageService, ToastService, ValidationService } from 'Services';
+import { useChangePasswordMutation } from 'Store/features/users/users.slice';
 import { omit } from 'Utils/helpers/object';
-import { getValidations } from 'Utils/helpers/validation';
 
-interface ChangePasswordFormValuesBase extends ChangePasswordData {
-  passwordConfirm: string;
-}
-type ChangePasswordFormValues = Partial<ChangePasswordFormValuesBase>;
-type SubmittedChangePasswordFormValues = ChangePasswordFormValuesBase;
+type ChangePasswordFormValues = ValidationService.InferType<
+  typeof changePasswordValidations
+>;
 
-const passwordValidations = getValidations([
-  'required',
-  {
-    minLength: { value: 4 },
-    maxLength: { value: 16 },
-  },
-]);
+const changePasswordValidations = ValidationService.object({
+  newPassword: ValidationService.string().password(),
+  currentPassword: ValidationService.string().password(),
+  passwordConfirm: ValidationService.string().passwordConfirm('newPassword'),
+});
 
 function ChangePasswordForm() {
   const [changePassword, { isLoading: isChangePasswordLoading }] =
@@ -32,9 +24,7 @@ function ChangePasswordForm() {
     values: ChangePasswordFormValues,
     resetForm: UseFormReset<ChangePasswordFormValues>,
   ) {
-    const changePasswordData = omit(values, [
-      'passwordConfirm',
-    ]) as SubmittedChangePasswordFormValues;
+    const changePasswordData = omit(values, ['passwordConfirm']);
 
     return changePassword(changePasswordData)
       .unwrap()
@@ -51,11 +41,8 @@ function ChangePasswordForm() {
       onSubmit={handleFormSubmit}
       isLoading={isChangePasswordLoading}
       buttonText="Update password"
-      renderFields={({
-        control,
-        register,
-        formState: { errors: formErrors },
-      }) => (
+      validationSchema={changePasswordValidations}
+      renderFields={({ register, formState: { errors: formErrors } }) => (
         <Wrapper>
           <Input
             name="currentPassword"
@@ -64,7 +51,6 @@ function ChangePasswordForm() {
             errors={formErrors}
             register={register}
             placeholder="Enter current password"
-            registerOptions={passwordValidations}
           />
           <Input
             name="newPassword"
@@ -73,14 +59,13 @@ function ChangePasswordForm() {
             errors={formErrors}
             register={register}
             placeholder="Enter new password"
-            registerOptions={passwordValidations}
           />
-          <PasswordConfirmInput
+          <Input
+            type="password"
             name="passwordConfirm"
             label="Password Confirm"
             errors={formErrors}
-            control={control}
-            passwordFieldName="newPassword"
+            register={register}
             placeholder="Confirm new password"
           />
         </Wrapper>

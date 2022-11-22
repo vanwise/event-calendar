@@ -1,7 +1,4 @@
-import {
-  EventFormValues,
-  SubmittedEventFormValues,
-} from 'Components/modals/EventModal/components/EventForm/EventForm';
+import { EventFormValues } from 'Components/modals/EventModal/components/EventForm/EventForm';
 import EventModal, {
   EventModalProps,
 } from 'Components/modals/EventModal/EventModal';
@@ -38,7 +35,7 @@ function useEventModal() {
 
   function handleEventFormSubmit(values: EventFormValues) {
     return onEventFormSubmit({
-      values: values as SubmittedEventFormValues,
+      values,
       addEvent,
       updateEvent,
       eventForChanging,

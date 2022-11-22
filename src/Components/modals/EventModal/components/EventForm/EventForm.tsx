@@ -1,37 +1,29 @@
 import { useCallback } from 'react';
 import styled from 'styled-components/macro';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { FieldPath } from 'react-hook-form';
 import { Button } from 'Components/buttons';
 import { Input, Select, TextArea } from 'Components/inputs';
 import { useAppSelector, useHookForm } from 'Hooks';
+import { ValidationService } from 'Services';
 import { selectAllTags } from 'Store/features/tags/tags.selectors';
 import { Event } from 'Types/api';
 import { FormSubmit } from 'Types/libs';
-import { getValidations } from 'Utils/helpers/validation';
 import { DateFields, ReminderCheckbox, TimeFields } from './components';
-import { getEventFormDefaultValues } from './EventForm.utils';
+import {
+  eventFormValidations,
+  getEventFormDefaultValues,
+} from './EventForm.utils';
 
 export type ResetFormField = (name: FieldPath<EventFormValues>) => void;
-interface EventFormValuesBase
-  extends Omit<Event, 'id' | 'startDateISO' | 'endDateISO'> {
-  startDate: string;
-  endDate: string;
-  startTime: string;
-  endTime: string;
-  hasReminder: boolean;
-}
-export type EventFormValues = Partial<EventFormValuesBase>;
-export type SubmittedEventFormValues = PartialBy<
-  EventFormValuesBase,
-  'description'
+export type EventFormValues = ValidationService.InferType<
+  typeof eventFormValidations
 >;
 interface EventFormProps {
   onSubmit: FormSubmit<EventFormValues>;
   isLoading?: boolean;
   defaultEvent?: Event;
 }
-
-const requiredValidation = getValidations(['required']);
 
 function EventForm({ onSubmit, isLoading, defaultEvent }: EventFormProps) {
   const eventTags = useAppSelector(selectAllTags);
@@ -44,6 +36,7 @@ function EventForm({ onSubmit, isLoading, defaultEvent }: EventFormProps) {
     handleSubmit,
     formState: { errors: formErrors, isDirty },
   } = useHookForm<EventFormValues>({
+    resolver: yupResolver(eventFormValidations),
     defaultValues: getEventFormDefaultValues(defaultEvent),
   });
 
@@ -66,7 +59,6 @@ function EventForm({ onSubmit, isLoading, defaultEvent }: EventFormProps) {
           errors={formErrors}
           register={register}
           placeholder="Enter title"
-          registerOptions={requiredValidation}
         />
 
         <DateFields control={control} resetFormField={resetFormField} />
@@ -77,7 +69,6 @@ function EventForm({ onSubmit, isLoading, defaultEvent }: EventFormProps) {
           control={control}
           options={tagsOptions}
           placeholder="Select tag"
-          controlOptions={requiredValidation}
         />
 
         <TimeFields control={control} resetFormField={resetFormField} />

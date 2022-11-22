@@ -2,22 +2,23 @@ import styled from 'styled-components/macro';
 import { UseFormReset } from 'react-hook-form';
 import { SectionForm } from 'Components/forms';
 import { Input } from 'Components/inputs';
-import { ToastService } from 'Services';
-import {
-  UpdatedUser,
-  useUpdateUserMutation,
-} from 'Store/features/users/users.slice';
+import { ToastService, ValidationService } from 'Services';
+import { useUpdateUserMutation } from 'Store/features/users/users.slice';
 import { User } from 'Types/api';
 import { getResettingOnBlur } from 'Utils/helpers/form';
-import { combineValidations, getValidations } from 'Utils/helpers/validation';
 
 interface ProfileFormProps {
   user: User;
 }
-type ProfileFormValuesBase = UpdatedUser;
-type ProfileFormValues = Partial<ProfileFormValuesBase>;
+type ProfileFormValues = ValidationService.InferType<
+  typeof profileFormValidations
+>;
 
-const requiredValidation = getValidations(['required']);
+const profileFormValidations = ValidationService.object({
+  firstName: ValidationService.string().trimAndRequired(),
+  lastName: ValidationService.string().nullable(),
+  email: ValidationService.string().trimAndRequired().email(),
+});
 
 function ProfileForm({ user }: ProfileFormProps) {
   const [updateUser, { isLoading: isUpdateUserLoading }] =
@@ -69,10 +70,7 @@ function ProfileForm({ user }: ProfileFormProps) {
               label="First name"
               errors={formErrors}
               register={register}
-              registerOptions={combineValidations(
-                requiredValidation,
-                resettingOnBlur,
-              )}
+              registerOptions={resettingOnBlur}
             />
             <Input
               name="lastName"
@@ -86,10 +84,7 @@ function ProfileForm({ user }: ProfileFormProps) {
               errors={formErrors}
               register={register}
               placeholder="Enter email"
-              registerOptions={combineValidations(
-                getValidations(['email']),
-                resettingOnBlur,
-              )}
+              registerOptions={resettingOnBlur}
             />
           </Wrapper>
         );

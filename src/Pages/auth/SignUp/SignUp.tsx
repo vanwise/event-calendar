@@ -1,41 +1,16 @@
 import styled from 'styled-components/macro';
 import { useNavigate } from 'react-router-dom';
 import AuthForm, { AuthFormMethods } from 'Components/forms/AuthForm/AuthForm';
-import { Input, PasswordConfirmInput } from 'Components/inputs';
+import { Input } from 'Components/inputs';
+import { ValidationService } from 'Services';
 import { useRegisterUserMutation } from 'Store/features/auth/auth.slice';
-import { AUTH_ROUTES, ROOT_ROUTES } from 'Utils/constants/routes';
+import { ROOT_ROUTES } from 'Utils/constants/routes';
 import { omit } from 'Utils/helpers/object';
-import { getValidations } from 'Utils/helpers/validation';
+import { SIGN_UP_ROUTE_DATA, signUpValidations } from './SignUp.utils';
 
-interface SignUpFormValuesBase {
-  firstName: string;
-  lastName: string;
-  email: string;
-  login: string;
-  password: string;
-  passwordConfirm: string;
-}
-type SignUpFormValues = Partial<SignUpFormValuesBase>;
-export type SubmittedSignUpFormValues = PartialBy<
-  SignUpFormValuesBase,
-  'lastName'
+export type SignUpFormValues = ValidationService.InferType<
+  typeof signUpValidations
 >;
-
-const requiredValidation = getValidations(['required']);
-const passwordValidations = getValidations([
-  'required',
-  {
-    minLength: { value: 4 },
-    maxLength: { value: 16 },
-  },
-]);
-
-const ROUTE_DATA = {
-  url: AUTH_ROUTES.SIGN_IN,
-  text: 'You already have an account?',
-  title: 'Sign Up',
-  linkText: 'Sign In',
-};
 
 function SignUpPage() {
   const naviagate = useNavigate();
@@ -43,8 +18,7 @@ function SignUpPage() {
     useRegisterUserMutation();
 
   async function handleSubmit(values: SignUpFormValues) {
-    const formValues = values as SubmittedSignUpFormValues;
-    const dataForRequest = omit(formValues, ['passwordConfirm']);
+    const dataForRequest = omit(values, ['passwordConfirm']);
 
     return registerUser(dataForRequest)
       .unwrap()
@@ -52,7 +26,6 @@ function SignUpPage() {
   }
 
   function renderInputs({
-    control,
     register,
     formState: { errors },
   }: AuthFormMethods<SignUpFormValues>) {
@@ -65,7 +38,6 @@ function SignUpPage() {
             errors={errors}
             register={register}
             placeholder="Enter first name"
-            registerOptions={requiredValidation}
           />
           <Input
             name="lastName"
@@ -82,7 +54,6 @@ function SignUpPage() {
           errors={errors}
           register={register}
           placeholder="Enter login"
-          registerOptions={requiredValidation}
         />
 
         <Input
@@ -91,7 +62,6 @@ function SignUpPage() {
           errors={errors}
           register={register}
           placeholder="Enter email"
-          registerOptions={getValidations(['email'])}
         />
 
         <Wrapper>
@@ -102,14 +72,14 @@ function SignUpPage() {
             errors={errors}
             register={register}
             placeholder="Enter password"
-            registerOptions={passwordValidations}
           />
-          <PasswordConfirmInput
+          <Input
             name="passwordConfirm"
             label="Password Confirm"
+            type="password"
+            placeholder="Confirm password"
             errors={errors}
-            control={control}
-            passwordFieldName="password"
+            register={register}
           />
         </Wrapper>
       </>
@@ -119,9 +89,10 @@ function SignUpPage() {
   return (
     <AuthForm
       onSubmit={handleSubmit}
-      routeData={ROUTE_DATA}
+      routeData={SIGN_UP_ROUTE_DATA}
       isLoading={isRegisterUserLoading}
       renderInputs={renderInputs}
+      validationSchema={signUpValidations}
     />
   );
 }

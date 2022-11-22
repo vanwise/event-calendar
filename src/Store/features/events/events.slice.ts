@@ -2,8 +2,12 @@ import { createEntityAdapter, EntityState } from '@reduxjs/toolkit';
 import { api } from 'Store/api';
 import { Event } from 'Types/api';
 
-interface NewEvent extends PartialBy<Omit<Event, 'id'>, 'description'> {
-  hasReminder: boolean;
+type RawEvent = Omit<
+  Event,
+  'id' | 'createdAt' | 'updatedAt' | 'notificationId'
+>;
+interface NewEvent extends PartialBy<RawEvent, 'description'> {
+  hasReminder?: boolean;
 }
 interface UpdatedEvent {
   id: string;

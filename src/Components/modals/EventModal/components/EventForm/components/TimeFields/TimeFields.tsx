@@ -2,7 +2,6 @@ import styled from 'styled-components/macro';
 import { Control, useWatch } from 'react-hook-form';
 import { Select } from 'Components/inputs';
 import { useDynamicDateNow } from 'Hooks';
-import { getValidations } from 'Utils/helpers/validation';
 import { EventFormValues, ResetFormField } from '../../EventForm';
 import {
   useEndTimeReseting,
@@ -14,8 +13,6 @@ export interface TimeFieldsProps {
   control: Control<EventFormValues>;
   resetFormField: ResetFormField;
 }
-
-const requiredValidation = getValidations(['required']);
 
 function TimeFields({ control, resetFormField }: TimeFieldsProps) {
   const dateNow = useDynamicDateNow();
@@ -55,7 +52,6 @@ function TimeFields({ control, resetFormField }: TimeFieldsProps) {
         label="Start Time"
         control={control}
         options={startTimeOptions}
-        controlOptions={requiredValidation}
       />
       <Line />
       <Select
@@ -63,7 +59,6 @@ function TimeFields({ control, resetFormField }: TimeFieldsProps) {
         label="End Time"
         control={control}
         options={endTimeOptions}
-        controlOptions={requiredValidation}
       />
     </Root>
   );

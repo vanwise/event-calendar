@@ -1,7 +1,9 @@
 import { ReactNode } from 'react';
 import styled, { CSSProp } from 'styled-components/macro';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { UseFormReturn } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { AnyObjectSchema } from 'yup';
 import { Button } from 'Components/buttons';
 import { useHookForm } from 'Hooks';
 import { AccessToken } from 'Store/features/auth/auth.slice';
@@ -24,6 +26,7 @@ interface AuthFormProps<FormValues> {
   routeData: RouteData;
   isLoading: boolean;
   renderInputs(formMethods: AuthFormMethods<FormValues>): ReactNode;
+  validationSchema?: AnyObjectSchema;
   inputsWrapperCSS?: CSSProp;
 }
 
@@ -33,9 +36,14 @@ function AuthForm<FormValues>({
   routeData,
   isLoading,
   renderInputs,
+  validationSchema,
   inputsWrapperCSS,
 }: AuthFormProps<FormValues>) {
-  const { handleSubmit, ...formMethods } = useHookForm<FormValues>();
+  const resolver = validationSchema && yupResolver(validationSchema);
+
+  const { handleSubmit, ...formMethods } = useHookForm<FormValues>({
+    resolver,
+  });
 
   return (
     <Root>
