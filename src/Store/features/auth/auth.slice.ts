@@ -1,16 +1,16 @@
-import { SubmittedSignInFormValues } from 'Pages/auth/SignIn/SignIn';
-import { SubmittedSignUpFormValues } from 'Pages/auth/SignUp/SignUp';
+import { SignInFormValues } from 'Pages/auth/SignIn/SignIn';
+import { SignUpFormValues } from 'Pages/auth/SignUp/SignUp';
 import { api } from 'Store/api';
 import { saveTokenToStorage } from './auth.utils';
 
 export interface AccessToken {
   accessToken: string;
 }
-type UserForRegistration = Omit<SubmittedSignUpFormValues, 'passwordConfirm'>;
+type UserForRegistration = Omit<SignUpFormValues, 'passwordConfirm'>;
 
 const authApi = api.injectEndpoints({
   endpoints: builder => ({
-    logIn: builder.mutation<AccessToken, SubmittedSignInFormValues>({
+    logIn: builder.mutation<AccessToken, SignInFormValues>({
       query: logInData => ({
         url: '/auth/login',
         method: 'POST',

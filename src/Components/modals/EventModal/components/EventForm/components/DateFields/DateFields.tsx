@@ -3,15 +3,12 @@ import styled from 'styled-components/macro';
 import { Control, useWatch } from 'react-hook-form';
 import { DropdownDatePicker } from 'Components/inputs';
 import { TimeService } from 'Services';
-import { getValidations } from 'Utils/helpers/validation';
 import { EventFormValues, ResetFormField } from '../../EventForm';
 
 interface DateFieldsProps {
   control: Control<EventFormValues>;
   resetFormField: ResetFormField;
 }
-
-const requiredValidation = getValidations(['required']);
 
 function DateFields({ control, resetFormField }: DateFieldsProps) {
   const [startDate, endDate] = useWatch({
@@ -34,7 +31,6 @@ function DateFields({ control, resetFormField }: DateFieldsProps) {
         label="Start Date"
         control={control}
         placeholder="Select start date"
-        controlOptions={requiredValidation}
         borderStartDate={startOfNowDay}
       />
       <DropdownDatePicker
@@ -42,7 +38,6 @@ function DateFields({ control, resetFormField }: DateFieldsProps) {
         label="End Date"
         control={control}
         placeholder="Select end date"
-        controlOptions={requiredValidation}
         borderStartDate={startDate || startOfNowDay}
       />
     </Root>

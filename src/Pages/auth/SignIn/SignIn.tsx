@@ -2,34 +2,21 @@ import { useNavigate } from 'react-router-dom';
 import { AuthForm } from 'Components/forms';
 import { AuthFormMethods } from 'Components/forms/AuthForm/AuthForm';
 import { Input } from 'Components/inputs';
+import { ValidationService } from 'Services';
 import { useLogInMutation } from 'Store/features/auth/auth.slice';
-import { AUTH_ROUTES, ROOT_ROUTES } from 'Utils/constants/routes';
-import { getValidations } from 'Utils/helpers/validation';
+import { ROOT_ROUTES } from 'Utils/constants/routes';
+import { SIGN_IN_ROUTE_DATA, signInValidations } from './SignIn.utils';
 
-interface SignInFormValuesBase {
-  login: string;
-  password: string;
-}
-type SignInFormValues = Partial<SignInFormValuesBase>;
-export type SubmittedSignInFormValues = SignInFormValuesBase;
-
-const requiredValidation = getValidations(['required']);
-
-const ROUTE_DATA = {
-  url: AUTH_ROUTES.SIGN_UP,
-  text: `Don't have an account yet?`,
-  title: 'Sign In',
-  linkText: 'Sign Up',
-};
+export type SignInFormValues = ValidationService.InferType<
+  typeof signInValidations
+>;
 
 function SignInPage() {
   const naviagate = useNavigate();
   const [logIn, { isLoading: isLogInLoading }] = useLogInMutation();
 
   function handleSubmit(values: SignInFormValues) {
-    const formValues = values as SubmittedSignInFormValues;
-
-    return logIn(formValues)
+    return logIn(values)
       .unwrap()
       .then(() => naviagate(ROOT_ROUTES.HOME));
   }
@@ -46,7 +33,6 @@ function SignInPage() {
           errors={errors}
           register={register}
           placeholder="Enter login"
-          registerOptions={requiredValidation}
         />
         <Input
           name="password"
@@ -55,7 +41,6 @@ function SignInPage() {
           errors={errors}
           register={register}
           placeholder="Enter password"
-          registerOptions={requiredValidation}
         />
       </>
     );
@@ -64,9 +49,10 @@ function SignInPage() {
   return (
     <AuthForm
       onSubmit={handleSubmit}
-      routeData={ROUTE_DATA}
+      routeData={SIGN_IN_ROUTE_DATA}
       isLoading={isLogInLoading}
       renderInputs={renderInputs}
+      validationSchema={signInValidations}
     />
   );
 }
