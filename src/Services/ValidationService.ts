@@ -7,7 +7,7 @@ function hasYupStringMatch(
   string: Maybe<string>,
 ) {
   if (!string) return true;
-  return Boolean(string?.match(regex)?.length);
+  return Boolean(string.match(regex)?.length);
 }
 
 yup.setLocale({
@@ -33,8 +33,10 @@ yup.addMethod(
 );
 
 yup.addMethod(yup.StringSchema, 'withoutSpaces', function () {
-  return this.test('withoutSpaces', 'Without spaces', value =>
-    hasYupStringMatch(/ /, value),
+  return this.test(
+    'withoutSpaces',
+    'Without spaces',
+    value => !hasYupStringMatch(/ /, value),
   );
 });
 
