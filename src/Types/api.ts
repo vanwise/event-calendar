@@ -1,7 +1,7 @@
 export interface Event {
   id: string;
   title: string;
-  description?: string;
+  description: string | null;
   tagId: string;
   startDateISO: string;
   endDateISO: string;
@@ -19,7 +19,7 @@ export interface User {
   id: string;
   firstName: string;
   lastName: string | null;
-  email: string;
+  email: string | null;
   login: string;
   notificationSubscriptions: string[];
   createdAt: string;

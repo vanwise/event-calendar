@@ -5,12 +5,12 @@ import { EventFormValues } from './EventForm';
 
 export const eventFormValidations = ValidationService.object({
   title: ValidationService.string().trimAndRequired(),
-  description: ValidationService.string(),
+  description: ValidationService.string().nullable(),
   tagId: ValidationService.string().required().uuid(),
   startDate: ValidationService.string().required().dateISO(),
   endDate: ValidationService.string().required().dateISO(),
-  startTime: ValidationService.string().required().dateISO(),
-  endTime: ValidationService.string().required().dateISO(),
+  startTime: ValidationService.string().required(),
+  endTime: ValidationService.string().required(),
   hasReminder: ValidationService.boolean(),
 });
 

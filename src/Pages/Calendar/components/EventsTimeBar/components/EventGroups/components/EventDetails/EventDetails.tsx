@@ -53,7 +53,7 @@ function EventDetails({
         </TimeWrapper>
 
         <Title ref={measuredTitleRef}>{event?.title}</Title>
-        <Description lineCount={2} title={event.description}>
+        <Description lineCount={2} title={event.description || ''}>
           {event.description}
         </Description>
         <Tag>{eventTag?.title}</Tag>

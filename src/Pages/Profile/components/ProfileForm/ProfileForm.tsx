@@ -17,7 +17,7 @@ type ProfileFormValues = ValidationService.InferType<
 const profileFormValidations = ValidationService.object({
   firstName: ValidationService.string().trimAndRequired(),
   lastName: ValidationService.string().nullable(),
-  email: ValidationService.string().trimAndRequired().email(),
+  email: ValidationService.string().nullable().email(),
 });
 
 function ProfileForm({ user }: ProfileFormProps) {
@@ -56,6 +56,7 @@ function ProfileForm({ user }: ProfileFormProps) {
       formProps={{ defaultValues }}
       isLoading={isUpdateUserLoading}
       buttonText="Update profile"
+      validationSchema={profileFormValidations}
       renderFields={({
         register,
         setValue,
@@ -70,6 +71,7 @@ function ProfileForm({ user }: ProfileFormProps) {
               label="First name"
               errors={formErrors}
               register={register}
+              placeholder="Enter first name"
               registerOptions={resettingOnBlur}
             />
             <Input
@@ -77,6 +79,7 @@ function ProfileForm({ user }: ProfileFormProps) {
               label="Last name"
               errors={formErrors}
               register={register}
+              placeholder="Enter last name"
             />
             <Input
               name="email"
@@ -84,7 +87,6 @@ function ProfileForm({ user }: ProfileFormProps) {
               errors={formErrors}
               register={register}
               placeholder="Enter email"
-              registerOptions={resettingOnBlur}
             />
           </Wrapper>
         );

@@ -13,7 +13,7 @@ export const signUpValidations = signInValidations.concat(
   ValidationService.object({
     firstName: ValidationService.string().trimAndRequired(),
     lastName: ValidationService.string().trim(),
-    email: ValidationService.string().trimAndRequired().email(),
+    email: ValidationService.string().email(),
     passwordConfirm: ValidationService.string().passwordConfirm('password'),
   }),
 );

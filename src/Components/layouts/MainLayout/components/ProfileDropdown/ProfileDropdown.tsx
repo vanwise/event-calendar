@@ -33,7 +33,7 @@ function ProfileDropdown() {
     { text: 'Logout', isButton: true, onClick: logOut },
   ];
 
-  const { firstName, lastName = '' } = user;
+  const { firstName, lastName } = user;
 
   return (
     <Root>
@@ -46,7 +46,10 @@ function ProfileDropdown() {
       <MainDropdown
         renderTrigger={toggleDropdown => (
           <TriggerButton onClick={toggleDropdown}>
-            <TextWithLineClamp>{`${firstName} ${lastName}`}</TextWithLineClamp>
+            <TextWithLineClamp>
+              {firstName}
+              {lastName && ` ${lastName}`}
+            </TextWithLineClamp>
           </TriggerButton>
         )}
         renderDropdown={closeDropdown => (
