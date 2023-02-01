@@ -2,16 +2,16 @@ import styled from 'styled-components/macro';
 import { RightArrowIcon } from 'Components/svg';
 
 interface ArrowButtonProps extends ButtonPropsWithoutRef {
-  direction?: ArrowDirection;
+  direction?: ArrowButtonDirection;
 }
 
-const directionRotateValue = {
+export const arrowButtonRotateValue = {
   bottom: 90,
   left: 180,
   top: 270,
 };
 
-type ArrowDirection = keyof typeof directionRotateValue;
+export type ArrowButtonDirection = keyof typeof arrowButtonRotateValue;
 
 function ArrowButton({ direction, ...props }: ArrowButtonProps) {
   return (
@@ -21,7 +21,7 @@ function ArrowButton({ direction, ...props }: ArrowButtonProps) {
   );
 }
 
-const Root = styled.button<{ $direction?: ArrowDirection }>`
+const Root = styled.button<{ $direction?: ArrowButtonDirection }>`
   width: 32px;
   height: 32px;
   padding: 2px;
@@ -30,7 +30,8 @@ const Root = styled.button<{ $direction?: ArrowDirection }>`
   border-radius: 12px;
 
   ${({ $direction }) =>
-    $direction && `transform: rotate(${directionRotateValue[$direction]}deg);`}
+    $direction &&
+    `transform: rotate(${arrowButtonRotateValue[$direction]}deg);`}
 
   &:hover:not([disabled]) {
     border-radius: 50%;

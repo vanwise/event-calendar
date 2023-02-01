@@ -1,10 +1,12 @@
 import { css } from 'styled-components/macro';
 import { IconButton } from 'Components/buttons';
+import EventForm, {
+  EventFormValues,
+} from 'Components/forms/EventForm/EventForm';
 import { useConfirmationModal } from 'Hooks/modals';
 import { Event } from 'Types/api';
 import { FormSubmit } from 'Types/libs';
 import Modal, { ModalProps } from '../Modal/Modal';
-import EventForm, { EventFormValues } from './components/EventForm/EventForm';
 
 export interface EventModalProps
   extends Omit<ModalProps, 'children' | 'title'> {

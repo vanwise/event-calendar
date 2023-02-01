@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { TimeService } from 'Services';
 
 function useDynamicDateNow(updateTimeoutInSeconds = 60) {
-  const [dateNow, setDateNow] = useState(TimeService.getDate());
+  const [dateNow, setDateNow] = useState(TimeService.getDate);
 
   useEffect(() => {
     const interval = setInterval(

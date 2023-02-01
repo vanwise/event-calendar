@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import styled, { CSSProp } from 'styled-components/macro';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { UseFormReturn } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { AnyObjectSchema } from 'yup';
@@ -24,7 +23,7 @@ interface AuthFormProps<FormValues> {
   formCSS?: CSSProp;
   onSubmit: FormSubmit<FormValues, AccessToken | void>;
   routeData: RouteData;
-  isLoading: boolean;
+  isLoading?: boolean;
   renderInputs(formMethods: AuthFormMethods<FormValues>): ReactNode;
   validationSchema?: AnyObjectSchema;
   inputsWrapperCSS?: CSSProp;
@@ -39,10 +38,8 @@ function AuthForm<FormValues>({
   validationSchema,
   inputsWrapperCSS,
 }: AuthFormProps<FormValues>) {
-  const resolver = validationSchema && yupResolver(validationSchema);
-
   const { handleSubmit, ...formMethods } = useHookForm<FormValues>({
-    resolver,
+    validationSchema,
   });
 
   return (
@@ -60,7 +57,7 @@ function AuthForm<FormValues>({
 
       <LinkWrapper>
         <Text>{routeData.text}</Text>
-        <LinkStylized to={routeData.url}>{routeData.linkText}!</LinkStylized>
+        <LinkStylized to={routeData.url}>{routeData.linkText}</LinkStylized>
       </LinkWrapper>
     </Root>
   );

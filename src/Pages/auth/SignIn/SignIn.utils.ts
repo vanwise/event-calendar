@@ -5,7 +5,7 @@ export const SIGN_IN_ROUTE_DATA = {
   url: AUTH_ROUTES.SIGN_UP,
   text: `Don't have an account yet?`,
   title: 'Sign In',
-  linkText: 'Sign Up',
+  linkText: 'Sign Up!',
 };
 
 export const signInValidations = ValidationService.object({

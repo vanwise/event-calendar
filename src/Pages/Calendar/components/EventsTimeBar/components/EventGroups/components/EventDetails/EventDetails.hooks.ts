@@ -1,24 +1,33 @@
-import { useCallback, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { sleep } from 'Utils/helpers/common';
 
-export function useSmallEventTitle() {
-  const [isTitleVisible, setIsTitleVisible] = useState(false);
+export function useSmallEventTitle(startTime: string, duration: string) {
+  const titleRef = useRef<HTMLParagraphElement>(null);
+  const [isTitleVisible, setIsTitleVisible] = useState(true);
 
-  const measuredTitleRef = useCallback((titleNode: HTMLParagraphElement) => {
-    if (titleNode !== null) {
-      const titleParentRect = titleNode.parentElement?.getBoundingClientRect();
-      const titleRect = titleNode.getBoundingClientRect();
+  useEffect(() => {
+    async function changeTitleVisibility() {
+      const title = titleRef.current;
+      await sleep(100);
 
-      if (titleParentRect) {
-        const titleTopPosition = titleRect.top - titleParentRect.top;
+      if (startTime && duration && title !== null) {
+        const titleParentRect = title.parentElement?.getBoundingClientRect();
+        const titleRect = title.getBoundingClientRect();
 
-        if (titleTopPosition > 0) {
-          const isVisible =
-            titleTopPosition + titleRect.height <= titleParentRect.height;
-          setIsTitleVisible(isVisible);
+        if (titleParentRect) {
+          const titleTopPosition = titleRect.top - titleParentRect.top;
+
+          if (titleTopPosition > 0) {
+            const isVisible =
+              titleTopPosition + titleRect.height <= titleParentRect.height;
+            setIsTitleVisible(isVisible);
+          }
         }
       }
     }
-  }, []);
 
-  return { isTitleVisible, measuredTitleRef };
+    changeTitleVisibility();
+  }, [startTime, duration]);
+
+  return { isTitleVisible, titleRef };
 }

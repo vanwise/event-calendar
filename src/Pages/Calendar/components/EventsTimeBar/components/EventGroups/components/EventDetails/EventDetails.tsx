@@ -33,26 +33,31 @@ function EventDetails({
 }: EventDetailsProps) {
   const eventTag = useAppSelector(store => selectTagById(store, event.tagId));
 
-  const { isTitleVisible, measuredTitleRef } = useSmallEventTitle();
+  const { isTitleVisible, titleRef } = useSmallEventTitle(startTime, duration);
 
   return (
     <Root
+      role="section"
+      onClick={onClick}
       $isActive={isActive}
       $topPosition={topPosition}
       $eventHeight={eventHeight}
       $groupedIndex={groupedIndex}>
-      <Wrapper onClick={onClick} title={event.title} $isActive={isActive}>
+      <Wrapper title={event.title} $isActive={isActive}>
         <TimeWrapper>
           <Time>{startTime}</Time>
           {!isTitleVisible && (
-            <Title $isSmall>
+            <Title data-testid="small-title" $isSmall>
               <TextWithLineClamp>{event.title}</TextWithLineClamp>
             </Title>
           )}
           <Duration>{duration}</Duration>
         </TimeWrapper>
 
-        <Title ref={measuredTitleRef}>{event?.title}</Title>
+        <div ref={titleRef}>
+          {isTitleVisible && <Title data-testid="title">{event?.title}</Title>}
+        </div>
+
         <Description lineCount={2} title={event.description || ''}>
           {event.description}
         </Description>
@@ -61,6 +66,29 @@ function EventDetails({
     </Root>
   );
 }
+
+const Wrapper = styled.div<{ $isActive: boolean }>`
+  position: relative;
+  flex-grow: 1;
+  border-radius: 10px;
+  padding: 5px 5px 5px 15px;
+  overflow: hidden;
+  background: var(
+    ${({ $isActive }) => ($isActive ? '--transparent' : '--white')}
+  );
+  font-weight: 400;
+  transition: 0.3s ease-out;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 0;
+    width: 5px;
+    height: calc(100% + 10px);
+    background: var(--violet);
+  }
+`;
 
 const activeRootCSS = css`
   border: 2px solid var(--violet);
@@ -94,37 +122,16 @@ const Root = styled.section<RootProps>`
   border: 1px solid var(--gray6);
   transition: 0.3s ease-out;
   user-select: none;
+  cursor: pointer;
+
+  &:hover {
+    ${Wrapper} {
+      background-color: var(--violet2);
+    }
+  }
 
   ${({ $groupedIndex }) => Number.isInteger($groupedIndex) && groupedRootCSS}
   ${({ $isActive }) => $isActive && activeRootCSS}
-`;
-
-const Wrapper = styled.div<{ $isActive: boolean }>`
-  position: relative;
-  flex-grow: 1;
-  border-radius: 10px;
-  padding: 5px 5px 5px 15px;
-  overflow: hidden;
-  background: var(
-    ${({ $isActive }) => ($isActive ? '--transparent' : '--white')}
-  );
-  font-weight: 400;
-  cursor: pointer;
-  transition: 0.3s ease-out;
-
-  &:hover {
-    background-color: var(--violet2);
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -5px;
-    left: 0;
-    width: 5px;
-    height: calc(100% + 10px);
-    background: var(--violet);
-  }
 `;
 
 const TimeWrapper = styled.div`

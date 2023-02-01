@@ -89,20 +89,25 @@ export function getDayHoursOptions({
   return options;
 }
 
-type HourString = string | undefined;
+function isBetween(target: number, min: number, max: number) {
+  return target >= min && target <= max;
+}
 
 export function parseHourString(timeString = '') {
-  const [hour, minutes] = timeString.split(':') as [HourString, HourString];
-  return [hour, minutes];
+  const time = timeString.split(':');
+  const hours = isBetween(+time[0], 0, 24) ? +time[0] : 0;
+  const minutes = isBetween(+time[1], 0, 60) ? +time[1] : 0;
+
+  return [hours, minutes];
 }
 
 export function getJointDateAndTime(date: TimeServiceRawDate, time: string) {
-  const [hour = 0, minutes = 0] = parseHourString(time);
+  const [hours, minutes] = parseHourString(time);
   const dateObject = TimeService.getDate(date);
 
   const newDate = TimeService.addMultiple(dateObject, {
-    hours: +hour,
-    minutes: +minutes,
+    hours,
+    minutes,
   });
 
   if (newDate.isValid()) {

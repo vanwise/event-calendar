@@ -1,4 +1,4 @@
-import { appHistory } from 'Routes/Routes';
+import { appHistory } from 'Routes/history';
 import { StorageService } from 'Services';
 import { resetReduxStore } from 'Store/config';
 import { ROOT_ROUTES } from 'Utils/constants/routes';

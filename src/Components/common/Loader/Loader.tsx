@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import { LoaderHeightWidthRadiusProps } from 'react-spinners/helpers/props';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 
@@ -20,11 +20,19 @@ function Loader({ className, hasFillWholeBlock, ...props }: LoaderProps) {
   }
 
   return (
-    <Root className={className} $hasFillWholeBlock={hasFillWholeBlock}>
+    <Root
+      className={className}
+      data-testid="loader"
+      $hasFillWholeBlock={hasFillWholeBlock}>
       <ScaleLoaderStylized color="var(--red2)" {...props} />
     </Root>
   );
 }
+
+const wholeBlockCss = css`
+  width: 100%;
+  height: 100%;
+`;
 
 const Root = styled.div<{
   $hasFillWholeBlock: LoaderProps['hasFillWholeBlock'];
@@ -33,12 +41,7 @@ const Root = styled.div<{
   align-items: center;
   justify-content: center;
 
-  ${({ $hasFillWholeBlock }) =>
-    $hasFillWholeBlock &&
-    `
-    width: 100%;
-    height: 100%;
-  `}
+  ${({ $hasFillWholeBlock }) => $hasFillWholeBlock && wholeBlockCss}
 `;
 
 const ScaleLoaderStylized = styled(ScaleLoader)``;

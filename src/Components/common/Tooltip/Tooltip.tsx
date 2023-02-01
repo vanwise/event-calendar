@@ -8,7 +8,7 @@ interface TooltipProps extends WithClassName {
 
 function Tooltip({ text, iconCSS, className }: TooltipProps) {
   return (
-    <Root className={className}>
+    <Root role="tooltip" aria-label={text} className={className}>
       <Icon $CSS={iconCSS} />
       <Text>{text}</Text>
     </Root>
@@ -69,6 +69,7 @@ const Text = styled.span`
 
 const Root = styled.span`
   position: relative;
+  display: inline-block;
 
   &:hover {
     ${Text} {

@@ -30,7 +30,7 @@ function ProfileForm({ user }: ProfileFormProps) {
     firstName: user.firstName,
   };
 
-  function handleFormSumbit(
+  function handleFormSubmit(
     values: ProfileFormValues,
     resetForm: UseFormReset<ProfileFormValues>,
   ) {
@@ -52,7 +52,7 @@ function ProfileForm({ user }: ProfileFormProps) {
   return (
     <SectionForm
       title="Change profile"
-      onSubmit={handleFormSumbit}
+      onSubmit={handleFormSubmit}
       formProps={{ defaultValues }}
       isLoading={isUpdateUserLoading}
       buttonText="Update profile"

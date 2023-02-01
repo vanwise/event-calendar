@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import { ToastOptions } from 'react-toastify/dist/types';
-import { ToastCloseButton } from 'Components/buttons';
+import ToastCloseButton from 'Components/buttons/ToastCloseButton';
 
 const toastOptions: ToastOptions = {
   position: toast.POSITION.BOTTOM_RIGHT,

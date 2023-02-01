@@ -1,13 +1,17 @@
+import { CSSProp } from 'styled-components/macro';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import { FormInputProps } from 'Types/libs';
-import { RawInputProps, RawInputTag } from '../RawInput/RawInput.types';
+
+export type RawInputTag = 'input' | 'textarea';
 
 type RegisterField = keyof UseFormRegisterReturn;
 
 type ElementProps<As extends RawInputTag> = Omit<
-  RawInputProps<As>,
-  'as' | 'hasError' | RegisterField
->;
+  React.ComponentPropsWithoutRef<As>,
+  RegisterField
+> & {
+  inputCSS?: CSSProp;
+};
 
 export type InputProps<
   Values,

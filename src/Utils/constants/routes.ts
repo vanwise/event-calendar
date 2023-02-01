@@ -3,6 +3,7 @@ export const ROOT_ROUTES = {
   AUTH: '/auth',
   PROFILE: '/profile',
   CALENDAR: '/calendar',
+  NOT_FOUND: '/not-found',
 };
 
 export const AUTH_ROUTES = {

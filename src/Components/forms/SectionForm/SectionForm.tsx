@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import styled, { CSSProp } from 'styled-components/macro';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { UseFormProps, UseFormReset, UseFormReturn } from 'react-hook-form';
 import { AnyObjectSchema } from 'yup';
 import { Button } from 'Components/buttons';
@@ -33,10 +32,8 @@ function SectionForm<FormValues>({
   renderFields,
   validationSchema,
 }: SectionFormProps<FormValues>) {
-  const resolver = validationSchema && yupResolver(validationSchema);
-
   const { handleSubmit, ...formMethods } = useHookForm<FormValues>({
-    resolver,
+    validationSchema,
     ...formProps,
   });
 
@@ -47,7 +44,7 @@ function SectionForm<FormValues>({
   return (
     <section className={className}>
       <Title $CSS={titleCSS}>{title}</Title>
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
+      <form role="form" onSubmit={handleSubmit(handleFormSubmit)}>
         {renderFields(formMethods)}
         <Button
           type="submit"

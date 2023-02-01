@@ -7,15 +7,15 @@ export const HOUR_HEIGHT_IN_PX = 80;
 export const HOUR_TEXT_WIDTH_IN_PX = 80;
 
 const dayHours = getDayHours();
+const { HOUR_MINUTES, TWENTY_FOUR_HOUR_MINUTES } = DATE_FORMAT;
 
 function HoursList() {
   return (
     <ul>
       {dayHours.map(hour => {
-        const dateTime = TimeService.getDate(
-          hour,
-          DATE_FORMAT.HOUR_MINUTES,
-        ).format('HH:mm');
+        const dateTime = TimeService.getDate(hour, HOUR_MINUTES).format(
+          TWENTY_FOUR_HOUR_MINUTES,
+        );
 
         return (
           <Item key={hour}>

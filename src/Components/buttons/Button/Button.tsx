@@ -1,10 +1,10 @@
 import styled from 'styled-components/macro';
-import { Loader } from 'Components/common';
+import Loader from 'Components/common/Loader';
 import { BUTTON_LOADER_COLOR, BUTTON_THEMES } from './Button.utils';
 
-type Theme = keyof typeof BUTTON_THEMES;
+export type ButtonTheme = keyof typeof BUTTON_THEMES;
 interface ButtonProps extends ButtonPropsWithoutRef {
-  theme?: Theme;
+  theme?: ButtonTheme;
   isLoading?: boolean;
 }
 
@@ -32,7 +32,7 @@ function Button({
   );
 }
 
-const Root = styled.button<{ $theme: Theme; $isLoading?: boolean }>`
+const Root = styled.button<{ $theme: ButtonTheme; $isLoading?: boolean }>`
   position: relative;
   z-index: 0;
   padding: 15px;

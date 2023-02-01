@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import styled, { CSSProp, keyframes } from 'styled-components/macro';
-import { WithOutsideClick } from 'Components/HOCs';
+import { useOutsideClick } from 'Hooks';
 
 interface MainDropdownProps extends WithClassName {
   renderDropdown(closeDropdown: () => void): JSX.Element;
@@ -9,8 +9,13 @@ interface MainDropdownProps extends WithClassName {
     isDropdownVisible: boolean,
   ): JSX.Element;
   dropdownWrapperCSS?: CSSProp;
+  /** must be wrapped in useCallback */
   onClose?(): void;
 }
+
+/**
+ * @param onClose must be wrapped in useCallback
+ */
 
 function MainDropdown({
   renderDropdown,
@@ -29,29 +34,29 @@ function MainDropdown({
     }
   }, []);
 
-  function closeDropdown() {
+  const closeDropdown = useCallback(() => {
     setIsDropdownVisible(false);
     onClose?.();
-  }
+  }, [onClose]);
+
+  const refForOutsideClick = useOutsideClick<HTMLDivElement>(closeDropdown);
 
   function toggleDropdown() {
     setIsDropdownVisible(prevValue => !prevValue);
   }
 
   return (
-    <WithOutsideClick onOutsideClick={closeDropdown}>
-      <Root className={className}>
-        {renderTrigger(toggleDropdown, isDropdownVisible)}
-        {isDropdownVisible && (
-          <DropdownWrapper
-            ref={measuredRef}
-            $CSS={dropdownWrapperCSS}
-            $topPosition={wrapperTopPosition}>
-            {renderDropdown(closeDropdown)}
-          </DropdownWrapper>
-        )}
-      </Root>
-    </WithOutsideClick>
+    <Root ref={refForOutsideClick} className={className}>
+      {renderTrigger(toggleDropdown, isDropdownVisible)}
+      {isDropdownVisible && (
+        <DropdownWrapper
+          ref={measuredRef}
+          $CSS={dropdownWrapperCSS}
+          $topPosition={wrapperTopPosition}>
+          {renderDropdown(closeDropdown)}
+        </DropdownWrapper>
+      )}
+    </Root>
   );
 }
 

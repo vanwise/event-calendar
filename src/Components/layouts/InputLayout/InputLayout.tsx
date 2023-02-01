@@ -1,8 +1,7 @@
 import { ReactNode } from 'react';
 import styled from 'styled-components/macro';
-import { ErrorMessage } from '@hookform/error-message';
 import { FieldValues } from 'react-hook-form';
-import { TextWithLineClamp } from 'Components/text';
+import { FormErrorMessage, TextWithLineClamp } from 'Components/text';
 import { FormInputProps } from 'Types/libs';
 
 export type InputLayoutProps<FormValues> = Pick<
@@ -35,17 +34,15 @@ function InputLayout<FormValues extends FieldValues>({
       <ErrorWrapper as={as} className={className}>
         {renderInput(hasError)}
 
-        <ErrorMessage
-          name={name as any}
+        <FormErrorMessage
+          name={name}
           errors={errors}
-          render={({ message }) =>
-            !isDisabled &&
-            message && (
-              <OneLineText className={className} title={message}>
-                {message}
-              </OneLineText>
-            )
-          }
+          isDisabled={isDisabled}
+          renderMessage={message => (
+            <OneLineText className={className} title={message}>
+              {message}
+            </OneLineText>
+          )}
         />
       </ErrorWrapper>
     </Root>

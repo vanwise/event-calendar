@@ -1,10 +1,10 @@
 import styled, { css, CSSProp } from 'styled-components/macro';
 import { CrossIcon, TrashIcon } from 'Components/svg';
 
-type Icon = keyof typeof ICONS;
+export type IconButtonIcon = keyof typeof ICON_BUTTON_ICONS;
 export interface IconButtonProps
   extends Omit<ButtonPropsWithoutRef, 'children'> {
-  icon: Icon;
+  icon: IconButtonIcon;
   iconCSS?: CSSProp;
 }
 
@@ -12,7 +12,7 @@ const customCSS = css<{ $CSS?: CSSProp }>`
   ${({ $CSS }) => $CSS}
 `;
 
-const ICONS = {
+export const ICON_BUTTON_ICONS = {
   cross: styled(CrossIcon)`
     fill: var(--red2);
     ${customCSS}
@@ -24,7 +24,7 @@ const ICONS = {
 };
 
 function IconButton({ icon, iconCSS, ...restProps }: IconButtonProps) {
-  const Icon = ICONS[icon];
+  const Icon = ICON_BUTTON_ICONS[icon];
 
   return (
     <Root type="button" {...restProps}>
