@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tooltip should be visible after hover and show mock text 1`] = `
+.c1 {
+  position: absolute;
+  z-index: 10;
+  bottom: calc(100% + 5px);
+  left: 50%;
+  display: none;
+  padding: 10px 15px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  max-width: 300px;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  border: 1px solid var(--violet);
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 5px 20px 5px var(--gray-opacity);
+  -webkit-animation: fSBaHY 0.3s forwards;
+  animation: fSBaHY 0.3s forwards;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+
+.c1::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -19px;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  border-top: 12px solid var(--violet);
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
+
+.c1::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -19px;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  border-top: 10px solid white;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 9px solid transparent;
+}
+
+.c2:hover .c0 {
+  display: block;
+}
+
+<span
+  class="c0 c1"
+>
+  tooltip mock text
+</span>
+`;

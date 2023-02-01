@@ -35,6 +35,7 @@ function Select<FormValues extends FieldValues, Option extends SelectOption>({
 
     return (
       <ReactSelect
+        aria-label={label}
         value={selectedValue || null}
         styles={mergeStyles(styles, customStyles)}
         onBlur={() => setIsFocused(false)}

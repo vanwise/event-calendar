@@ -1,4 +1,4 @@
-import { EventFormValues } from 'Components/modals/EventModal/components/EventForm/EventForm';
+import { EventFormValues } from 'Components/forms/EventForm/EventForm';
 import EventModal, {
   EventModalProps,
 } from 'Components/modals/EventModal/EventModal';

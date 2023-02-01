@@ -1,1 +1,2 @@
-export { default as WithOutsideClick } from './WithOutsideClick';
+export { default as WithAuthCheck } from './WithAuthCheck';
+export { default as WithForm } from './WithForm';

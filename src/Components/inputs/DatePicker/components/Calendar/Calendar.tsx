@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components/macro';
 import { HiddenTitle } from 'Components/text';
 import TimeService, { TimeServiceDate } from 'Services/TimeService';
 import { DATE_FORMAT } from 'Utils/constants/date';
+import { getCalendarDayButtonTitle } from './Calendar.utils';
 
 export interface DayCell {
   date: TimeServiceDate;
@@ -37,24 +38,34 @@ function Calendar({ onDateClick, daysInMonth }: CalendarProps) {
           (
             { date, isActive, isFrom, isTo, isDisabled, isNow, isMarked },
             index,
-          ) => (
-            <Cell key={index}>
-              <DayButton
-                type="button"
-                $isTo={isTo}
-                $isNow={isNow}
-                $isFrom={isFrom}
-                onClick={() => onDateClick(date)}
-                disabled={isDisabled}
-                $isActive={isActive}
-                $isMarked={isMarked}
-                $isDisabled={isDisabled}>
-                <time dateTime={date.format(YEAR_MONTH_DAY)}>
-                  {date.format(SHORT_DAY)}
-                </time>
-              </DayButton>
-            </Cell>
-          ),
+          ) => {
+            const buttonTitle = getCalendarDayButtonTitle({
+              isTo,
+              isFrom,
+              isActive,
+            });
+
+            return (
+              <Cell key={index}>
+                <DayButton
+                  type="button"
+                  data-testid={isMarked && 'markedDay'}
+                  title={buttonTitle}
+                  $isTo={isTo}
+                  $isNow={isNow}
+                  $isFrom={isFrom}
+                  onClick={() => onDateClick(date)}
+                  disabled={isDisabled}
+                  $isActive={isActive}
+                  $isMarked={isMarked}
+                  $isDisabled={isDisabled}>
+                  <time dateTime={date.format(YEAR_MONTH_DAY)}>
+                    {date.format(SHORT_DAY)}
+                  </time>
+                </DayButton>
+              </Cell>
+            );
+          },
         )}
       </Table>
     </Root>

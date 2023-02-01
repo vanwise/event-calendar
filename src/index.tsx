@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import * as serviceWorkerRegistration from 'serviceWorkerRegistration';
 import App from 'App';
-import { ModalsContainer } from 'Components/modals';
+import { ModalsContainer } from 'Hooks/modals/useModal/components';
 import { store } from 'Store/config';
 import reportWebVitals from './reportWebVitals';
 

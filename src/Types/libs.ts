@@ -41,7 +41,7 @@ export interface FormInputProps<
   FieldName extends FieldPath<FormValues> = FieldPath<FormValues>,
 > {
   name: FieldName;
-  errors?: FieldErrors<FormValues>;
+  errors: FieldErrors<FormValues>;
   register: UseFormRegister<FormValues>;
   registerOptions?: RegisterOptions<FormValues>;
 }

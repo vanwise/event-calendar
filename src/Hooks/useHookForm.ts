@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   FieldValues,
   Path,
@@ -6,14 +7,29 @@ import {
   SubmitHandler,
   useForm,
   UseFormProps,
+  UseFormReturn,
 } from 'react-hook-form';
+import { AnyObjectSchema } from 'yup';
 import { FormSubmit } from 'Types/libs';
+
+export interface UseHookFormProps<Values extends FieldValues = FieldValues>
+  extends UseFormProps<Values> {
+  validationSchema?: AnyObjectSchema;
+}
 
 function useHookForm<
   Values extends FieldValues = FieldValues,
   SubmitResult = any,
->(formProps?: UseFormProps<Values>) {
-  const { handleSubmit: onSubmit, ...formMethods } = useForm<Values>(formProps);
+>({
+  validationSchema,
+  ...restFormProps
+}: UseHookFormProps<Values> = {}): UseFormReturn<Values> {
+  const resolver = validationSchema && yupResolver(validationSchema);
+
+  const { handleSubmit: onSubmit, ...formMethods } = useForm<Values>({
+    resolver,
+    ...restFormProps,
+  });
 
   const handleSubmit = useCallback(
     (

@@ -28,7 +28,7 @@ function useNotificationSubscription() {
 
     if (
       'Notification' in window &&
-      !(Notification.permission === 'denied') &&
+      Notification.permission !== 'denied' &&
       'serviceWorker' in navigator &&
       user &&
       isCreateSubscriptionUninitialized

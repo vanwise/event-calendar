@@ -6,7 +6,7 @@ export const SIGN_UP_ROUTE_DATA = {
   url: AUTH_ROUTES.SIGN_IN,
   text: 'You already have an account?',
   title: 'Sign Up',
-  linkText: 'Sign In',
+  linkText: 'Sign In!',
 };
 
 export const signUpValidations = signInValidations.concat(

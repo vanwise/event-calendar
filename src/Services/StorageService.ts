@@ -10,6 +10,9 @@ const StorageService: StorageServiceType = {
   remove(key) {
     localStorage.removeItem(key);
   },
+  clear() {
+    localStorage.clear();
+  },
 };
 
 interface StorageValues {
@@ -20,6 +23,7 @@ interface StorageServiceType {
   get<K extends StorageKey>(key: K): StorageValues[K] | null;
   set<K extends StorageKey>(key: K, newValue: StorageValues[K]): void;
   remove(key: StorageKey): void;
+  clear(): void;
 }
 
 export default StorageService;

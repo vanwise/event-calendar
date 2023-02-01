@@ -112,7 +112,8 @@ const TimeService = {
       (acc, key, index) => {
         const unitKey = key as keyof typeof durationObj;
         const unitValue = durationObj[unitKey];
-        const spaceSymbol = index === 0 || !unitValue ? '' : ' ';
+        const spaceSymbol =
+          index === 0 || !unitValue || (unitValue && !acc) ? '' : ' ';
         const unitValueString = unitValue ? `${unitValue}${unitKey}` : '';
 
         return acc + spaceSymbol + unitValueString;

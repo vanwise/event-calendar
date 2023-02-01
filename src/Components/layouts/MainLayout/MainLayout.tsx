@@ -1,12 +1,13 @@
 import styled from 'styled-components/macro';
 import { Outlet } from 'react-router-dom';
-import { useNotificationSubscription } from 'Hooks';
-import { handlePushNotification } from 'Utils/helpers/notifications';
 import {
-  NavigationSidebar,
+  MainNavigation,
   Notifications,
   ProfileDropdown,
-} from './components';
+} from 'Components/common';
+import { MainLogoIcon } from 'Components/svg';
+import { useNotificationSubscription } from 'Hooks';
+import { handlePushNotification } from 'Utils/helpers/notifications';
 
 handlePushNotification();
 
@@ -15,12 +16,18 @@ function MainLayout() {
 
   return (
     <Root>
-      <NavigationSidebar />
+      <NavigationSidebar>
+        <LogoWrapper>
+          <MainLogoIcon />
+        </LogoWrapper>
+
+        <MainNavigation />
+      </NavigationSidebar>
 
       <Wrapper>
         <Header>
           <HeaderWrapper>
-            <Notifications />
+            <NotificationsStylized />
             <ProfileDropdown />
           </HeaderWrapper>
         </Header>
@@ -37,6 +44,19 @@ const Root = styled.div`
   display: grid;
   grid-template: 100% / 100px 1fr;
   height: 100%;
+`;
+
+const NavigationSidebar = styled.aside`
+  border-right: 2px solid var(--gray);
+`;
+
+const LogoWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 0 15px 40px;
+  padding: 20px 0;
+  height: 90px;
+  border-bottom: 2px solid var(--gray);
 `;
 
 const Wrapper = styled.div`
@@ -57,6 +77,10 @@ const HeaderWrapper = styled.div`
   justify-content: flex-end;
   padding: 0 0 15px;
   border-bottom: 2px solid var(--gray);
+`;
+
+const NotificationsStylized = styled(Notifications)`
+  margin: 0 15px 0 0;
 `;
 
 const Content = styled.main`

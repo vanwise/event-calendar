@@ -17,11 +17,16 @@ function reducer(state: any, action: AnyAction) {
   return combineReducers(appReducers)(state, action);
 }
 
-export const store = configureStore({
-  reducer,
-  middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(api.middleware, apiErrorLogger),
-});
+export function getStore(preloadedState?: any) {
+  return configureStore({
+    reducer,
+    middleware: getDefaultMiddleware =>
+      getDefaultMiddleware().concat(api.middleware, apiErrorLogger),
+    preloadedState,
+  });
+}
+
+export const store = getStore();
 
 export function resetReduxStore() {
   store.dispatch({ type: RESET_STORE_ACTION_TYPE });
